@@ -50,10 +50,29 @@ IOException 同上
 LoginException 在 accessToken 和 refreshToken 不匹配时抛出(refreshToken 过期或者手动设置了错误的值)
 
 ### 普通 API
-见 API 文档
+调用示例(打印一个直播间的历史弹幕)
+
+    int roomId = 3;
+    BilibiliRESTAPI.getLiveService()
+                   .getHistoryBulletScreens(roomId)
+                   .execute()
+                   .body()
+                   .getData()
+                   .getRoom()
+                   .forEach(liveHistoryBulletScreenEntity ->
+                           System.out.printf("[%s]%s: %s\n",
+                                   liveHistoryBulletScreenEntity.getTimeline(),
+                                   liveHistoryBulletScreenEntity.getNickname(),
+                                   liveHistoryBulletScreenEntity.getText())
+                   );
+
+API 文档
+
 //TODO 文档编写中
 
 ## 进入直播间
+由于弹幕推送是通过 Socket 实现的, 所以进入直播间并非是 REST 那样无状态的.
+
 //TODO 尚未实现
 
 # 已经实现的 API
@@ -68,7 +87,7 @@ LoginException 在 accessToken 和 refreshToken 不匹配时抛出(refreshToken 
 
 登出
 
-## 直播
+## live
 获得弹幕设置
 
 获得直播间的历史弹幕(十条)
