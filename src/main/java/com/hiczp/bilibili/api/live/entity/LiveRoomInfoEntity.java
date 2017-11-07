@@ -3,6 +3,7 @@ package com.hiczp.bilibili.api.live.entity;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Map;
 
 public class LiveRoomInfoEntity {
     /**
@@ -1054,7 +1055,7 @@ public class LiveRoomInfoEntity {
             @SerializedName("super_num")
             private int superNum;
             @SerializedName("count_map")
-            private CountMapEntity countMap;
+            private Map<String, String> countMap;
 
             public int getId() {
                 return id;
@@ -1136,11 +1137,11 @@ public class LiveRoomInfoEntity {
                 this.superNum = superNum;
             }
 
-            public CountMapEntity getCountMap() {
+            public Map<String, String> getCountMap() {
                 return countMap;
             }
 
-            public void setCountMap(CountMapEntity countMap) {
+            public void setCountMap(Map<String, String> countMap) {
                 this.countMap = countMap;
             }
 
@@ -1158,67 +1159,6 @@ public class LiveRoomInfoEntity {
 
                 public void setGold(String gold) {
                     this.gold = gold;
-                }
-            }
-
-            public static class CountMapEntity {
-                /**
-                 * 1 :
-                 * 2 :
-                 * 3 :
-                 * 4 :
-                 * 5 :
-                 */
-
-                @SerializedName("1")
-                private String $1;
-                @SerializedName("2")
-                private String $2;
-                @SerializedName("3")
-                private String $3;
-                @SerializedName("4")
-                private String $4;
-                @SerializedName("5")
-                private String $5;
-
-                public String get$1() {
-                    return $1;
-                }
-
-                public void set$1(String $1) {
-                    this.$1 = $1;
-                }
-
-                public String get$2() {
-                    return $2;
-                }
-
-                public void set$2(String $2) {
-                    this.$2 = $2;
-                }
-
-                public String get$3() {
-                    return $3;
-                }
-
-                public void set$3(String $3) {
-                    this.$3 = $3;
-                }
-
-                public String get$4() {
-                    return $4;
-                }
-
-                public void set$4(String $4) {
-                    this.$4 = $4;
-                }
-
-                public String get$5() {
-                    return $5;
-                }
-
-                public void set$5(String $5) {
-                    this.$5 = $5;
                 }
             }
         }

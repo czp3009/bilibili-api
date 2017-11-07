@@ -92,7 +92,7 @@ public class LiveHistoryBulletScreensEntity {
             @SerializedName("timeline")
             private String timeline;
             @SerializedName("isadmin")
-            private int isadmin;
+            private int isAdmin;
             @SerializedName("vip")
             private int vip;
             @SerializedName("svip")
@@ -100,7 +100,7 @@ public class LiveHistoryBulletScreensEntity {
             @SerializedName("rank")
             private int rank;
             @SerializedName("teamid")
-            private int teamid;
+            private int teamId;
             @SerializedName("rnd")
             private long rnd;
             @SerializedName("user_title")
@@ -146,12 +146,12 @@ public class LiveHistoryBulletScreensEntity {
                 this.timeline = timeline;
             }
 
-            public int getIsadmin() {
-                return isadmin;
+            public int getIsAdmin() {
+                return isAdmin;
             }
 
-            public void setIsadmin(int isadmin) {
-                this.isadmin = isadmin;
+            public void setIsAdmin(int isAdmin) {
+                this.isAdmin = isAdmin;
             }
 
             public int getVip() {
@@ -178,12 +178,12 @@ public class LiveHistoryBulletScreensEntity {
                 this.rank = rank;
             }
 
-            public int getTeamid() {
-                return teamid;
+            public int getTeamId() {
+                return teamId;
             }
 
-            public void setTeamid(int teamid) {
-                this.teamid = teamid;
+            public void setTeamId(int teamId) {
+                this.teamId = teamId;
             }
 
             public long getRnd() {

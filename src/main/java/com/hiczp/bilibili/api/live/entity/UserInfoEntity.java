@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserEntity {
+public class UserInfoEntity {
     /**
      * code : 0
      * message : ok
@@ -14,7 +14,7 @@ public class UserEntity {
     @SerializedName("message")
     private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private UserEntity data;
 
     public int getCode() {
         return code;
@@ -32,15 +32,15 @@ public class UserEntity {
         this.message = message;
     }
 
-    public DataEntity getData() {
+    public UserEntity getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(UserEntity data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class UserEntity {
         /**
          * silver : 1896
          * gold : 0

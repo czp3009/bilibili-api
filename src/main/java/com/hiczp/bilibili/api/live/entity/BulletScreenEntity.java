@@ -8,6 +8,7 @@ public class BulletScreenEntity {
 
     private int mid = BilibiliRESTAPI.getMid();
 
+    //弹幕长度限制为 LiveRoomInfoEntity.getData().getMsgLength(), 但是实际上所有房间的弹幕长度限制都是 20
     @SerializedName("msg")
     private String message;
 
@@ -15,8 +16,16 @@ public class BulletScreenEntity {
     @SerializedName("rnd")
     private long random = (long) (Math.random() * (999999999 - (-999999999)) + (-999999999));
 
+    //1 普通
+    //4 底端
+    //5 顶端
+    //6 逆向
+    //7 特殊
+    //9 高级
+    //一些模式需要 VIP
     private int mode = 1;
 
+    //尚且只见过为 0 的情况
     private int pool = 0;
 
     private String type = "json";
