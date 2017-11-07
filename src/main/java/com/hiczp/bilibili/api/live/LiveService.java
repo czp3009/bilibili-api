@@ -22,6 +22,7 @@ public interface LiveService {
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") int hostUserId);
 
+    //该 API 意义不明
     @GET("AppBag/sendDaily")
     Call<SendDailyResponseEntity> sendDaily();
 
