@@ -40,6 +40,7 @@ LoginException 在用户名密码不匹配时抛出
     BilibiliRESTAPI.logout() throws IOException, LoginException
 
 IOException 同上
+
 LoginException 在 accessToken 错误时抛出(过期, 或者手动设置了一个错误的值)
 
 当 accessToken 过期时, 需要刷新 token (OAuth2 协议中的 refreshToken 操作)
@@ -47,7 +48,10 @@ LoginException 在 accessToken 错误时抛出(过期, 或者手动设置了一�
     BilibiliRESTAPI.refreshToken() throws IOException, LoginException
 
 IOException 同上
+
 LoginException 在 accessToken 和 refreshToken 不匹配时抛出(refreshToken 过期或者手动设置了错误的值)
+
+登录过程的协议分析见我的博客 https://www.hiczp.com/post-145.html
 
 ### 普通 API
 调用示例(打印一个直播间的历史弹幕)
