@@ -50,6 +50,7 @@ public class BilibiliRESTAPI {
                     )).addInterceptor(AddAccessKeyInterceptor.getInstance())
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
+                    .addInterceptor(ErrorResponseConverterInterceptor.getInstance())
                     .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
@@ -68,6 +69,7 @@ public class BilibiliRESTAPI {
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
+                    .addInterceptor(ErrorResponseConverterInterceptor.getInstance())
                     .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
