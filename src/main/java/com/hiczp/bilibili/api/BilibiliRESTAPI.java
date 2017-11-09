@@ -50,7 +50,7 @@ public class BilibiliRESTAPI {
                     )).addInterceptor(AddAccessKeyInterceptor.getInstance())
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
-                    .addInterceptor(BasicHttpLoggingInterceptor.getInstance())
+                    .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
             liveService = new Retrofit.Builder()
@@ -68,7 +68,7 @@ public class BilibiliRESTAPI {
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
-                    .addInterceptor(BasicHttpLoggingInterceptor.getInstance())
+                    .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
             passportService = new Retrofit.Builder()
@@ -85,8 +85,9 @@ public class BilibiliRESTAPI {
         LOGGER.debug("Login attempt with username '{}'", username);
         PassportService passportService = getPassportService();
         KeyEntity keyEntity = passportService.getKey().execute().body();
+        //服务器返回异常错误码
         if (keyEntity.getCode() != 0) {
-            throw new RuntimeException(keyEntity.getMessage());
+            throw new IOException(keyEntity.getMessage());
         }
         RSAPublicKey rsaPublicKey;
         try {
@@ -115,9 +116,23 @@ public class BilibiliRESTAPI {
         LoginResponseEntity loginResponseEntity = passportService.login(
                 username, cipheredPassword
         ).execute().body();
-        //TODO 不明确用户名和密码不匹配时返回的错误码
-        if (loginResponseEntity.getCode() != 0) {
-            throw new LoginException("username or password invalid");
+        int code = loginResponseEntity.getCode();
+        switch (code) {
+            case ServerErrorCode.Passport.BAD_REQUEST: {
+                throw new IOException("request error");
+            }
+            case ServerErrorCode.Passport.USERNAME_OR_PASSWORD_INVALID: {
+                throw new LoginException("username or password invalid");
+            }
+            case ServerErrorCode.Passport.CANT_DECRYPT_RSA_PASSWORD: {
+                throw new LoginException("password error or hash expired");
+            }
+            default: {
+                //其他错误码
+                if (code != 0) {
+                    throw new IOException(loginResponseEntity.getMessage());
+                }
+            }
         }
         BilibiliRESTAPI.accessToken = loginResponseEntity.getData().getAccessToken();
         BilibiliRESTAPI.refreshToken = loginResponseEntity.getData().getRefreshToken();
@@ -129,9 +144,17 @@ public class BilibiliRESTAPI {
 
     public static InfoEntity getAccountInfo() throws IOException, LoginException {
         InfoEntity infoEntity = getPassportService().getInfo(accessToken).execute().body();
-        //TODO 不明确未登录时获取用户信息的错误码
-        if (infoEntity.getCode() != 0) {
-            throw new LoginException("please try after login");
+        int code = infoEntity.getCode();
+        switch (code) {
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("please try after login");
+            }
+            default: {
+                //其他错误码
+                if (code != 0) {
+                    throw new IOException(infoEntity.getMessage());
+                }
+            }
         }
         return infoEntity;
     }
@@ -142,9 +165,23 @@ public class BilibiliRESTAPI {
 
     public static RefreshTokenResponseEntity refreshToken(String accessToken, String refreshToken) throws IOException, LoginException {
         RefreshTokenResponseEntity refreshTokenResponseEntity = getPassportService().refreshToken(accessToken, refreshToken).execute().body();
-        //TODO 不明确 access token 和 refresh token 不匹配时的错误码
-        if (refreshTokenResponseEntity.getCode() != 0) {
-            throw new LoginException("access token and refresh token mismatch");
+        int code = refreshTokenResponseEntity.getCode();
+        switch (code) {
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("access token can't be empty");
+            }
+            case ServerErrorCode.Passport.ACCESS_TOKEN_NOT_FOUND: {
+                throw new LoginException("access token invalid");
+            }
+            case ServerErrorCode.Passport.REFRESH_TOKEN_NOT_MATCH: {
+                throw new LoginException("access token and refresh token mismatch");
+            }
+            default: {
+                //其他错误码
+                if (code != 0) {
+                    throw new IOException(refreshTokenResponseEntity.getMessage());
+                }
+            }
         }
         BilibiliRESTAPI.accessToken = refreshTokenResponseEntity.getData().getAccessToken();
         BilibiliRESTAPI.refreshToken = refreshTokenResponseEntity.getData().getRefreshToken();
@@ -160,7 +197,21 @@ public class BilibiliRESTAPI {
 
     public static LogoutResponseEntity logout(String accessToken) throws IOException, LoginException {
         LogoutResponseEntity logoutResponseEntity = getPassportService().logout(accessToken).execute().body();
-        //TODO 不明确使用无效的 access token 登出时的错误码
+        int code = logoutResponseEntity.getCode();
+        switch (code) {
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("access token can't be empty");
+            }
+            case ServerErrorCode.Passport.ACCESS_TOKEN_NOT_FOUND: {
+                throw new LoginException("access token invalid");
+            }
+            default: {
+                //其他错误码
+                if (code != 0) {
+                    throw new IOException(logoutResponseEntity.getMessage());
+                }
+            }
+        }
         if (logoutResponseEntity.getCode() != 0) {
             throw new LoginException("access token invalid");
         }

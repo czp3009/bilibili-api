@@ -218,7 +218,7 @@ public class LiveServiceTest {
                 .body();
         try {
             firstGiftInPlayerBag = playerBagEntity.getData().get(0);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             LOGGER.error("Current user don't have any gift");
         }
         GSON.toJson(
