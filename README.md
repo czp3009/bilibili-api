@@ -132,5 +132,39 @@ getAppSmallTV(意义不明)
 
 直播签到
 
+# 特别说明
+## 直播间 ID 问题
+一个直播间, 我们用浏览器去访问它, 他可能是这样的
+
+    http://live.bilibili.com/3
+    
+我们可能会以为后面的 3 就是这个直播间的 room_id, 其实并不是.
+
+我们能直接看到的这个号码, 其实是 show_room_id.
+
+所有直播间号码小于 1000 的直播间, show_room_id 和 room_id 是不相等的(room_id 在不少 API 里又叫 cid).
+
+一些 API 能提供自动跳转功能, 也就是用这个 show_room_id 作为参数, 返回的信息是跳转到对应的 room_id 之后的返回信息.
+
+简单地说, 一些 API 用 show_room_id 作为参数可以正常工作, 而另一些不能. 所以尽可能使用 room_id 作为参数来调用 API.
+
+room_id 的获取要通过
+
+    http://api.live.bilibili.com/AppRoom/index?room_id=3&platform=android
+
+其中, response.data.room_id 就是其真实的 room_id, 这个直播间为 23058
+
+在本调用库中我们这样做
+
+    int showRoomId = 3;
+    int roomId = BilibiliRESTAPI.getLiveService()
+                    .getRoomInfo(showRoomId)
+                    .execute()
+                    .body()
+                    .getData()
+                    .getRoomId();
+
+由此, 我们获得了直播间的真实 room_id, 用它访问其他 API 就不会出错了.
+
 # License
 GPL V3
