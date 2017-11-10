@@ -27,7 +27,6 @@ public class BilibiliRESTAPI {
     private static LiveService liveService;
     private static PassportService passportService;
 
-    //TODO 尚未实现 未登录, 服务器繁忙 等情况下的统一错误处理拦截器
     public static LiveService getLiveService() {
         if (liveService == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -51,7 +50,7 @@ public class BilibiliRESTAPI {
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
                     .addInterceptor(ErrorResponseConverterInterceptor.getInstance())
-                    .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
+                    .addNetworkInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
             liveService = new Retrofit.Builder()
@@ -64,13 +63,14 @@ public class BilibiliRESTAPI {
         return liveService;
     }
 
+    //TODO 不明确客户端访问 passport.bilibili.com 时使用的 UA
     public static PassportService getPassportService() {
         if (passportService == null) {
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
                     .addInterceptor(ErrorResponseConverterInterceptor.getInstance())
-                    .addInterceptor(BodyHttpLoggingInterceptor.getInstance())
+                    .addNetworkInterceptor(BodyHttpLoggingInterceptor.getInstance())
                     .build();
 
             passportService = new Retrofit.Builder()
