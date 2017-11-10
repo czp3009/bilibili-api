@@ -98,7 +98,7 @@ public class BilibiliRESTAPI {
                             keyEntity.getData().getKey()
                                     .replace("-----BEGIN PUBLIC KEY-----", "")
                                     .replace("-----END PUBLIC KEY-----", "")
-                                    .replace("\n", "")
+                                    .replaceAll("\n", "")
                                     .getBytes()
                     )
             );
