@@ -31,11 +31,7 @@ public final class Utils {
     //Display-ID 的值在未登录前为 Buvid-客户端启动时间, 在登录后为 mid-客户端启动时间
     public static String calculateDisplayId() {
         int mid = BilibiliRESTAPI.getMid();
-        if (mid != 0) { //已登录
-            return calculateDisplayId(mid);
-        } else {    //未登录
-            return String.format("%s-%d", BUVID, Instant.now().getEpochSecond());
-        }
+        return mid != 0 ? calculateDisplayId(mid) : String.format("%s-%d", BUVID, Instant.now().getEpochSecond());
     }
 
     public static String calculateDisplayId(int mid) {
