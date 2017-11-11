@@ -166,5 +166,14 @@ room_id 的获取要通过
 
 由此, 我们获得了直播间的真实 room_id, 用它访问其他 API 就不会出错了.
 
+## 服务器返回非 0 返回值时
+当服务器返回的 JSON 中的 code 字段非 0 时(有错误发生), 该 JSON 可能是由服务端过滤器统一返回的, 因此其 JSON 格式(字段类型)将和实体类不一样, 此时会导致 JsonParseErrorException.
+
+为了让调用代码不需要写很多 try catch, 因此当服务器返回的 code 非 0 时, 封装好的 OkHttpClientInterceptor 将把 data 字段变为 null(发生错误时, data 字段没有实际有效的数据).
+
+因此只需要判断 code 是否是 0 即可知道 API 是否成功执行, 不需要异常捕获.
+
+(B站所有 API 无论是否执行成功, HttpStatus 都是 200, 判断 HTTP 状态码是无用的, 必须通过 JSON 中的 code 字段来知道 API 是否执行成功).
+
 # License
 GPL V3
