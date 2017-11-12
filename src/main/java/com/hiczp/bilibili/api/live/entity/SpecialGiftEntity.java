@@ -1,5 +1,7 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class SpecialGiftEntity {
@@ -57,13 +59,13 @@ public class SpecialGiftEntity {
          */
 
         @SerializedName("gift39")
-        private Object gift39;
+        private JsonElement gift39;
 
-        public Object getGift39() {
+        public JsonElement getGift39() {
             return gift39;
         }
 
-        public void setGift39(Object gift39) {
+        public void setGift39(JsonObject gift39) {
             this.gift39 = gift39;
         }
     }

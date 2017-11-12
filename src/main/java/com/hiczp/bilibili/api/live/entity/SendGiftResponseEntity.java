@@ -1,5 +1,7 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -172,7 +174,7 @@ public class SendGiftResponseEntity {
             @SerializedName("eventNum")
             private int eventNum;
             @SerializedName("specialGift")
-            private Object specialGift;
+            private JsonElement specialGift;
             @SerializedName("capsule")
             private CapsuleEntity capsule;
             @SerializedName("addFollow")
@@ -370,11 +372,11 @@ public class SendGiftResponseEntity {
                 this.eventNum = eventNum;
             }
 
-            public Object getSpecialGift() {
+            public JsonElement getSpecialGift() {
                 return specialGift;
             }
 
-            public void setSpecialGift(Object specialGift) {
+            public void setSpecialGift(JsonObject specialGift) {
                 this.specialGift = specialGift;
             }
 
