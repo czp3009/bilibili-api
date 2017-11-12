@@ -18,6 +18,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.util.Base64;
 
+//TODO 尚未实现自动 refreshToken 拦截器
 public class BilibiliRESTAPI {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliRESTAPI.class);
     private static String accessToken;
@@ -29,6 +30,7 @@ public class BilibiliRESTAPI {
 
     public static LiveService getLiveService() {
         if (liveService == null) {
+            LOGGER.debug("Init LiveService");
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(new AddFixedHeadersInterceptor(
                             "Display-ID", Utils.calculateDisplayId(),
@@ -66,6 +68,7 @@ public class BilibiliRESTAPI {
     //TODO 不明确客户端访问 passport.bilibili.com 时使用的 UA
     public static PassportService getPassportService() {
         if (passportService == null) {
+            LOGGER.debug("Init PassportService");
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                     .addInterceptor(AddAppKeyInterceptor.getInstance())
                     .addInterceptor(SortParamsAndSignInterceptor.getInstance())
@@ -140,7 +143,7 @@ public class BilibiliRESTAPI {
         BilibiliRESTAPI.refreshToken = loginResponseEntity.getData().getRefreshToken();
         BilibiliRESTAPI.mid = loginResponseEntity.getData().getMid();
         LOGGER.info("Login success with username '{}'", username);
-        LOGGER.debug("mid: " + BilibiliRESTAPI.mid);
+        LOGGER.debug("mid: {}", BilibiliRESTAPI.mid);
         return loginResponseEntity;
     }
 
@@ -158,6 +161,7 @@ public class BilibiliRESTAPI {
                 }
             }
         }
+        BilibiliRESTAPI.mid = infoEntity.getData().getMid();
         return infoEntity;
     }
 
@@ -217,10 +221,11 @@ public class BilibiliRESTAPI {
         if (logoutResponseEntity.getCode() != 0) {
             throw new LoginException("access token invalid");
         }
+        LOGGER.info("Logout success");
+        LOGGER.debug("Old mid: {}", BilibiliRESTAPI.mid);
         BilibiliRESTAPI.accessToken = null;
         BilibiliRESTAPI.refreshToken = null;
         BilibiliRESTAPI.mid = 0;
-        LOGGER.info("Logout success");
         return logoutResponseEntity;
     }
 
