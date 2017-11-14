@@ -12,6 +12,7 @@ public class BulletScreenEntity {
     @SerializedName("msg")
     private String message;
 
+    //在 web 端发送弹幕, 该字段是固定的, 为用户进入直播页面的时间的时间戳. 但是在 Android 端, 这是一个随机数
     //该随机数不包括符号位有 9 位
     @SerializedName("rnd")
     private long random = (long) (Math.random() * (999999999 - (-999999999)) + (-999999999));

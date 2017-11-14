@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.hiczp.bilibili.api.BilibiliRESTAPI;
 import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class LoginTest {
         );
     }
 
+    @Ignore
     @Test
     public void _2refreshToken() throws Exception {
         LOGGER.info("Refreshing token");

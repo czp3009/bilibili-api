@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 @Suite.SuiteClasses({
         LoginTest.class,
         LiveServiceTest.class,
+        LiveRoomTest.class,
         LogoutTest.class
 })
 public class RuleSuite {

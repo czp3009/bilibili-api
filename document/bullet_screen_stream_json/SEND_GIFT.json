@@ -1,0 +1,80 @@
+{
+  "cmd": "SEND_GIFT",
+  "data": {
+    "giftName": "\u4ebf\u5706",
+    "num": 1,
+    "uname": "\u30c5\u4ee3\u6211\u56de\u5bb6",
+    "rcost": 106855699,
+    "uid": 14146398,
+    "top_list": [
+      {
+        "uid": 10952886,
+        "uname": "\u5b89\u4e36\u664b",
+        "coin": 498900,
+        "face": "http://static.hdslb.com/images/member/noface.gif",
+        "guard_level": 0,
+        "rank": 1,
+        "score": 498900
+      },
+      {
+        "uid": 13174983,
+        "uname": "-\u56db\u5b63\u8c46-",
+        "coin": 384300,
+        "face": "http://i0.hdslb.com/bfs/face/23f9f57a69378736f68b50fc4cac4f6b01683e97.jpg",
+        "guard_level": "3",
+        "rank": 2,
+        "score": 384300
+      },
+      {
+        "uid": 87444977,
+        "uname": "\u964c\u964c\u821e\u98ce",
+        "coin": 377700,
+        "face": "http://i2.hdslb.com/bfs/face/c06c835bf8ed6401535847bf21e78d4d3b89d402.jpg",
+        "guard_level": 0,
+        "rank": 3,
+        "score": 377700
+      }
+    ],
+    "timestamp": 1510565032,
+    "giftId": 6,
+    "giftType": 0,
+    "action": "\u8d60\u9001",
+    "super": 0,
+    "price": 1000,
+    "rnd": "541907145",
+    "newMedal": 0,
+    "newTitle": 0,
+    "medal": [],
+    "title": "",
+    "beatId": "",
+    "biz_source": "live",
+    "metadata": "",
+    "remain": 0,
+    "gold": 0,
+    "silver": 0,
+    "eventScore": 0,
+    "eventNum": 0,
+    "smalltv_msg": [],
+    "specialGift": null,
+    "notice_msg": [],
+    "capsule": {
+      "normal": {
+        "coin": 6,
+        "change": 0,
+        "progress": {
+          "now": 4800,
+          "max": 10000
+        }
+      },
+      "colorful": {
+        "coin": 0,
+        "change": 0,
+        "progress": {
+          "now": 0,
+          "max": 5000
+        }
+      }
+    },
+    "addFollow": 0
+  }
+}
