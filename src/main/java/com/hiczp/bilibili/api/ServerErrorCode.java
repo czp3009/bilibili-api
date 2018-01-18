@@ -2,6 +2,13 @@ package com.hiczp.bilibili.api;
 
 //不知道为什么错误码都要加负号
 public class ServerErrorCode {
+    public static class Common {
+        public static final int NO_LOGIN = -101;
+        public static final int BAD_REQUEST = -400;
+        public static final int NOT_FOUND = -404;
+        public static final int INTERNAL_SERVER_ERROR = -500;
+    }
+
     public static class Passport {
         public static final int NO_LOGIN = -101;
         public static final int BAD_REQUEST = -400;

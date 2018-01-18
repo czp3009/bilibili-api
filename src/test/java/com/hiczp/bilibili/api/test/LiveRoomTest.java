@@ -9,7 +9,17 @@ import com.hiczp.bilibili.api.live.socket.BulletScreenListenerAdaptor;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.live.socket.PackageRepository;
 import com.hiczp.bilibili.api.live.socket.Utils;
-import com.hiczp.bilibili.api.live.socket.entity.*;
+import com.hiczp.bilibili.api.live.socket.entity.DanMuMSGEntity;
+import com.hiczp.bilibili.api.live.socket.entity.LiveEntity;
+import com.hiczp.bilibili.api.live.socket.entity.PreparingEntity;
+import com.hiczp.bilibili.api.live.socket.entity.SendGiftEntity;
+import com.hiczp.bilibili.api.live.socket.entity.SysGiftEntity;
+import com.hiczp.bilibili.api.live.socket.entity.SysMSGEntity;
+import com.hiczp.bilibili.api.live.socket.entity.WelcomeEntity;
+import com.hiczp.bilibili.api.live.socket.entity.WelcomeGuardEntity;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,10 +29,6 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
 
 @Ignore
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -82,6 +88,7 @@ public class LiveRoomTest {
         socketChannel.close();
     }
 
+    @Ignore
     @Test
     public void _1liveClientTest() throws IOException {
         int roomId = CONFIG.getRoomId();
