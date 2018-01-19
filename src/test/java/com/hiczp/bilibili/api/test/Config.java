@@ -1,7 +1,10 @@
 package com.hiczp.bilibili.api.test;
 
+import com.hiczp.bilibili.api.BilibiliAPI;
+
 public class Config {
     private static Config config;
+    private static final BilibiliAPI bilibiliAPI = new BilibiliAPI();
 
     private String username;
     private String password;
@@ -37,5 +40,9 @@ public class Config {
 
     public void setRoomId(int roomId) {
         this.roomId = roomId;
+    }
+
+    public static BilibiliAPI getBilibiliAPI() {
+        return bilibiliAPI;
     }
 }

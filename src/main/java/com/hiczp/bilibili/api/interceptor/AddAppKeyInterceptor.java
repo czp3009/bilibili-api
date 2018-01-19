@@ -1,6 +1,6 @@
 package com.hiczp.bilibili.api.interceptor;
 
-import com.hiczp.bilibili.api.Utils;
+import com.hiczp.bilibili.api.BilibiliClientProperties;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -8,13 +8,10 @@ import okhttp3.Response;
 import java.io.IOException;
 
 public class AddAppKeyInterceptor implements Interceptor {
-    private static AddAppKeyInterceptor addAppKeyInterceptor;
+    private BilibiliClientProperties bilibiliClientDefinition;
 
-    public static AddAppKeyInterceptor getInstance() {
-        if (addAppKeyInterceptor == null) {
-            addAppKeyInterceptor = new AddAppKeyInterceptor();
-        }
-        return addAppKeyInterceptor;
+    public AddAppKeyInterceptor(BilibiliClientProperties bilibiliClientDefinition) {
+        this.bilibiliClientDefinition = bilibiliClientDefinition;
     }
 
     @Override
@@ -22,7 +19,7 @@ public class AddAppKeyInterceptor implements Interceptor {
         Request request = chain.request();
         return chain.proceed(request.newBuilder().url(
                 request.url().newBuilder()
-                        .addQueryParameter("appkey", Utils.getAppKey())
+                        .addQueryParameter("appkey", bilibiliClientDefinition.getAppKey())
                         .build()
         ).build());
     }

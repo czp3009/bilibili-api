@@ -1,12 +1,11 @@
 package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.hiczp.bilibili.api.BilibiliRESTAPI;
 
 public class BulletScreenEntity {
-    private int cid;
+    private long cid;
 
-    private int mid = BilibiliRESTAPI.getMid();
+    private long mid;
 
     //弹幕长度限制为 LiveRoomInfoEntity.getData().getMsgLength(), 但是实际上所有房间的弹幕长度限制都是 20
     @SerializedName("msg")
@@ -38,25 +37,26 @@ public class BulletScreenEntity {
 
     private String playTime = "0.0";
 
-    public BulletScreenEntity(int cid, String message) {
+    public BulletScreenEntity(long cid, long mid, String message) {
         this.cid = cid;
+        this.mid = mid;
         this.message = message;
     }
 
-    public int getCid() {
+    public long getCid() {
         return cid;
     }
 
-    public BulletScreenEntity setCid(int cid) {
+    public BulletScreenEntity setCid(long cid) {
         this.cid = cid;
         return this;
     }
 
-    public int getMid() {
+    public long getMid() {
         return mid;
     }
 
-    public BulletScreenEntity setMid(int mid) {
+    public BulletScreenEntity setMid(long mid) {
         this.mid = mid;
         return this;
     }

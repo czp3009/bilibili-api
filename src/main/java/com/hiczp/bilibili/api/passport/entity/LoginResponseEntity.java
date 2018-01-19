@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.passport.entity;
 
 import com.google.gson.annotations.SerializedName;
+import com.hiczp.bilibili.api.BilibiliAccount;
 
 public class LoginResponseEntity {
     /**
@@ -16,7 +17,7 @@ public class LoginResponseEntity {
     @SerializedName("data")
     private DataEntity data;
     @SerializedName("ts")
-    private int ts;
+    private long ts;
 
     public int getCode() {
         return code;
@@ -42,12 +43,22 @@ public class LoginResponseEntity {
         this.data = data;
     }
 
-    public int getTs() {
+    public long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(long ts) {
         this.ts = ts;
+    }
+
+    public BilibiliAccount toBilibiliAccount() {
+        return new BilibiliAccount(
+                this.data.accessToken,
+                this.data.refreshToken,
+                this.data.mid,
+                this.data.expiresIn,
+                this.ts
+        );
     }
 
     public static class DataEntity {
@@ -63,9 +74,9 @@ public class LoginResponseEntity {
         @SerializedName("refresh_token")
         private String refreshToken;
         @SerializedName("mid")
-        private int mid;
+        private long mid;
         @SerializedName("expires_in")
-        private int expiresIn;
+        private long expiresIn;
 
         public String getAccessToken() {
             return accessToken;
@@ -83,19 +94,19 @@ public class LoginResponseEntity {
             this.refreshToken = refreshToken;
         }
 
-        public int getMid() {
+        public long getMid() {
             return mid;
         }
 
-        public void setMid(int mid) {
+        public void setMid(long mid) {
             this.mid = mid;
         }
 
-        public int getExpiresIn() {
+        public long getExpiresIn() {
             return expiresIn;
         }
 
-        public void setExpiresIn(int expiresIn) {
+        public void setExpiresIn(long expiresIn) {
             this.expiresIn = expiresIn;
         }
     }

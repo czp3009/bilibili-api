@@ -7,7 +7,7 @@
     <groupId>com.hiczp</groupId>
     <artifactId>bilibili-api</artifactId>
     <name>bilibili-api</name>
-    <version>1.0</version>
+    <version>0.0.1</version>
     <description>Bilibili API</description>
     <url>https://github.com/czp3009/bilibili-api</url>
 

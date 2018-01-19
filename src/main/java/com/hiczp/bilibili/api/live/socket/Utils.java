@@ -1,10 +1,6 @@
 package com.hiczp.bilibili.api.live.socket;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class Utils {
     private static byte[][] splitBytes(byte[] bytes, int n) {
@@ -20,18 +16,6 @@ public class Utils {
             result[line - 1] = Arrays.copyOfRange(bytes, (line - 1) * n, to);
         }
         return result;
-    }
-
-    static void invokeCallback(List<BulletScreenListener> bulletScreenListeners, @Nullable Consumer<BulletScreenListener> consumer) {
-        if (consumer != null) {
-            for (int i = bulletScreenListeners.size() - 1; i >= 0; i--) {
-                try {
-                    consumer.accept(bulletScreenListeners.get(i));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     public static void printBytes(byte[] bytes) {

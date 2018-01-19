@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.passport.entity;
 
 import com.google.gson.annotations.SerializedName;
+import com.hiczp.bilibili.api.BilibiliAccount;
 
 public class RefreshTokenResponseEntity {
     /**
@@ -10,7 +11,7 @@ public class RefreshTokenResponseEntity {
      */
 
     @SerializedName("ts")
-    private int ts;
+    private long ts;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -18,11 +19,11 @@ public class RefreshTokenResponseEntity {
     @SerializedName("data")
     private DataEntity data;
 
-    public int getTs() {
+    public long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(long ts) {
         this.ts = ts;
     }
 
@@ -50,6 +51,16 @@ public class RefreshTokenResponseEntity {
         this.data = data;
     }
 
+    public BilibiliAccount toBilibiliAccount() {
+        return new BilibiliAccount(
+                this.data.accessToken,
+                this.data.refreshToken,
+                this.data.mid,
+                this.data.expiresIn,
+                this.ts
+        );
+    }
+
     public static class DataEntity {
         /**
          * mid : 20293030
@@ -59,19 +70,19 @@ public class RefreshTokenResponseEntity {
          */
 
         @SerializedName("mid")
-        private int mid;
+        private long mid;
         @SerializedName("refresh_token")
         private String refreshToken;
         @SerializedName("access_token")
         private String accessToken;
         @SerializedName("expires_in")
-        private int expiresIn;
+        private long expiresIn;
 
-        public int getMid() {
+        public long getMid() {
             return mid;
         }
 
-        public void setMid(int mid) {
+        public void setMid(long mid) {
             this.mid = mid;
         }
 
@@ -91,11 +102,11 @@ public class RefreshTokenResponseEntity {
             this.accessToken = accessToken;
         }
 
-        public int getExpiresIn() {
+        public long getExpiresIn() {
             return expiresIn;
         }
 
-        public void setExpiresIn(int expiresIn) {
+        public void setExpiresIn(long expiresIn) {
             this.expiresIn = expiresIn;
         }
     }

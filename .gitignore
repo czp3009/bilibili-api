@@ -2,4 +2,6 @@
 .idea
 *.iml
 target
+out
+build
 src/test/resources/config.json

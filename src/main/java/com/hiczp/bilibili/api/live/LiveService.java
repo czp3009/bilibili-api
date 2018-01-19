@@ -71,8 +71,8 @@ public interface LiveService {
 
     @POST("api/sendmsg")
     @FormUrlEncoded
-    Call<SendBulletScreenResponseEntity> sendBulletScreen(@Field("cid") int cid,
-                                                          @Field("mid") int mid,
+    Call<SendBulletScreenResponseEntity> sendBulletScreen(@Field("cid") long cid,
+                                                          @Field("mid") long mid,
                                                           @Field("msg") String message,
                                                           @Field("rnd") long random,
                                                           @Field("mode") int mode,
