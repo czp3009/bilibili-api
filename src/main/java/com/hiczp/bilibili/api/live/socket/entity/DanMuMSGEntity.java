@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class DanMuMSGEntity {
     private static final Gson GSON = new Gson();
-    private static final Type LIST_STRING_TYPE = new TypeToken<List<String>>() {
+    private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {
     }.getType();
 
     /**
@@ -149,6 +149,6 @@ public class DanMuMSGEntity {
 
     //获得用户头衔
     public List<String> getUserTitles() {
-        return GSON.fromJson(info.get(5), LIST_STRING_TYPE);
+        return GSON.fromJson(info.get(5), STRING_LIST_TYPE);
     }
 }
