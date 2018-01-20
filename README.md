@@ -3,134 +3,109 @@
 
 由于B站即使更新客户端, 也会继续兼容以前的旧版本客户端, 所以短期内不用担心 API 失效的问题.
 
-如果 API 存在遗漏或者错误, 欢迎提交 issue.
-
 注意, 该项目使用 Bilibili Android 客户端协议, 与 Web 端的协议有差异, 不要提交 Web 端有关的 API.
 
+# API 不完全
+由于本项目还在开发初期, 大量 API 没有完成, 所以很可能没有你想要的 API.
+
+欢迎提交 issue 或者 Merge Request.
+
 # 添加依赖
-//TODO 尚未提交至 Maven 仓库
+## Gradle
+
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.1'
+
+## Maven
+
+    <dependency>
+      <groupId>com.hiczp</groupId>
+      <artifactId>bilibili-api</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+
+# 名词解释
+B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
+
+| 参数 | 含义 |
+| :--- | :--- |
+| mid | 用户 ID(与 userId 含义一致, 经常被混用) |
+| userId | 用户 ID, 用户在B站的唯一标识, 数字 |
+| userid | 注意这里是全小写, 它的值可能是 'bili_1178318619', 这个东西是没用的, B站并不用这个作为用户唯一标识 |
+| showRoomId | 直播间 URL (Web)上的房间号 |
+| roomId | 直播间的真实 ID(直播房间号在 1000 以下的房间, 真实 ID 是另外一个数字) |
+| cid | 直播间 ID(URL 上的房间号以及真实房间号都叫 cid) |
+| ruid | 直播间房主的用户 ID |
 
 # 使用
 ## RESTFul API
-安全验证有关的 params 有三个
-
-    access_key: 用户的凭证(一些 API 中也称它为 access_token)
-    appkey: OAuth2 的客户端识别码
-    sign: 根据其他 params 生成的一个有固定算法的验证参数
-
-appKey 和 sign 已经封装, 所有请求都会自动添加它们.
-
-部分 API 需要登录, 登录后所有请求都会自动加上 access_key.
-
 由于B站 API 设计清奇, 一些显然不需要登录的 API 也需要登录, 所以所有 API 尽可能登陆后访问以免失败.
 
 ### 登录
 使用账户名和密码作为登录参数
 
-    BilibiliRESTAPI.login(String username, String password) throws IOException, LoginException
+    BilibiliAPI bilibiliAPI = new BilibiliAPI()
+        .login(String username, String password) throws IOException, LoginException
     
 IOException 在网络故障时抛出
 
 LoginException 在用户名密码不匹配时抛出
 
-返回值为 LoginResponseEntity 类型, 可以记下其中的 accessToken 和 refreshToken, 如果有其他用途的话.
+login 方法的返回值为 LoginResponseEntity 类型, 使用
 
-登出操作如下
+    .login(...).toBilibiliAccount()
+
+来获得一个 BilibiliAccount 实例, 其中包含了 OAuth2 的用户凭证, 如果有需要, 可以将其持久化保存.
+
+将一个登陆状态恢复出来(从之前保存的 BilibiliAccount 实例)使用如下代码
+
+    BilibiliAPI bilibiliAPI = new BilibiliAPI(BilibiliAccount bilibiliAccount)
+
+注意, 如果这个 BilibiliAccount 实例含有的 accessToken 是错误的或者过期的, 需要鉴权的 API 将全部 401.
+
+### 刷新 Token
+OAuth2 的重要凭证有两个, token 与 refreshToken, token 到期之后, 并不需要再次用用户名密码登录一次, 仅需要用 refreshToken 刷新一次 token 即可(会得到新的 token 和 refreshToken, refreshToken 的有效期不是无限的. B站的 refreshToken 有效期不明确).
+
+    bilibiliAPI.refreshToken() throws IOException, LoginException
+
+IOException 在网络故障时抛出
+
+LoginException 在 token 错误,或者 refreshToken 错误或过期时抛出.
+
+### 登出
 
     BilibiliRESTAPI.logout() throws IOException, LoginException
 
-IOException 同上
+IOException 在网络故障时抛出
 
-LoginException 在 accessToken 错误时抛出(过期, 或者手动设置了一个错误的值)
+LoginException 在 accessToken 错误或过期时抛出
 
-当 accessToken 过期时, 需要刷新 token (OAuth2 协议中的 refreshToken 操作)
-
-    BilibiliRESTAPI.refreshToken() throws IOException, LoginException
-
-IOException 同上
-
-LoginException 在 accessToken 和 refreshToken 不匹配时抛出(refreshToken 过期或者手动设置了错误的值)
-
-登录过程的协议分析见我的博客 https://www.hiczp.com/post-145.html
-
-### 普通 API
-调用示例(打印一个直播间的历史弹幕)
+### API 调用示例
+打印一个直播间的历史弹幕
 
     int roomId = 3;
-    BilibiliRESTAPI.getLiveService()
-                   .getHistoryBulletScreens(roomId)
-                   .execute()
-                   .body()
-                   .getData()
-                   .getRoom()
-                   .forEach(liveHistoryBulletScreenEntity ->
-                           System.out.printf("[%s]%s: %s\n",
-                                   liveHistoryBulletScreenEntity.getTimeline(),
-                                   liveHistoryBulletScreenEntity.getNickname(),
-                                   liveHistoryBulletScreenEntity.getText())
-                   );
+    new BilibiliRESTAPI()
+        .getLiveService()
+        .getHistoryBulletScreens(roomId)
+        .execute()
+        .body()
+        .getData()
+        .getRoom()
+        .forEach(liveHistoryBulletScreenEntity ->
+            System.out.printf("[%s]%s: %s\n",
+                liveHistoryBulletScreenEntity.getTimeline(),
+                liveHistoryBulletScreenEntity.getNickname(),
+                liveHistoryBulletScreenEntity.getText())
+        );
+
+(如果要调用需要鉴权的 API, 需要先登录)
 
 API 文档
 
 //TODO 文档编写中
 
-## 进入直播间
-由于弹幕推送是通过 Socket 实现的, 所以进入直播间并非是 REST 那样无状态的.
-
+## Socket
+### 获取直播间实时弹幕
 //TODO 尚未实现
-
-# 已经实现的 API
-## passport
-获得 OAUth2 key
-
-登录
-
-获得 OAuth2 账户信息
-
-刷新 Token
-
-登出
-
-## live
-获得弹幕设置
-
-获得直播间的历史弹幕(十条)
-
-获得直播间信息
-
-获得是否关注了目标主播
-
-sendDaily(该 API 意义尚不明确)
-
-获得所有类型的礼物数据
-
-getAppSmallTV(意义不明)
-
-获得所有头衔类型的数据
-
-获得直播房间的特殊礼物
-
-获得在 live.bilibili.com 的用户信息(与 bilibili 总站账户以及 OAuth2 的账户不一样)
-
-获得直播间的播放地址(.flv 文件)
-
-发送直播心跳包(可以获得观众经验)
-
-发送弹幕
-
-获得下一个宝箱的数据
-
-开宝箱(得到银瓜子)
-
-查看用户背包数据(可用的礼物)
-
-获得活动礼物数据
-
-发送礼物给主播
-
-查看直播间的送礼排行榜
-
-直播签到
 
 # 特别说明
 ## 直播间 ID 问题
@@ -152,12 +127,12 @@ room_id 的获取要通过
 
     http://api.live.bilibili.com/AppRoom/index?room_id=3&platform=android
 
-其中, response.data.room_id 就是其真实的 room_id, 这个直播间为 23058
+其中, response.data.room_id 就是其真实的 room_id, 例子中的这个直播间的真实 room_id 为 23058
 
-在本调用库中我们这样做
+在代码中我们这样做
 
     int showRoomId = 3;
-    int roomId = BilibiliRESTAPI.getLiveService()
+    int roomId = bilibiliAPI.getLiveService()
                     .getRoomInfo(showRoomId)
                     .execute()
                     .body()

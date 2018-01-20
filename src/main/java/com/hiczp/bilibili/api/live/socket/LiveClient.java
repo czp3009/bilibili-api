@@ -20,6 +20,6 @@ public class LiveClient {
     }
 
     public LiveClient connect() {
-        return this;
+        throw new UnsupportedOperationException();
     }
 }

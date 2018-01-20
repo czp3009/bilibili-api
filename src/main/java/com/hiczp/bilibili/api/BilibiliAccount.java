@@ -19,20 +19,20 @@ public class BilibiliAccount implements BilibiliSecurityContext {
         this.loginTime = loginTime;
     }
 
-    public BilibiliAccount(BilibiliAccount bilibiliAccount) {
-        copyFrom(bilibiliAccount);
+    public BilibiliAccount(BilibiliSecurityContext bilibiliSecurityContext) {
+        copyFrom(bilibiliSecurityContext);
     }
 
     public static BilibiliAccount emptyInstance() {
         return new BilibiliAccount();
     }
 
-    public BilibiliAccount copyFrom(BilibiliAccount bilibiliAccount) {
-        this.accessToken = bilibiliAccount.accessToken;
-        this.refreshToken = bilibiliAccount.refreshToken;
-        this.userId = bilibiliAccount.userId;
-        this.expirationTime = bilibiliAccount.expirationTime;
-        this.loginTime = bilibiliAccount.loginTime;
+    public BilibiliAccount copyFrom(BilibiliSecurityContext bilibiliSecurityContext) {
+        this.accessToken = bilibiliSecurityContext.getAccessToken();
+        this.refreshToken = bilibiliSecurityContext.getRefreshToken();
+        this.userId = bilibiliSecurityContext.getUserId();
+        this.expirationTime = bilibiliSecurityContext.getExpirationTime();
+        this.loginTime = bilibiliSecurityContext.getLoginTime();
         return this;
     }
 

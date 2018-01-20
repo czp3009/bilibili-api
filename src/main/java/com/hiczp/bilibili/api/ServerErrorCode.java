@@ -23,8 +23,8 @@ public class ServerErrorCode {
 
     public static class Live {
         //访问 isFollowed 时如果未登录, 返回的是 3, message 是 "user no login"
-        public static final int USER_NO_LOGIN = 3;
         //正常的 API 如果未登录, 返回的是 -101
+        public static final int USER_NO_LOGIN = 3;
         public static final int NOT_FOUND = -404;
         //已经领取过这个宝箱
         public static final int THIS_SILVER_TASK_ALREADY_TOOK = -903;
