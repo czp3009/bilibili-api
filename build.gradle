@@ -5,6 +5,7 @@ description = 'Bilibili android client API library written in Java'
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -52,9 +53,17 @@ artifacts {
     archives javadocJar
 }
 
+signing {
+    sign configurations.archives
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
+            beforeDeployment { MavenDeployment deployment ->
+                signing.signPom(deployment)
+            }
+
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                 authentication(userName: ossUsername, password: ossPassword)
             }
