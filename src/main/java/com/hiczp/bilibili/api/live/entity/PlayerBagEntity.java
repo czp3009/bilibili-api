@@ -61,17 +61,17 @@ public class PlayerBagEntity {
          */
 
         @SerializedName("id")
-        private int id;
+        private long id;
         @SerializedName("uid")
-        private int uid;
+        private long uid;
         @SerializedName("gift_id")
-        private int giftId;
+        private long giftId;
         @SerializedName("gift_num")
-        private int giftNum;
+        private long giftNum;
         @SerializedName("expireat")
-        private int expireat;
+        private long expireat;
         @SerializedName("gift_type")
-        private int giftType;
+        private long giftType;
         @SerializedName("gift_name")
         private String giftName;
         @SerializedName("gift_price")
@@ -81,57 +81,57 @@ public class PlayerBagEntity {
         @SerializedName("count_set")
         private String countSet;
         @SerializedName("combo_num")
-        private int comboNum;
+        private long comboNum;
         @SerializedName("super_num")
-        private int superNum;
+        private long superNum;
         @SerializedName("count_map")
         private Map<String, String> countMap;
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
 
-        public int getUid() {
+        public long getUid() {
             return uid;
         }
 
-        public void setUid(int uid) {
+        public void setUid(long uid) {
             this.uid = uid;
         }
 
-        public int getGiftId() {
+        public long getGiftId() {
             return giftId;
         }
 
-        public void setGiftId(int giftId) {
+        public void setGiftId(long giftId) {
             this.giftId = giftId;
         }
 
-        public int getGiftNum() {
+        public long getGiftNum() {
             return giftNum;
         }
 
-        public void setGiftNum(int giftNum) {
+        public void setGiftNum(long giftNum) {
             this.giftNum = giftNum;
         }
 
-        public int getExpireat() {
+        public long getExpireat() {
             return expireat;
         }
 
-        public void setExpireat(int expireat) {
+        public void setExpireat(long expireat) {
             this.expireat = expireat;
         }
 
-        public int getGiftType() {
+        public long getGiftType() {
             return giftType;
         }
 
-        public void setGiftType(int giftType) {
+        public void setGiftType(long giftType) {
             this.giftType = giftType;
         }
 
@@ -167,19 +167,19 @@ public class PlayerBagEntity {
             this.countSet = countSet;
         }
 
-        public int getComboNum() {
+        public long getComboNum() {
             return comboNum;
         }
 
-        public void setComboNum(int comboNum) {
+        public void setComboNum(long comboNum) {
             this.comboNum = comboNum;
         }
 
-        public int getSuperNum() {
+        public long getSuperNum() {
             return superNum;
         }
 
-        public void setSuperNum(int superNum) {
+        public void setSuperNum(long superNum) {
             this.superNum = superNum;
         }
 

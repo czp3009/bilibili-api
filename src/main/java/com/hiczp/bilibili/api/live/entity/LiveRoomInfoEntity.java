@@ -97,13 +97,13 @@ public class LiveRoomInfoEntity {
          */
 
         @SerializedName("room_id")
-        private int roomId;
+        private long roomId;
         @SerializedName("title")
         private String title;
         @SerializedName("cover")
         private String cover;
         @SerializedName("mid")
-        private int mid;
+        private long mid;
         @SerializedName("uname")
         private String uname;
         @SerializedName("face")
@@ -197,11 +197,11 @@ public class LiveRoomInfoEntity {
         @SerializedName("event_corner")
         private List<?> eventCorner;
 
-        public int getRoomId() {
+        public long getRoomId() {
             return roomId;
         }
 
-        public void setRoomId(int roomId) {
+        public void setRoomId(long roomId) {
             this.roomId = roomId;
         }
 
@@ -221,11 +221,11 @@ public class LiveRoomInfoEntity {
             this.cover = cover;
         }
 
-        public int getMid() {
+        public long getMid() {
             return mid;
         }
 
-        public void setMid(int mid) {
+        public void setMid(long mid) {
             this.mid = mid;
         }
 
@@ -615,15 +615,15 @@ public class LiveRoomInfoEntity {
              */
 
             @SerializedName("cid")
-            private int cid;
+            private long cid;
             @SerializedName("sch_id")
             private int schId;
             @SerializedName("title")
             private String title;
             @SerializedName("mid")
-            private int mid;
+            private long mid;
             @SerializedName("start")
-            private int start;
+            private long start;
             @SerializedName("start_at")
             private String startAt;
             @SerializedName("aid")
@@ -641,11 +641,11 @@ public class LiveRoomInfoEntity {
             @SerializedName("manager")
             private List<?> manager;
 
-            public int getCid() {
+            public long getCid() {
                 return cid;
             }
 
-            public void setCid(int cid) {
+            public void setCid(long cid) {
                 this.cid = cid;
             }
 
@@ -665,19 +665,19 @@ public class LiveRoomInfoEntity {
                 this.title = title;
             }
 
-            public int getMid() {
+            public long getMid() {
                 return mid;
             }
 
-            public void setMid(int mid) {
+            public void setMid(long mid) {
                 this.mid = mid;
             }
 
-            public int getStart() {
+            public long getStart() {
                 return start;
             }
 
-            public void setStart(int start) {
+            public void setStart(long start) {
                 this.start = start;
             }
 
@@ -1035,7 +1035,7 @@ public class LiveRoomInfoEntity {
              */
 
             @SerializedName("id")
-            private int id;
+            private long id;
             @SerializedName("name")
             private String name;
             @SerializedName("price")
@@ -1057,11 +1057,11 @@ public class LiveRoomInfoEntity {
             @SerializedName("count_map")
             private Map<String, String> countMap;
 
-            public int getId() {
+            public long getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(long id) {
                 this.id = id;
             }
 
@@ -1170,23 +1170,23 @@ public class LiveRoomInfoEntity {
              */
 
             @SerializedName("id")
-            private int id;
+            private long id;
             @SerializedName("num")
-            private int num;
+            private long num;
 
-            public int getId() {
+            public long getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(long id) {
                 this.id = id;
             }
 
-            public int getNum() {
+            public long getNum() {
                 return num;
             }
 
-            public void setNum(int num) {
+            public void setNum(long num) {
                 this.num = num;
             }
         }

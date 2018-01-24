@@ -14,13 +14,13 @@ public interface LiveService {
     Call<BulletScreenConfigEntity> getBulletScreenConfig(@Query("type") String type);
 
     @GET("AppRoom/msg")
-    Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") int roomId);
+    Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") long roomId);
 
     @GET("AppRoom/index")
-    Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") int roomId);
+    Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
 
     @POST("feed/v1/feed/isFollowed")
-    Call<IsFollowedResponseEntity> isFollowed(@Query("follow") int hostUserId);
+    Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
 
     //该 API 意义不明
     @GET("AppBag/sendDaily")
@@ -39,7 +39,7 @@ public interface LiveService {
 
     //这个 API 不是很明确, 所有房间都一样
     @GET("SpecialGift/room/{roomId}")
-    Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") int roomId);
+    Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
 
     @GET("mobile/getUser")
     Call<UserInfoEntity> getUserInfo();
@@ -63,11 +63,11 @@ public interface LiveService {
     //  <current_quality>3</current_quality>
     //</video>
     @GET("api/playurl")
-    Call<PlayUrlEntity> getPlayUrl(@Query("cid") int cid, @Query("otype") String outputType);
+    Call<PlayUrlEntity> getPlayUrl(@Query("cid") long cid, @Query("otype") String outputType);
 
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
-    Call<SendOnlineHeartResponseEntity> sendOnlineHeart(@Field("room_id") int roomId, @Field("scale") String scale);
+    Call<SendOnlineHeartResponseEntity> sendOnlineHeart(@Field("room_id") long roomId, @Field("scale") String scale);
 
     @POST("api/sendmsg")
     @FormUrlEncoded
@@ -107,16 +107,16 @@ public interface LiveService {
     Call<PlayerBagEntity> getPlayerBag();
 
     @GET("AppRoom/activityGift")
-    Call<ActivityGiftsEntity> getActivityGifts(@Query("room_id") int roomId);
+    Call<ActivityGiftsEntity> getActivityGifts(@Query("room_id") long roomId);
 
     @POST("AppBag/send")
     @FormUrlEncoded
-    Call<SendGiftResponseEntity> sendGift(@Field("giftId") int giftId,
-                                          @Field("num") int number,
-                                          @Field("ruid") int roomUserId,
-                                          @Field("roomid") int roomId,
+    Call<SendGiftResponseEntity> sendGift(@Field("giftId") long giftId,
+                                          @Field("num") long number,
+                                          @Field("ruid") long roomUserId,
+                                          @Field("roomid") long roomId,
                                           @Field("timestamp") long timeStamp,
-                                          @Field("bag_id") int bagId,
+                                          @Field("bag_id") long bagId,
                                           @Field("rnd") long random);
 
     default Call<SendGiftResponseEntity> sendGift(GiftEntity giftEntity) {

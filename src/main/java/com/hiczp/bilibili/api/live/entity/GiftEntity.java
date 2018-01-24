@@ -6,19 +6,19 @@ import java.time.Instant;
 
 public class GiftEntity {
     @SerializedName("giftId")
-    private int giftId;
+    private long giftId;
 
     @SerializedName("bag_id")
-    private int bagId;
+    private long bagId;
 
     @SerializedName("num")
-    private int number;
+    private long number;
 
     @SerializedName("roomid")
-    private int roomId;
+    private long roomId;
 
     @SerializedName("ruid")
-    private int roomUserId;
+    private long roomUserId;
 
     @SerializedName("timestamp")
     private long timeStamp = Instant.now().getEpochSecond();
@@ -27,7 +27,7 @@ public class GiftEntity {
     @SerializedName("rnd")
     private long random = (long) (Math.random() * 9999999999L);
 
-    public GiftEntity(int giftId, int bagId, int number, int roomId, int roomUserId) {
+    public GiftEntity(long giftId, long bagId, long number, long roomId, long roomUserId) {
         this.giftId = giftId;
         this.bagId = bagId;
         this.number = number;
@@ -35,59 +35,59 @@ public class GiftEntity {
         this.roomUserId = roomUserId;
     }
 
-    public GiftEntity(int giftId, int bagId, int number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
+    public GiftEntity(long giftId, long bagId, long number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
         this(giftId, bagId, number, liveRoomEntity.getRoomId(), liveRoomEntity.getMid());
     }
 
-    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, int number, int roomId, int roomUserId) {
+    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, long number, long roomId, long roomUserId) {
         this(bagGiftEntity.getGiftId(), bagGiftEntity.getId(), number, roomId, roomUserId);
     }
 
-    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, int number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
+    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, long number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
         this(bagGiftEntity.getGiftId(), bagGiftEntity.getId(), number, liveRoomEntity.getRoomId(), liveRoomEntity.getMid());
     }
 
-    public int getGiftId() {
+    public long getGiftId() {
         return giftId;
     }
 
-    public GiftEntity setGiftId(int giftId) {
+    public GiftEntity setGiftId(long giftId) {
         this.giftId = giftId;
         return this;
     }
 
-    public int getBagId() {
+    public long getBagId() {
         return bagId;
     }
 
-    public GiftEntity setBagId(int bagId) {
+    public GiftEntity setBagId(long bagId) {
         this.bagId = bagId;
         return this;
     }
 
-    public int getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public GiftEntity setNumber(int number) {
+    public GiftEntity setNumber(long number) {
         this.number = number;
         return this;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 
-    public GiftEntity setRoomId(int roomId) {
+    public GiftEntity setRoomId(long roomId) {
         this.roomId = roomId;
         return this;
     }
 
-    public int getRoomUserId() {
+    public long getRoomUserId() {
         return roomUserId;
     }
 
-    public GiftEntity setRoomUserId(int roomUserId) {
+    public GiftEntity setRoomUserId(long roomUserId) {
         this.roomUserId = roomUserId;
         return this;
     }

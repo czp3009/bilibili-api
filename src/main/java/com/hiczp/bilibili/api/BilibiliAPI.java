@@ -124,39 +124,43 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     }
 
     public LoginResponseEntity login(String username, String password) throws IOException, LoginException {
-        LOGGER.debug("Login attempting with username '{}'", username);
+        LOGGER.info("Login attempting with username '{}'", username);
         LoginResponseEntity loginResponseEntity = BilibiliSecurityHelper.login(
                 this,
                 username,
                 password
         );
         bilibiliAccount.copyFrom(loginResponseEntity.toBilibiliAccount());
+        LOGGER.info("Login succeed with username: {}", username);
         return loginResponseEntity;
     }
 
     public RefreshTokenResponseEntity refreshToken() throws IOException, LoginException {
-        LOGGER.debug("RefreshToken attempting with userId '{}'", bilibiliAccount.getUserId());
+        LOGGER.info("RefreshToken attempting with userId '{}'", bilibiliAccount.getUserId());
         RefreshTokenResponseEntity refreshTokenResponseEntity = BilibiliSecurityHelper.refreshToken(
                 this,
                 bilibiliAccount.getAccessToken(),
                 bilibiliAccount.getRefreshToken()
         );
         bilibiliAccount.copyFrom(refreshTokenResponseEntity.toBilibiliAccount());
+        LOGGER.info("RefreshToken succeed with userId: {}", bilibiliAccount.getUserId());
         return refreshTokenResponseEntity;
     }
 
     public LogoutResponseEntity logout() throws IOException, LoginException {
-        LOGGER.debug("Logout attempting with userId '{}'", bilibiliAccount.getUserId());
+        LOGGER.info("Logout attempting with userId '{}'", bilibiliAccount.getUserId());
         Long userId = bilibiliAccount.getUserId();
         LogoutResponseEntity logoutResponseEntity = BilibiliSecurityHelper.logout(this, bilibiliAccount.getAccessToken());
         bilibiliAccount.reset();
-        LOGGER.debug("Logout succeed with userId: {}", userId);
+        LOGGER.info("Logout succeed with userId: {}", userId);
         return logoutResponseEntity;
     }
 
     @Override
     public LiveClient getLiveClient(long showRoomId) {
-        return bilibiliAccount.getUserId() == null ? new LiveClient(showRoomId) : new LiveClient(showRoomId, bilibiliAccount.getUserId());
+        return bilibiliAccount.getUserId() == null ?
+                new LiveClient(this, showRoomId) :
+                new LiveClient(this, showRoomId, bilibiliAccount.getUserId());
     }
 
     public BilibiliClientProperties getBilibiliClientProperties() {
