@@ -70,7 +70,6 @@ uploadArchives {
             if (!hasProperty('ossPassword')) {
                 ext.ossPassword = ''
             }
-
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                 authentication(userName: ossUsername, password: ossPassword)
             }

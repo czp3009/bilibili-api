@@ -7,7 +7,6 @@ import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.rsa.RSAPublicKeyImpl;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -16,9 +15,14 @@ import javax.crypto.NoSuchPaddingException;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPublicKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.stream.Collectors;
 
 public class BilibiliSecurityHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliSecurityHelper.class);
@@ -32,26 +36,25 @@ public class BilibiliSecurityHelper {
         if (keyEntity.getCode() != 0) {
             throw new IOException(keyEntity.getMessage());
         }
+        //构造无备注的 RSA 公钥字符串
+        String rsaPublicKeyString = Arrays.stream(keyEntity.getData().getKey().split("\n"))
+                .filter(string -> !string.startsWith("-"))
+                .collect(Collectors.joining());
         //解析 RSA 公钥
-        RSAPublicKey rsaPublicKey;
+        PublicKey publicKey;
         try {
-            rsaPublicKey = new RSAPublicKeyImpl(
-                    Base64.getDecoder().decode(
-                            keyEntity.getData().getKey()
-                                    .replace("-----BEGIN PUBLIC KEY-----", "")
-                                    .replace("-----END PUBLIC KEY-----", "")
-                                    .replaceAll("\n", "")
-                                    .getBytes()
-                    )
-            );
-        } catch (InvalidKeyException e) {
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(rsaPublicKeyString.getBytes()));
+            publicKey = KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
+        } catch (NoSuchAlgorithmException e) {
+            throw new Error(e);
+        } catch (InvalidKeySpecException e) {
             throw new IOException("get broken RSA public key");
         }
         //加密密码
         String cipheredPassword;
         try {
             Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             cipheredPassword = new String(
                     Base64.getEncoder().encode(
                             cipher.doFinal((keyEntity.getData().getHash() + password).getBytes())

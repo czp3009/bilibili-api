@@ -31,17 +31,16 @@ public class LiveClient {
         this.userId = userId;
     }
 
-    public synchronized LiveRoomInfoEntity.LiveRoomEntity fetchRoomInfo() throws IOException {
+    private void fetchRoomInfo() throws IOException {
         liveRoomEntity = bilibiliServiceProvider.getLiveService()
                 .getRoomInfo(showRoomId)
                 .execute()
                 .body()
                 .getData();
-        return liveRoomEntity;
     }
 
     public LiveClient connect() throws IOException {
-        LOGGER.info("Try to connect to live room {}", showRoomId);
+        LOGGER.info("Try to fetch info of live room {}", showRoomId);
         fetchRoomInfo();
         LOGGER.info("Get actual room id {}", liveRoomEntity.getRoomId());
 
