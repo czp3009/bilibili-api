@@ -22,7 +22,8 @@ public interface PassportService {
     @POST("api/oauth2/revoke")
     Call<LogoutResponseEntity> logout(@Query("access_token") String accessToken);
 
-    //TODO sso 未测试
+    //TODO sso 尚不明确
+    @Deprecated
     @GET("api/login/sso")
-    Call sso(@Query("access_token") String accessToken);
+    Call sso(@Query("access_token") String accessToken, @Query("gourl") String goUrl);
 }
