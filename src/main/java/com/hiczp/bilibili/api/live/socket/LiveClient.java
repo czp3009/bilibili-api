@@ -1,13 +1,10 @@
 package com.hiczp.bilibili.api.live.socket;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.hiczp.bilibili.api.BilibiliServiceProvider;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
 import com.hiczp.bilibili.api.live.socket.codec.PackageDecoder;
 import com.hiczp.bilibili.api.live.socket.codec.PackageEncoder;
-import com.hiczp.bilibili.api.live.socket.event.ConnectSucceedEvent;
-import com.hiczp.bilibili.api.live.socket.event.ConnectionCloseEvent;
 import com.hiczp.bilibili.api.live.socket.handler.LiveClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -24,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class LiveClient implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClient.class);
@@ -34,12 +30,8 @@ public class LiveClient implements Closeable {
     private final long showRoomId;
     private final long userId;
 
-    private long reconnectLimit = 0;
-    private long reconnectAttempt = 0;
-    private long reconnectDelay = 5L;
-    private boolean userWantClose = false;
-
     private Long roomId;
+
     private EventLoopGroup eventLoopGroup;
     private Channel channel;
 
@@ -47,18 +39,12 @@ public class LiveClient implements Closeable {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = 0;
-        initEventBus();
     }
 
     public LiveClient(BilibiliServiceProvider bilibiliServiceProvider, long showRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = userId;
-        initEventBus();
-    }
-
-    private void initEventBus() {
-        eventBus.register(this);
     }
 
     public synchronized LiveClient connect() throws IOException {
@@ -67,7 +53,9 @@ public class LiveClient implements Closeable {
             return this;
         }
 
-        reconnectAttempt++;
+        if (eventLoopGroup != null) {
+            eventLoopGroup.shutdownGracefully();
+        }
 
         LOGGER.info("Fetching info of live room {}", showRoomId);
         LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity = bilibiliServiceProvider.getLiveService()
@@ -78,9 +66,6 @@ public class LiveClient implements Closeable {
         roomId = liveRoomEntity.getRoomId();
         LOGGER.info("Get actual room id {}", roomId);
 
-        if (eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
-        }
         eventLoopGroup = new NioEventLoopGroup(1);
         LOGGER.debug("Init SocketChannel Bootstrap");
         Bootstrap bootstrap = new Bootstrap()
@@ -125,7 +110,6 @@ public class LiveClient implements Closeable {
 
     @Override
     public synchronized void close() {
-        userWantClose = true;
         if (eventLoopGroup != null) {
             LOGGER.info("Closing connection");
             try {
@@ -134,41 +118,6 @@ public class LiveClient implements Closeable {
                 e.printStackTrace();
             }
             eventLoopGroup = null;
-        }
-    }
-
-    @Subscribe
-    public void onConnectSucceed(ConnectSucceedEvent connectSucceedEvent) {
-        LOGGER.info("Connect succeed");
-        if (userWantClose) {
-            reconnectAttempt = 0;
-        }
-    }
-
-    @Subscribe
-    public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
-        LOGGER.info("Connection closed");
-        if (!userWantClose && reconnectAttempt <= reconnectLimit) {
-            LOGGER.info("Reconnect attempt {}, limit {}", reconnectAttempt, reconnectLimit);
-            LOGGER.info("Auto reconnect after {} second", reconnectDelay);
-            eventLoopGroup.schedule(
-                    () -> {
-                        try {
-                            connect();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    reconnectDelay,
-                    TimeUnit.SECONDS
-            );
-        } else {
-            eventLoopGroup.shutdownGracefully();
-        }
-
-        if (userWantClose) {
-            userWantClose = false;
-            reconnectAttempt = 0;
         }
     }
 
@@ -196,15 +145,5 @@ public class LiveClient implements Closeable {
 
     public Optional<Long> getRoomId() {
         return Optional.of(roomId);
-    }
-
-    public LiveClient setReconnectLimit(long reconnectLimit) {
-        this.reconnectLimit = reconnectLimit;
-        return this;
-    }
-
-    public LiveClient setReconnectDelay(long reconnectDelay) {
-        this.reconnectDelay = reconnectDelay;
-        return this;
     }
 }

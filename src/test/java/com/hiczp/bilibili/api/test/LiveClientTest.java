@@ -25,9 +25,7 @@ public class LiveClientTest {
     @Test
     public void _0_duplicateConnectAndCloseTest() throws Exception {
         LiveClient liveClient = BILIBILI_API
-                .getLiveClient(ROOM_ID)
-                .setReconnectLimit(5)
-                .setReconnectDelay(1);
+                .getLiveClient(ROOM_ID);
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(5000);
@@ -48,12 +46,11 @@ public class LiveClientTest {
         Thread.sleep(5000);
     }
 
+    @Ignore
     @Test
     public void _1_longTimeTest() throws Exception {
         LiveClient liveClient = BILIBILI_API
                 .getLiveClient(ROOM_ID)
-                .setReconnectLimit(5)
-                .setReconnectDelay(1)
                 .registerListener(new Listener());
         LOGGER.debug("Start long-time test");
         LOGGER.debug("Connecting!");
