@@ -64,10 +64,10 @@ uploadArchives {
                 signing.signPom(deployment)
             }
 
-            if (!hasProperty('ossUsername')) {
+            if (!project.hasProperty('ossUsername')) {
                 ext.ossUsername = ''
             }
-            if (!hasProperty('ossPassword')) {
+            if (!project.hasProperty('ossPassword')) {
                 ext.ossPassword = ''
             }
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
