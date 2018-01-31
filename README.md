@@ -13,14 +13,14 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.1'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.2'
 
 ## Maven
 
     <dependency>
       <groupId>com.hiczp</groupId>
       <artifactId>bilibili-api</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
 
 # 名词解释
@@ -83,7 +83,7 @@ LoginException 在 accessToken 错误或过期时抛出
 打印一个直播间的历史弹幕
 
     int roomId = 3;
-    new BilibiliRESTAPI()
+    new BilibiliAPI()
         .getLiveService()
         .getHistoryBulletScreens(roomId)
         .execute()
@@ -105,7 +105,66 @@ API 文档
 
 ## Socket
 ### 获取直播间实时弹幕
-//TODO 尚未实现
+
+    int roomId = 3;
+    LiveClient liveClient = new BilibiliAPI()
+        .getLiveClient(roomId)
+        .registerListener(new MyListener())
+        .connect();
+
+.connect() 会抛出 IOException 当网络故障时.
+
+(connect 以及 close 方法都是阻塞的)
+
+(connect 方法运行结束只代表 socket 确实是连上了, 但是服务器还没有响应进房请求数据包)
+
+(当服务器响应进房请求数据包时才代表真的连上了, 此时会有一个连接成功的事件, 见下文)
+
+事件机制使用 Google Guava EventBus 实现, 监听器不需要继承任何类或者接口.
+
+    public class MyListener {
+        @Subscribe
+        public void onConnectSucceed(ConnectSucceedEvent connectSucceedEvent) {
+            //do something
+        }
+        
+        @Subscribe
+        public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
+            //do something
+        }
+        
+        @Subscribe
+        public void onDanMuMsg(DanMuMsgPackageEvent danMuMsgPackageEvent) {
+            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getDanMuMsgEntity();
+            System.out.pintf("%s: %s\n", danMuMsgEntity.getUsername(), danMuMsgEntity.getMessage());
+        }
+    }
+
+如果持续 40 秒(心跳包为 30 秒)没有收到任何消息, 将视为掉线, 会跟服务器主动断开连接一样(这通常是发送了服务器无法读取的数据包)触发一次 ConnectionCloseEvent.
+
+    liveClient.close();
+
+即可关闭连接.
+
+所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
+
+| 事件 | 抛出条件 |
+| :--- | :--- |
+| ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 |
+| ConnectionCloseEvent | 连接断开(主动或被动) |
+| ConnectSucceedEvent | 进房成功 |
+| DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
+| LivePackageEvent | 收到 LIVE 数据包 |
+| PreparingPackageEvent | 收到 PREPARING 数据包 |
+| SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
+| SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
+| SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
+| UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
+| ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
+| WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
+| WelcomePackageEvent | 收到 WELCOME 数据包 |
+
+事件里面可以取到解析好的 POJO, 然后可以从里面取数据, 见上面的监听器示例.
 
 # 特别说明
 ## 直播间 ID 问题

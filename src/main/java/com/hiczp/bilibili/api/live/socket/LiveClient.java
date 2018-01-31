@@ -1,10 +1,12 @@
 package com.hiczp.bilibili.api.live.socket;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.hiczp.bilibili.api.BilibiliServiceProvider;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
 import com.hiczp.bilibili.api.live.socket.codec.PackageDecoder;
 import com.hiczp.bilibili.api.live.socket.codec.PackageEncoder;
+import com.hiczp.bilibili.api.live.socket.event.ConnectionCloseEvent;
 import com.hiczp.bilibili.api.live.socket.handler.LiveClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -39,12 +41,18 @@ public class LiveClient implements Closeable {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = 0;
+        initEventBus();
     }
 
     public LiveClient(BilibiliServiceProvider bilibiliServiceProvider, long showRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = userId;
+        initEventBus();
+    }
+
+    private void initEventBus() {
+        eventBus.register(this);
     }
 
     public synchronized LiveClient connect() throws IOException {
@@ -119,6 +127,11 @@ public class LiveClient implements Closeable {
             }
             eventLoopGroup = null;
         }
+    }
+
+    @Subscribe
+    public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
+        eventLoopGroup.shutdownGracefully();
     }
 
     public EventBus getEventBus() {
