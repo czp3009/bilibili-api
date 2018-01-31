@@ -11,13 +11,12 @@ import org.slf4j.LoggerFactory;
 public class UserInfoTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoTest.class);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    private final BilibiliAPI bilibiliAPI = Config.getBilibiliAPI();
+    private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
 
     @Test
     public void getUserInfo() throws Exception {
-        InfoEntity infoEntity = bilibiliAPI.getPassportService()
-                .getInfo(bilibiliAPI.getBilibiliAccount().getAccessToken())
+        InfoEntity infoEntity = BILIBILI_API.getPassportService()
+                .getInfo(BILIBILI_API.getBilibiliAccount().getAccessToken())
                 .execute()
                 .body();
         LOGGER.debug("UserInfo below: \n{}", GSON.toJson(infoEntity));

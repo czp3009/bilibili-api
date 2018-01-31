@@ -38,7 +38,7 @@ public class WelcomeEntity {
          */
 
         @SerializedName("uid")
-        private int uid;
+        private long uid;
         @SerializedName("uname")
         private String userName;
         @SerializedName("is_admin")
@@ -46,11 +46,11 @@ public class WelcomeEntity {
         @SerializedName("vip")
         private int vip;
 
-        public int getUid() {
+        public long getUid() {
             return uid;
         }
 
-        public void setUid(int uid) {
+        public void setUid(long uid) {
             this.uid = uid;
         }
 
@@ -62,11 +62,11 @@ public class WelcomeEntity {
             this.userName = userName;
         }
 
-        public boolean isIsAdmin() {
+        public boolean isAdmin() {
             return isAdmin;
         }
 
-        public void setIsAdmin(boolean isAdmin) {
+        public void setAdmin(boolean isAdmin) {
             this.isAdmin = isAdmin;
         }
 

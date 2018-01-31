@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SysMSGEntity {
+public class SysMsgEntity {
     /**
      * cmd : SYS_MSG
      * msg : 【瑾然-】:?在直播间:?【3939852】:?赠送 小电视一个，请前往抽奖
@@ -30,11 +30,11 @@ public class SysMSGEntity {
     @SerializedName("url")
     private String url;
     @SerializedName("roomid")
-    private int roomId;
+    private long roomId;
     @SerializedName("real_roomid")
-    private int realRoomId;
+    private long realRoomId;
     @SerializedName("rnd")
-    private int rnd;
+    private long rnd;
     @SerializedName("tv_id")
     private String tvId;
 
@@ -86,27 +86,27 @@ public class SysMSGEntity {
         this.url = url;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(long roomId) {
         this.roomId = roomId;
     }
 
-    public int getRealRoomId() {
+    public long getRealRoomId() {
         return realRoomId;
     }
 
-    public void setRealRoomId(int realRoomId) {
+    public void setRealRoomId(long realRoomId) {
         this.realRoomId = realRoomId;
     }
 
-    public int getRnd() {
+    public long getRnd() {
         return rnd;
     }
 
-    public void setRnd(int rnd) {
+    public void setRnd(long rnd) {
         this.rnd = rnd;
     }
 

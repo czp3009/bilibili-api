@@ -75,9 +75,9 @@ public class SendGiftEntity {
         @SerializedName("rcost")
         private int rCost;
         @SerializedName("uid")
-        private int uid;
+        private long uid;
         @SerializedName("timestamp")
-        private int timestamp;
+        private long timestamp;
         @SerializedName("giftId")
         private int giftId;
         @SerializedName("giftType")
@@ -157,19 +157,19 @@ public class SendGiftEntity {
             this.rCost = rCost;
         }
 
-        public int getUid() {
+        public long getUid() {
             return uid;
         }
 
-        public void setUid(int uid) {
+        public void setUid(long uid) {
             this.uid = uid;
         }
 
-        public int getTimestamp() {
+        public long getTimestamp() {
             return timestamp;
         }
 
-        public void setTimestamp(int timestamp) {
+        public void setTimestamp(long timestamp) {
             this.timestamp = timestamp;
         }
 

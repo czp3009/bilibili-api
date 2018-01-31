@@ -14,7 +14,8 @@ import java.io.InputStreamReader;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        UserInfoTest.class
+        UserInfoTest.class,
+        LiveClientTest.class
 })
 public class RuleSuite {
     @ClassRule

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
-public class DanMuMSGEntity {
+public class DanMuMsgEntity {
     private static final Gson GSON = new Gson();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {
     }.getType();
@@ -76,8 +76,8 @@ public class DanMuMSGEntity {
     }
 
     //得到发送者的用户 ID
-    public int getUserId() {
-        return info.get(2).getAsJsonArray().get(0).getAsInt();
+    public long getUserId() {
+        return info.get(2).getAsJsonArray().get(0).getAsLong();
     }
 
     //得到发送者的用户名

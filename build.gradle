@@ -24,7 +24,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     // https://mvnrepository.com/artifact/io.netty/netty-all
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.19.Final'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.20.Final'
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '23.6-jre'
 }

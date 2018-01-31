@@ -55,7 +55,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     @Override
     public PassportService getPassportService() {
         if (passportService == null) {
-            LOGGER.debug("Init PassportService in BilibiliAPI instance {}", this.hashCode());
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                     .addInterceptor(new AddFixedParamsInterceptor(
                             "build", bilibiliClientProperties.getBuild(),
@@ -84,7 +83,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     @Override
     public LiveService getLiveService() {
         if (liveService == null) {
-            LOGGER.debug("Init LiveService in BilibiliAPI instance {}", this.hashCode());
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(new AddFixedHeadersInterceptor(
                             "Buvid", bilibiliClientProperties.getBuvId(),

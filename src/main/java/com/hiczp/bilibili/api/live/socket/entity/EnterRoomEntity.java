@@ -4,28 +4,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class EnterRoomEntity {
     @SerializedName("roomid")
-    private int roomId;
+    private long roomId;
     @SerializedName("uid")
-    private int userId;
+    private long userId;
 
-    public EnterRoomEntity(int roomId, int userId) {
+    public EnterRoomEntity(long roomId, long userId) {
         this.roomId = roomId;
         this.userId = userId;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(long roomId) {
         this.roomId = roomId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 }
