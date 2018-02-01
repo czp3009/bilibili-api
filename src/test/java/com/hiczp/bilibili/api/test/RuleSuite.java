@@ -7,17 +7,18 @@ import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import javax.security.auth.login.LoginException;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        LoginTest.class,
         UserInfoTest.class,
         LiveClientTest.class,
         SsoTest.class,
-        SendBulletScreenTest.class
+        SendBulletScreenTest.class,
+        SecurityHelperTest.class,
+        LogoutTest.class
 })
 public class RuleSuite {
     @ClassRule
@@ -37,19 +38,6 @@ public class RuleSuite {
             } catch (NullPointerException e) {
                 //抛出异常就可以取消测试
                 throw new RuntimeException("Please create config file before tests");
-            }
-
-            Config config = Config.getInstance();
-            //登录
-            Config.getBilibiliAPI().login(config.getUsername(), config.getPassword());
-        }
-
-        @Override
-        protected void after() {
-            try {
-                Config.getBilibiliAPI().logout();
-            } catch (IOException | LoginException e) {
-                e.printStackTrace();
             }
         }
     };

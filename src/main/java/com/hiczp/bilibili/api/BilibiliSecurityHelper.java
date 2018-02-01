@@ -5,8 +5,6 @@ import com.hiczp.bilibili.api.passport.entity.KeyEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -25,8 +23,6 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 
 public class BilibiliSecurityHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliSecurityHelper.class);
-
     public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
                                             String username,
                                             String password) throws IOException, LoginException {
@@ -72,7 +68,6 @@ public class BilibiliSecurityHelper {
         //判断返回值
         switch (loginResponseEntity.getCode()) {
             case ServerErrorCode.Common.OK: {
-                LOGGER.info("Login succeed with username '{}', userId: {}", username, loginResponseEntity.getData().getMid());
                 return loginResponseEntity;
             }
             case ServerErrorCode.Passport.USERNAME_OR_PASSWORD_INVALID: {
@@ -80,6 +75,9 @@ public class BilibiliSecurityHelper {
             }
             case ServerErrorCode.Passport.CANT_DECRYPT_RSA_PASSWORD: {
                 throw new LoginException("password error or hash expired");
+            }
+            case ServerErrorCode.Passport.CAPTCHA_NOT_MATCH: {
+                throw new LoginException(loginResponseEntity.getMessage());
             }
             default: {
                 //其他错误码
@@ -99,13 +97,9 @@ public class BilibiliSecurityHelper {
                 .body();
         switch (refreshTokenResponseEntity.getCode()) {
             case ServerErrorCode.Common.OK: {
-                LOGGER.info("Access token refreshed, Expires in {} seconds later", refreshTokenResponseEntity.getData().getExpiresIn());
                 return refreshTokenResponseEntity;
             }
-            case ServerErrorCode.Common.NO_LOGIN: {
-                throw new LoginException("access token can't be empty");
-            }
-            case ServerErrorCode.Passport.ACCESS_TOKEN_NOT_FOUND: {
+            case ServerErrorCode.Passport.NO_LOGIN: {
                 throw new LoginException("access token invalid");
             }
             case ServerErrorCode.Passport.REFRESH_TOKEN_NOT_MATCH: {
@@ -125,10 +119,7 @@ public class BilibiliSecurityHelper {
             case ServerErrorCode.Common.OK: {
                 return logoutResponseEntity;
             }
-            case ServerErrorCode.Common.NO_LOGIN: {
-                throw new LoginException("access token can't be empty or invalid");
-            }
-            case ServerErrorCode.Passport.ACCESS_TOKEN_NOT_FOUND: {
+            case ServerErrorCode.Passport.NO_LOGIN: {
                 throw new LoginException("access token invalid");
             }
             default: {
