@@ -128,6 +128,25 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 username,
                 password
         );
+        //判断返回值
+        switch (loginResponseEntity.getCode()) {
+            case ServerErrorCode.Common.OK: {
+
+            }
+            break;
+            case ServerErrorCode.Passport.USERNAME_OR_PASSWORD_INVALID: {
+                throw new LoginException("username or password invalid");
+            }
+            case ServerErrorCode.Passport.CANT_DECRYPT_RSA_PASSWORD: {
+                throw new LoginException("password error or hash expired");
+            }
+            case ServerErrorCode.Passport.CAPTCHA_NOT_MATCH: {
+                throw new LoginException(loginResponseEntity.getMessage());
+            }
+            default: {
+                throw new IOException(loginResponseEntity.getMessage());
+            }
+        }
         bilibiliAccount.copyFrom(loginResponseEntity.toBilibiliAccount());
         LOGGER.info("Login succeed with username: {}", username);
         return loginResponseEntity;
@@ -140,6 +159,21 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 bilibiliAccount.getAccessToken(),
                 bilibiliAccount.getRefreshToken()
         );
+        switch (refreshTokenResponseEntity.getCode()) {
+            case ServerErrorCode.Common.OK: {
+
+            }
+            break;
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("access token invalid");
+            }
+            case ServerErrorCode.Passport.REFRESH_TOKEN_NOT_MATCH: {
+                throw new LoginException("access token and refresh token mismatch");
+            }
+            default: {
+                throw new IOException(refreshTokenResponseEntity.getMessage());
+            }
+        }
         bilibiliAccount.copyFrom(refreshTokenResponseEntity.toBilibiliAccount());
         LOGGER.info("RefreshToken succeed with userId: {}", bilibiliAccount.getUserId());
         return refreshTokenResponseEntity;
@@ -149,6 +183,18 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         LOGGER.info("Logout attempting with userId '{}'", bilibiliAccount.getUserId());
         Long userId = bilibiliAccount.getUserId();
         LogoutResponseEntity logoutResponseEntity = BilibiliSecurityHelper.logout(this, bilibiliAccount.getAccessToken());
+        switch (logoutResponseEntity.getCode()) {
+            case ServerErrorCode.Common.OK: {
+
+            }
+            break;
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("access token invalid");
+            }
+            default: {
+                throw new IOException(logoutResponseEntity.getMessage());
+            }
+        }
         bilibiliAccount.reset();
         LOGGER.info("Logout succeed with userId: {}", userId);
         return logoutResponseEntity;

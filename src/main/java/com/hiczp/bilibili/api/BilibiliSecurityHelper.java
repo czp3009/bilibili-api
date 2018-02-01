@@ -10,7 +10,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 public class BilibiliSecurityHelper {
     public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
                                             String username,
-                                            String password) throws IOException, LoginException {
+                                            String password) throws IOException {
         PassportService passportService = bilibiliServiceProvider.getPassportService();
         KeyEntity keyEntity = passportService.getKey().execute().body();
         //服务器返回异常错误码
@@ -62,70 +61,23 @@ public class BilibiliSecurityHelper {
             throw new IOException("get broken RSA public key");
         }
         //发起登录请求
-        LoginResponseEntity loginResponseEntity = passportService.login(
-                username, cipheredPassword
-        ).execute().body();
-        //判断返回值
-        switch (loginResponseEntity.getCode()) {
-            case ServerErrorCode.Common.OK: {
-                return loginResponseEntity;
-            }
-            case ServerErrorCode.Passport.USERNAME_OR_PASSWORD_INVALID: {
-                throw new LoginException("username or password invalid");
-            }
-            case ServerErrorCode.Passport.CANT_DECRYPT_RSA_PASSWORD: {
-                throw new LoginException("password error or hash expired");
-            }
-            case ServerErrorCode.Passport.CAPTCHA_NOT_MATCH: {
-                throw new LoginException(loginResponseEntity.getMessage());
-            }
-            default: {
-                //其他错误码
-                throw new IOException(loginResponseEntity.getMessage());
-            }
-        }
+        return passportService.login(username, cipheredPassword)
+                .execute()
+                .body();
     }
 
     public static RefreshTokenResponseEntity refreshToken(BilibiliServiceProvider bilibiliServiceProvider,
                                                           String accessToken,
-                                                          String refreshToken) throws IOException, LoginException {
-        RefreshTokenResponseEntity refreshTokenResponseEntity = bilibiliServiceProvider.getPassportService()
-                .refreshToken(
-                        accessToken,
-                        refreshToken
-                ).execute()
+                                                          String refreshToken) throws IOException {
+        return bilibiliServiceProvider.getPassportService().refreshToken(accessToken, refreshToken)
+                .execute()
                 .body();
-        switch (refreshTokenResponseEntity.getCode()) {
-            case ServerErrorCode.Common.OK: {
-                return refreshTokenResponseEntity;
-            }
-            case ServerErrorCode.Passport.NO_LOGIN: {
-                throw new LoginException("access token invalid");
-            }
-            case ServerErrorCode.Passport.REFRESH_TOKEN_NOT_MATCH: {
-                throw new LoginException("access token and refresh token mismatch");
-            }
-            default: {
-                //其他错误码
-                throw new IOException(refreshTokenResponseEntity.getMessage());
-            }
-        }
     }
 
     public static LogoutResponseEntity logout(BilibiliServiceProvider bilibiliServiceProvider,
-                                              String accessToken) throws IOException, LoginException {
-        LogoutResponseEntity logoutResponseEntity = bilibiliServiceProvider.getPassportService().logout(accessToken).execute().body();
-        switch (logoutResponseEntity.getCode()) {
-            case ServerErrorCode.Common.OK: {
-                return logoutResponseEntity;
-            }
-            case ServerErrorCode.Passport.NO_LOGIN: {
-                throw new LoginException("access token invalid");
-            }
-            default: {
-                //其他错误码
-                throw new IOException(logoutResponseEntity.getMessage());
-            }
-        }
+                                              String accessToken) throws IOException {
+        return bilibiliServiceProvider.getPassportService().logout(accessToken)
+                .execute()
+                .body();
     }
 }
