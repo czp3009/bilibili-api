@@ -18,7 +18,7 @@ import java.util.List;
 public class LiveClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClientTest.class);
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
-    private static final int ROOM_ID = 3;
+    private static final long ROOM_ID = 3;
     private static final long TEST_TIME = 70 * 1000;
 
     @Ignore

@@ -16,7 +16,8 @@ import java.io.InputStreamReader;
 @Suite.SuiteClasses({
         UserInfoTest.class,
         LiveClientTest.class,
-        SsoTest.class
+        SsoTest.class,
+        SendBulletScreenTest.class
 })
 public class RuleSuite {
     @ClassRule

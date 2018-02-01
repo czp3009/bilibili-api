@@ -37,6 +37,7 @@ public class BulletScreenEntity {
 
     private String playTime = "0.0";
 
+    //实际上并不需要包含 mid 就可以正常发送弹幕, 但是真实的 Android 客户端确实发送了 mid
     public BulletScreenEntity(long cid, long mid, String message) {
         this.cid = cid;
         this.mid = mid;

@@ -97,6 +97,24 @@ LoginException 在 accessToken 错误或过期时抛出
                 liveHistoryBulletScreenEntity.getText())
         );
 
+发送一条弹幕到指定直播间
+
+    String username = "yourUsername";
+    String password = "yourPassword";
+    int roomId = 3;
+    
+    BilibiliAPI bilibiliAPI = new BilibiliAPI()
+        .login(username, password);
+    
+    bilibiliAPI.getLiveService()
+        .sendBulletScreen(
+            new BulletScreenEntity(
+                    roomId,
+                    bilibiliAPI.getBilibiliAccount().getUserId(),   //实际上并不需要包含 mid 就可以正常发送弹幕, 但是真实的 Android 客户端确实发送了 mid
+                    "这是自动发送的弹幕"
+            )
+        ).execute();
+
 (如果要调用需要鉴权的 API, 需要先登录)
 
 API 文档
@@ -115,6 +133,8 @@ API 文档
 .connect() 会抛出 IOException 当网络故障时.
 
 (connect 以及 close 方法都是阻塞的)
+
+使用 .getLiveClient() 前可以先登录也可以不登陆直接用, 如果 API 已经登录, 那么进房数据包中会带有用户ID, 尚不明确有什么作用, 可能与一些统计有关.
 
 (connect 方法运行结束只代表 socket 确实是连上了, 但是服务器还没有响应进房请求数据包)
 
