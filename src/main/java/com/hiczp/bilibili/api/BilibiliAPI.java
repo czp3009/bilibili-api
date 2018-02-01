@@ -67,7 +67,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
                     .addInterceptor(new ErrorResponseConverterInterceptor())
-                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
             passportService = new Retrofit.Builder()
@@ -108,7 +108,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
                     .addInterceptor(new ErrorResponseConverterInterceptor())
-                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
             liveService = new Retrofit.Builder()
