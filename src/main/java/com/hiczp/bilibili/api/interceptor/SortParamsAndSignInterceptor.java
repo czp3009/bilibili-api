@@ -44,8 +44,10 @@ public class SortParamsAndSignInterceptor implements Interceptor {
         nameAndValues.add(String.format("%s=%s", "sign", calculateSign(nameAndValues)));
         return chain.proceed(
                 request.newBuilder()
-                        .url(httpUrl.newBuilder().encodedQuery(generateQuery(nameAndValues)).build())
-                        .build()
+                        .url(httpUrl.newBuilder()
+                                .encodedQuery(generateQuery(nameAndValues))
+                                .build()
+                        ).build()
         );
     }
 
