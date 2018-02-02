@@ -11,7 +11,7 @@ public class BilibiliAccount implements BilibiliSecurityContext {
 
     }
 
-    public BilibiliAccount(String accessToken, String refreshToken, long userId, long expirationTime, long loginTime) {
+    public BilibiliAccount(String accessToken, String refreshToken, Long userId, Long expirationTime, Long loginTime) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.userId = userId;
