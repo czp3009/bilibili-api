@@ -1,6 +1,5 @@
 package com.hiczp.bilibili.api;
 
-import com.hiczp.bilibili.api.passport.PassportService;
 import com.hiczp.bilibili.api.passport.entity.KeyEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
@@ -22,11 +21,9 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 
 public class BilibiliSecurityHelper {
-    public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
-                                            String username,
-                                            String password) throws IOException {
-        PassportService passportService = bilibiliServiceProvider.getPassportService();
-        KeyEntity keyEntity = passportService.getKey().execute().body();
+    private static String cipherPassword(BilibiliServiceProvider bilibiliServiceProvider,
+                                         String password) throws IOException {
+        KeyEntity keyEntity = bilibiliServiceProvider.getPassportService().getKey().execute().body();
         //服务器返回异常错误码
         if (keyEntity.getCode() != 0) {
             throw new IOException(keyEntity.getMessage());
@@ -60,9 +57,27 @@ public class BilibiliSecurityHelper {
         } catch (InvalidKeyException e) {
             throw new IOException("get broken RSA public key");
         }
-        //发起登录请求
-        return passportService.login(username, cipheredPassword)
-                .execute()
+        return cipheredPassword;
+    }
+
+    public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
+                                            String username,
+                                            String password) throws IOException {
+        return login(bilibiliServiceProvider, username, password, null, null);
+    }
+
+    public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
+                                            String username,
+                                            String password,
+                                            String captcha,
+                                            String cookie) throws IOException {
+        return bilibiliServiceProvider.getPassportService()
+                .login(
+                        username,
+                        cipherPassword(bilibiliServiceProvider, password),
+                        captcha,
+                        cookie
+                ).execute()
                 .body();
     }
 

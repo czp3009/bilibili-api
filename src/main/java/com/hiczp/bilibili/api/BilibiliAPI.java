@@ -7,6 +7,7 @@ import com.hiczp.bilibili.api.passport.PassportService;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
+import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 
-//TODO 尚未实现自动 refreshToken 的拦截器
 public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
 
@@ -66,7 +66,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                     ))
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseConverterInterceptor())
+                    .addInterceptor(new ErrorResponseBodyConverterInterceptor())
                     .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
@@ -107,7 +107,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                     .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseConverterInterceptor())
+                    .addInterceptor(new ErrorResponseBodyConverterInterceptor())
                     .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
@@ -121,12 +121,21 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         return liveService;
     }
 
-    public LoginResponseEntity login(String username, String password) throws IOException, LoginException {
+    public LoginResponseEntity login(String username, String password) throws IOException, LoginException, CaptchaMismatchException {
+        return login(username, password, null, null);
+    }
+
+    public LoginResponseEntity login(String username,
+                                     String password,
+                                     String captcha,
+                                     String cookie) throws IOException, LoginException, CaptchaMismatchException {
         LOGGER.info("Login attempting with username '{}'", username);
         LoginResponseEntity loginResponseEntity = BilibiliSecurityHelper.login(
                 this,
                 username,
-                password
+                password,
+                captcha,
+                cookie
         );
         //判断返回值
         switch (loginResponseEntity.getCode()) {
@@ -141,7 +150,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 throw new LoginException("password error or hash expired");
             }
             case ServerErrorCode.Passport.CAPTCHA_NOT_MATCH: {
-                throw new LoginException(loginResponseEntity.getMessage());
+                throw new CaptchaMismatchException(loginResponseEntity.getMessage());
             }
             default: {
                 throw new IOException(loginResponseEntity.getMessage());

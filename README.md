@@ -50,6 +50,8 @@ IOException 在网络故障时抛出
 
 LoginException 在用户名密码不匹配时抛出
 
+CaptchaMismatchException 在验证码不正确时抛出, 见下文 [验证码问题](#验证码问题) 一节
+
 login 方法的返回值为 LoginResponseEntity 类型, 使用
 
     .login(...).toBilibiliAccount()
@@ -78,6 +80,66 @@ LoginException 在 token 错误,或者 refreshToken 错误或过期时抛出.
 IOException 在网络故障时抛出
 
 LoginException 在 accessToken 错误或过期时抛出
+
+### 验证码问题
+当对一个账户在短时间内(时长不明确)尝试多次错误的登录(密码错误)后, 再尝试登录该账号, 会被要求验证码.
+
+此时登录操作会抛出 CaptchaMismatchException 异常, 表示必须调用另一个接口
+
+    public LoginResponseEntity login(String username,
+                                     String password,
+                                     String captcha,
+                                     String cookie) throws IOException, LoginException, CaptchaMismatchException
+
+这个接口将带 captcha 参数地去登录, 注意这里还有一个 cookie 参数.
+
+下面先给出一段正确使用该接口的代码, 随后会解释其步骤
+
+    String username = "yourUsername";
+    String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    try {
+        bilibiliAPI.login(username, password);
+    } catch (CaptchaMismatchException e) {  //如果该账号现在需要验证码来进行登录, 就会抛出异常
+        final cookie = "sid=123456";    //自己造一个 cookie 或者从服务器取得
+        Response response = bilibiliAPI.getPassportService()
+                .getCaptcha(cookie)
+                .execute();
+        InputStream inputStream = response.body().byteStream();
+        String captcha = letUserInputCaptcha(inputStream);  //让用户根据图片输入验证码
+        bilibiliAPI.login(
+            username,
+            password,
+            captcha,
+            cookie
+        );
+    }
+
+验证码是通过访问 https://passport.bilibili.com/captcha 这个地址获得的.
+
+访问这个地址需要带有一个 cookie, cookie 里面要有 "sid=xxx", 然后服务端会记录下对应关系, 也就是 sid xxx 对应验证码 yyy, 然后就可以验证了.
+
+我们会发现, 访问任何 passport.bilibili.com 下面的地址, 都会被分发一个 cookie, 里面带有 sid 的值. 我们访问 /captcha 也会被分发一个 cookie, 但是这个通过访问 captcha 而被分发得到的 cookie 和访问得到的验证码图片, 没有对应关系. 推测是因为 cookie 的发放在请求进入甚至模块运行完毕后才进行.
+
+所以我们如果不带 cookie 去访问 /captcha, 我们这样拿到的由 /captcha 返回的 cookie 和 验证码, 是不匹配的.
+
+所以我们要先从其他地方获取一个 cookie.
+
+我们可以用 /api/oauth2/getKey(获取加密密码用的 hash 和公钥) 来获取一个 cookie
+
+    String cookie = bilibiliAPI.getPassportService()
+        .getKey()
+        .execute()
+        .headers()
+        .get("Set-cookie");
+
+/captcha 不验证 cookie 正确性, 我们可以直接使用假的 cookie (比如 123456)对其发起验证码请求, 它会记录下这个假的 cookie 和 验证码 的对应关系, 一样能验证成功. 但是不推荐这么做.
+
+简单地说, 只要我们是带 cookie 访问 /captcha 的, 那么我们得到的验证码, 是和这个 cookie 绑定的. 我们接下去用这个 cookie 和 这个验证码的值 去进行带验证码的登录, 就可以成功登陆.
+
+至于验证码怎么处理, 可以显示给最终用户, 让用户来输入, 或者用一些预训练模型自动识别验证码.
+
+这个带验证码的登录接口也会继续抛出 CaptchaMismatchException, 如果验证码输入错误的话.
 
 ### API 调用示例
 打印一个直播间的历史弹幕

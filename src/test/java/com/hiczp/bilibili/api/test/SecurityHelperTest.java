@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hiczp.bilibili.api.BilibiliAPI;
 import com.hiczp.bilibili.api.BilibiliSecurityHelper;
+import com.hiczp.bilibili.api.ServerErrorCode;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import org.junit.Test;
@@ -22,6 +23,10 @@ public class SecurityHelperTest {
                 CONFIG.getUsername(),
                 CONFIG.getPassword()
         );
+        if (loginResponseEntity.getCode() == ServerErrorCode.Passport.CAPTCHA_NOT_MATCH) {
+            LOGGER.error("This account need captcha to login, ignore test");
+            return;
+        }
         LOGGER.info("{}", GSON.toJson(loginResponseEntity));
         BilibiliSecurityHelper.logout(new BilibiliAPI(), loginResponseEntity.getData().getAccessToken());
     }
@@ -43,6 +48,10 @@ public class SecurityHelperTest {
                 CONFIG.getUsername(),
                 CONFIG.getPassword()
         );
+        if (loginResponseEntity.getCode() == ServerErrorCode.Passport.CAPTCHA_NOT_MATCH) {
+            LOGGER.error("This account need captcha to login, ignore test");
+            return;
+        }
         RefreshTokenResponseEntity refreshTokenResponseEntity = BilibiliSecurityHelper.refreshToken(
                 new BilibiliAPI(),
                 loginResponseEntity.getData().getAccessToken(),
@@ -69,6 +78,10 @@ public class SecurityHelperTest {
                 CONFIG.getUsername(),
                 CONFIG.getPassword()
         );
+        if (loginResponseEntity.getCode() == ServerErrorCode.Passport.CAPTCHA_NOT_MATCH) {
+            LOGGER.error("This account need captcha to login, ignore test");
+            return;
+        }
         String accessToken = loginResponseEntity.getData().getAccessToken();
         RefreshTokenResponseEntity refreshTokenResponseEntity = BilibiliSecurityHelper.refreshToken(
                 new BilibiliAPI(),
