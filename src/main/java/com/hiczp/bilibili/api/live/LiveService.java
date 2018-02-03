@@ -45,29 +45,21 @@ public interface LiveService {
     Call<UserInfoEntity> getUserInfo();
 
     //这里的 cid 必须用实际的 room_id, 不能使用 show_room_id, 否则得不到 playUrl. 实际 room_id 要首先通过 getRoomInfo() 获取
-    //outputType 为固定值 "json", 否则返回的内容是 XML, 如下所示(本 API 无法解析, 将直接抛出 JsonParseException)
-    //<video>
-    //  <result>suee</result>
-    //  <timelength>0</timelength>
-    //  <stream><![CDATA[http]]></stream>
-    //  <src>0</src>
-    //  <durl>
-    //    <order>1</order>
-    //    <length>0</length>
-    //    <url><![CDATA[http://bvc.live-play.acgvideo.com/live-bvc/968975/live_11153765_9369560_1500.flv?wsSecret=42bc37176fc35d4dd216f85dab65764b&wsTime=1510309331]]></url>
-    //    <b1url><![CDATA[http://txy.live-play.acgvideo.com/live-txy/305517/live_11153765_9369560_1500.flv?wsSecret=98c58195769412b97118664a488647dc&wsTime=1510309331]]></b1url>
-    //    <b2url><![CDATA[http://qn.live-play.acgvideo.com/live-qn/143985/live_11153765_9369560_1500.flv?wsSecret=876c89db6d97d3516b4e53f1866b8cc7&wsTime=1510309331]]></b2url>
-    //    <b3url><![CDATA[http://alx.live-play.acgvideo.com/live-alx/744409/live_11153765_9369560_1500.flv?wsSecret=769f731c9a75f35cc1e0f7f1e14e5c9e&wsTime=1510309331]]></b3url>
-    //  </durl>
-    //  <accept_quality><![CDATA[3,4]]></accept_quality>
-    //  <current_quality>3</current_quality>
-    //</video>
+    //outputType 为固定值 "json", 否则返回的内容是 XML(本 API 无法解析, 将直接抛出 JsonParseException)
     @GET("api/playurl")
     Call<PlayUrlEntity> getPlayUrl(@Query("cid") long cid, @Query("otype") String outputType);
+
+    default Call<PlayUrlEntity> getPlayUrl(long cid) {
+        return getPlayUrl(cid, "json");
+    }
 
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
     Call<SendOnlineHeartResponseEntity> sendOnlineHeart(@Field("room_id") long roomId, @Field("scale") String scale);
+
+    default Call<SendOnlineHeartResponseEntity> sendOnlineHeart(long roomId) {
+        return sendOnlineHeart(roomId, "xxhdpi");
+    }
 
     @POST("api/sendmsg")
     @FormUrlEncoded
