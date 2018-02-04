@@ -13,6 +13,10 @@ public interface LiveService {
     @GET("AppRoom/danmuConfig")
     Call<BulletScreenConfigEntity> getBulletScreenConfig(@Query("type") String type);
 
+    default Call<BulletScreenConfigEntity> getBulletScreenConfig() {
+        return getBulletScreenConfig("all");
+    }
+
     @GET("AppRoom/msg")
     Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") long roomId);
 
