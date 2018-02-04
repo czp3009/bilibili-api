@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
         SsoTest.class,
         SendBulletScreenTest.class,
         SecurityHelperTest.class,
+        AuthenticatorTest.class,
         LogoutTest.class
 })
 public class RuleSuite {

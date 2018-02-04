@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.interceptor;
 
+import com.google.common.base.Strings;
 import com.hiczp.bilibili.api.BilibiliSecurityContext;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -20,8 +21,9 @@ public class AddAccessKeyInterceptor implements Interceptor {
         Request request = chain.request();
         HttpUrl.Builder httpUrlBuilder = request.url().newBuilder();
         String accessKey = bilibiliSecurityContext.getAccessToken();
-        if (accessKey != null && accessKey.length() != 0) {
-            httpUrlBuilder.addQueryParameter("access_key", accessKey);
+        if (!Strings.isNullOrEmpty(accessKey)) {
+            httpUrlBuilder.removeAllQueryParameters("access_key")
+                    .addQueryParameter("access_key", accessKey);
         }
         return chain.proceed(request.newBuilder().url(httpUrlBuilder.build()).build());
     }

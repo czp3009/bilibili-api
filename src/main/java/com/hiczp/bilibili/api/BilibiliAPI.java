@@ -28,6 +28,10 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     private final BilibiliClientProperties bilibiliClientProperties;
     private final BilibiliAccount bilibiliAccount;
 
+    //用于阻止进行多次错误的 refreshToken 操作
+    private String invalidToken;
+    private String invalidRefreshToken;
+
     private PassportService passportService;
     private LiveService liveService;
 
@@ -43,12 +47,12 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
 
     public BilibiliAPI(BilibiliAccount bilibiliAccount) {
         this.bilibiliClientProperties = BilibiliClientProperties.defaultSetting();
-        this.bilibiliAccount = bilibiliAccount;
+        this.bilibiliAccount = new BilibiliAccount(bilibiliAccount);
     }
 
     public BilibiliAPI(BilibiliClientProperties bilibiliClientProperties, BilibiliAccount bilibiliAccount) {
         this.bilibiliClientProperties = bilibiliClientProperties;
-        this.bilibiliAccount = bilibiliAccount;
+        this.bilibiliAccount = new BilibiliAccount(bilibiliAccount);
     }
 
     //TODO 不明确客户端访问 passport.bilibili.com 时使用的 UA
@@ -66,7 +70,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                     ))
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseBodyConverterInterceptor())
+                    .addInterceptor(new ErrorResponseConverterInterceptor())
                     .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
@@ -88,10 +92,12 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                             "Buvid", bilibiliClientProperties.getBuvId(),
                             "User-Agent", "Mozilla/5.0 BiliDroid/5.15.0 (bbcallen@gmail.com)",
                             "Device-ID", bilibiliClientProperties.getHardwareId()
-                    )).addInterceptor(new AddDynamicHeadersInterceptor(
+                    ))
+                    .addInterceptor(new AddDynamicHeadersInterceptor(
                             //Display-ID 的值在未登录前为 Buvid-客户端启动时间, 在登录后为 mid-客户端启动时间
                             () -> "Display-ID", () -> String.format("%s-%d", bilibiliAccount.getUserId() == null ? bilibiliClientProperties.getBuvId() : bilibiliAccount.getUserId(), apiInitTime)
-                    )).addInterceptor(new AddFixedParamsInterceptor(
+                    ))
+                    .addInterceptor(new AddFixedParamsInterceptor(
                             "_device", "android",
                             "_hwid", bilibiliClientProperties.getHardwareId(),
                             "build", bilibiliClientProperties.getBuild(),
@@ -100,14 +106,22 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                             "scale", bilibiliClientProperties.getScale(),
                             "src", "google",
                             "version", bilibiliClientProperties.getVersion()
-                    )).addInterceptor(new AddDynamicParamsInterceptor(
+                    ))
+                    .addInterceptor(new AddDynamicParamsInterceptor(
                             () -> "ts", () -> Long.toString(Instant.now().getEpochSecond()),
                             () -> "trace_id", () -> new SimpleDateFormat("yyyyMMddHHmm000ss").format(new Date())
                     ))
-                    .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
                     .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
+                    .addInterceptor(new RefreshTokenInterceptor(
+                            this,
+                            ServerErrorCode.Common.UNAUTHORIZED,
+                            ServerErrorCode.Live.USER_NO_LOGIN,
+                            ServerErrorCode.Live.PLEASE_LOGIN,
+                            ServerErrorCode.Live.NO_LOGIN
+                    ))
+                    .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
                     .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseBodyConverterInterceptor())
+                    .addInterceptor(new ErrorResponseConverterInterceptor())
                     .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build();
 
@@ -125,10 +139,10 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         return login(username, password, null, null);
     }
 
-    public LoginResponseEntity login(String username,
-                                     String password,
-                                     String captcha,
-                                     String cookie) throws IOException, LoginException, CaptchaMismatchException {
+    public synchronized LoginResponseEntity login(String username,
+                                                  String password,
+                                                  String captcha,
+                                                  String cookie) throws IOException, LoginException, CaptchaMismatchException {
         LOGGER.info("Login attempting with username '{}'", username);
         LoginResponseEntity loginResponseEntity = BilibiliSecurityHelper.login(
                 this,
@@ -150,7 +164,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 throw new LoginException("password error or hash expired");
             }
             case ServerErrorCode.Passport.CAPTCHA_NOT_MATCH: {
-                throw new CaptchaMismatchException(loginResponseEntity.getMessage());
+                throw new CaptchaMismatchException("captcha mismatch");
             }
             default: {
                 throw new IOException(loginResponseEntity.getMessage());
@@ -161,7 +175,11 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         return loginResponseEntity;
     }
 
-    public RefreshTokenResponseEntity refreshToken() throws IOException, LoginException {
+    public synchronized RefreshTokenResponseEntity refreshToken() throws IOException, LoginException {
+        if (isCurrentTokenAndRefreshTokenInvalid()) {
+            throw new LoginException("access token or refresh token not been set yet or invalid");
+        }
+
         LOGGER.info("RefreshToken attempting with userId '{}'", bilibiliAccount.getUserId());
         RefreshTokenResponseEntity refreshTokenResponseEntity = BilibiliSecurityHelper.refreshToken(
                 this,
@@ -174,9 +192,11 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
             }
             break;
             case ServerErrorCode.Passport.NO_LOGIN: {
+                markCurrentTokenAndRefreshTokenInvalid();
                 throw new LoginException("access token invalid");
             }
             case ServerErrorCode.Passport.REFRESH_TOKEN_NOT_MATCH: {
+                markCurrentTokenAndRefreshTokenInvalid();
                 throw new LoginException("access token and refresh token mismatch");
             }
             default: {
@@ -188,7 +208,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         return refreshTokenResponseEntity;
     }
 
-    public LogoutResponseEntity logout() throws IOException, LoginException {
+    public synchronized LogoutResponseEntity logout() throws IOException, LoginException {
         LOGGER.info("Logout attempting with userId '{}'", bilibiliAccount.getUserId());
         Long userId = bilibiliAccount.getUserId();
         LogoutResponseEntity logoutResponseEntity = BilibiliSecurityHelper.logout(this, bilibiliAccount.getAccessToken());
@@ -214,6 +234,18 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         return bilibiliAccount.getUserId() == null ?
                 new LiveClient(this, showRoomId) :
                 new LiveClient(this, showRoomId, bilibiliAccount.getUserId());
+    }
+
+    private void markCurrentTokenAndRefreshTokenInvalid() {
+        invalidToken = bilibiliAccount.getAccessToken();
+        invalidRefreshToken = bilibiliAccount.getRefreshToken();
+    }
+
+    public boolean isCurrentTokenAndRefreshTokenInvalid() {
+        //如果 accessToken 或 refreshToken 没有被设置或者已经尝试过并明确他们是无效的
+        return bilibiliAccount.getAccessToken() == null ||
+                bilibiliAccount.getRefreshToken() == null ||
+                (bilibiliAccount.getAccessToken().equals(invalidToken) && bilibiliAccount.getRefreshToken().equals(invalidRefreshToken));
     }
 
     public BilibiliClientProperties getBilibiliClientProperties() {

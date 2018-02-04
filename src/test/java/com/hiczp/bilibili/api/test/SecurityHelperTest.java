@@ -7,6 +7,7 @@ import com.hiczp.bilibili.api.BilibiliSecurityHelper;
 import com.hiczp.bilibili.api.ServerErrorCode;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class SecurityHelperTest {
         BilibiliSecurityHelper.logout(new BilibiliAPI(), loginResponseEntity.getData().getAccessToken());
     }
 
+    @Ignore
     @Test
     public void loginWithWrongUsername() throws Exception {
         LoginResponseEntity loginResponseEntity = BilibiliSecurityHelper.login(

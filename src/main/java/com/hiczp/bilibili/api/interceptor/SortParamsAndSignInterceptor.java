@@ -30,16 +30,18 @@ public class SortParamsAndSignInterceptor implements Interceptor {
         Request request = chain.request();
         HttpUrl httpUrl = request.url();
         List<String> nameAndValues = new ArrayList<>(httpUrl.querySize() + 1);
-        httpUrl.queryParameterNames().forEach(name ->
-                httpUrl.queryParameterValues(name).forEach(value -> {
-                            try {
-                                nameAndValues.add(String.format("%s=%s", name, URLEncoder.encode(value, StandardCharsets.UTF_8.toString())));
-                            } catch (UnsupportedEncodingException e) {
-                                throw new Error(e);
-                            }
-                        }
-                )
-        );
+        httpUrl.queryParameterNames().stream()
+                .filter(parameterName -> !parameterName.equals("sign"))
+                .forEach(name ->
+                        httpUrl.queryParameterValues(name).forEach(value -> {
+                                    try {
+                                        nameAndValues.add(String.format("%s=%s", name, URLEncoder.encode(value, StandardCharsets.UTF_8.toString())));
+                                    } catch (UnsupportedEncodingException e) {
+                                        throw new Error(e);
+                                    }
+                                }
+                        )
+                );
         Collections.sort(nameAndValues);
         nameAndValues.add(String.format("%s=%s", "sign", calculateSign(nameAndValues)));
         return chain.proceed(
