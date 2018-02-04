@@ -11,9 +11,12 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public interface PassportService {
     //获取验证码
-    default okhttp3.Call getCaptcha(String cookies) {
+    default okhttp3.Call getCaptcha(@Nonnull String cookies) {
         return new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                 .build()
@@ -47,5 +50,5 @@ public interface PassportService {
     //TODO sso 尚不明确
     @Deprecated
     @GET("api/login/sso")
-    Call sso(@Query("access_token") String accessToken, @Query("gourl") String goUrl);
+    Call sso(@Query("access_token") String accessToken, @Nullable @Query("gourl") String goUrl);
 }
