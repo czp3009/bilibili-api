@@ -8,6 +8,7 @@ import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
@@ -15,11 +16,15 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
@@ -59,88 +64,104 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     @Override
     public PassportService getPassportService() {
         if (passportService == null) {
-            OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                    .addInterceptor(new AddFixedParamsInterceptor(
-                            "build", bilibiliClientProperties.getBuild(),
-                            "mobi_app", "android",
-                            "platform", "android"
-                    ))
-                    .addInterceptor(new AddDynamicParamsInterceptor(
-                            () -> "ts", () -> Long.toString(Instant.now().getEpochSecond())
-                    ))
-                    .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseConverterInterceptor())
-                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                    .build();
-
-            passportService = new Retrofit.Builder()
-                    .baseUrl(BaseUrlDefinition.PASSPORT)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(okHttpClient)
-                    .build()
-                    .create(PassportService.class);
+            passportService = getPassportServiceWithCustomInterceptors(Collections.emptyList());
         }
         return passportService;
+    }
+
+    public PassportService getPassportServiceWithCustomInterceptors(@Nonnull List<Interceptor> interceptors) {
+        Objects.requireNonNull(interceptors);
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+
+        okHttpClientBuilder
+                .addInterceptor(new AddFixedParamsInterceptor(
+                        "build", bilibiliClientProperties.getBuild(),
+                        "mobi_app", "android",
+                        "platform", "android"
+                ))
+                .addInterceptor(new AddDynamicParamsInterceptor(
+                        () -> "ts", () -> Long.toString(Instant.now().getEpochSecond())
+                ))
+                .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
+                .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
+                .addInterceptor(new ErrorResponseConverterInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
+
+        return new Retrofit.Builder()
+                .baseUrl(BaseUrlDefinition.PASSPORT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
+                .create(PassportService.class);
     }
 
     @Override
     public LiveService getLiveService() {
         if (liveService == null) {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new AddFixedHeadersInterceptor(
-                            "Buvid", bilibiliClientProperties.getBuvId(),
-                            "User-Agent", "Mozilla/5.0 BiliDroid/5.15.0 (bbcallen@gmail.com)",
-                            "Device-ID", bilibiliClientProperties.getHardwareId()
-                    ))
-                    .addInterceptor(new AddDynamicHeadersInterceptor(
-                            //Display-ID 的值在未登录前为 Buvid-客户端启动时间, 在登录后为 mid-客户端启动时间
-                            () -> "Display-ID", () -> String.format("%s-%d", bilibiliAccount.getUserId() == null ? bilibiliClientProperties.getBuvId() : bilibiliAccount.getUserId(), apiInitTime)
-                    ))
-                    .addInterceptor(new AddFixedParamsInterceptor(
-                            "_device", "android",
-                            "_hwid", bilibiliClientProperties.getHardwareId(),
-                            "build", bilibiliClientProperties.getBuild(),
-                            "mobi_app", "android",
-                            "platform", "android",
-                            "scale", bilibiliClientProperties.getScale(),
-                            "src", "google",
-                            "version", bilibiliClientProperties.getVersion()
-                    ))
-                    .addInterceptor(new AddDynamicParamsInterceptor(
-                            () -> "ts", () -> Long.toString(Instant.now().getEpochSecond()),
-                            () -> "trace_id", () -> new SimpleDateFormat("yyyyMMddHHmm000ss").format(new Date())
-                    ))
-                    .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new RefreshTokenInterceptor(
-                            this,
-                            ServerErrorCode.Common.UNAUTHORIZED,
-                            ServerErrorCode.Live.USER_NO_LOGIN,
-                            ServerErrorCode.Live.PLEASE_LOGIN,
-                            ServerErrorCode.Live.NO_LOGIN
-                    ))
-                    .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
-                    .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                    .addInterceptor(new ErrorResponseConverterInterceptor())
-                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                    .build();
-
-            liveService = new Retrofit.Builder()
-                    .baseUrl(BaseUrlDefinition.LIVE)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(okHttpClient)
-                    .build()
-                    .create(LiveService.class);
+            liveService = getLiveServiceWithCustomInterceptors(Collections.emptyList());
         }
         return liveService;
     }
 
-    public LoginResponseEntity login(String username, String password) throws IOException, LoginException, CaptchaMismatchException {
+    public LiveService getLiveServiceWithCustomInterceptors(@Nonnull List<Interceptor> interceptors) {
+        Objects.requireNonNull(interceptors);
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+
+        okHttpClientBuilder
+                .addInterceptor(new AddFixedHeadersInterceptor(
+                        "Buvid", bilibiliClientProperties.getBuvId(),
+                        "User-Agent", "Mozilla/5.0 BiliDroid/5.15.0 (bbcallen@gmail.com)",
+                        "Device-ID", bilibiliClientProperties.getHardwareId()
+                ))
+                .addInterceptor(new AddDynamicHeadersInterceptor(
+                        //Display-ID 的值在未登录前为 Buvid-客户端启动时间, 在登录后为 mid-客户端启动时间
+                        () -> "Display-ID", () -> String.format("%s-%d", bilibiliAccount.getUserId() == null ? bilibiliClientProperties.getBuvId() : bilibiliAccount.getUserId(), apiInitTime)
+                ))
+                .addInterceptor(new AddFixedParamsInterceptor(
+                        "_device", "android",
+                        "_hwid", bilibiliClientProperties.getHardwareId(),
+                        "build", bilibiliClientProperties.getBuild(),
+                        "mobi_app", "android",
+                        "platform", "android",
+                        "scale", bilibiliClientProperties.getScale(),
+                        "src", "google",
+                        "version", bilibiliClientProperties.getVersion()
+                ))
+                .addInterceptor(new AddDynamicParamsInterceptor(
+                        () -> "ts", () -> Long.toString(Instant.now().getEpochSecond()),
+                        () -> "trace_id", () -> new SimpleDateFormat("yyyyMMddHHmm000ss").format(new Date())
+                ))
+                .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
+                .addInterceptor(new RefreshTokenInterceptor(
+                        this,
+                        ServerErrorCode.Common.UNAUTHORIZED,
+                        ServerErrorCode.Live.USER_NO_LOGIN,
+                        ServerErrorCode.Live.PLEASE_LOGIN,
+                        ServerErrorCode.Live.NO_LOGIN
+                ))
+                .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
+                .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
+                .addInterceptor(new ErrorResponseConverterInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
+
+        return new Retrofit.Builder()
+                .baseUrl(BaseUrlDefinition.LIVE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
+                .create(LiveService.class);
+    }
+
+    public LoginResponseEntity login(@Nonnull String username, @Nonnull String password) throws IOException, LoginException, CaptchaMismatchException {
         return login(username, password, null, null);
     }
 
-    public synchronized LoginResponseEntity login(String username,
-                                                  String password,
+    public synchronized LoginResponseEntity login(@Nonnull String username,
+                                                  @Nonnull String password,
                                                   String captcha,
                                                   String cookie) throws IOException, LoginException, CaptchaMismatchException {
         LOGGER.info("Login attempting with username '{}'", username);
