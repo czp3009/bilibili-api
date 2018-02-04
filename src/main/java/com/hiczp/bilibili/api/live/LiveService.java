@@ -45,7 +45,7 @@ public interface LiveService {
     Call<UserInfoEntity> getUserInfo();
 
     //这里的 cid 必须用实际的 room_id, 不能使用 show_room_id, 否则得不到 playUrl. 实际 room_id 要首先通过 getRoomInfo() 获取
-    //outputType 为固定值 "json", 否则返回的内容是 XML(本 API 无法解析, 将直接抛出 JsonParseException)
+    //outputType 为固定值 "json", 否则返回一个空的 JsonArray (以前是返回一个 XML)
     @GET("api/playurl")
     Call<PlayUrlEntity> getPlayUrl(@Query("cid") long cid, @Query("otype") String outputType);
 
