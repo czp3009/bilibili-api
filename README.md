@@ -13,14 +13,14 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.2'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.3'
 
 ## Maven
 
     <dependency>
       <groupId>com.hiczp</groupId>
       <artifactId>bilibili-api</artifactId>
-      <version>0.0.2</version>
+      <version>0.0.3</version>
     </dependency>
 
 # 名词解释
