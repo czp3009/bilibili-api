@@ -12,7 +12,7 @@ public class LogoutResponseEntity {
     @SerializedName("message")
     private String message;
     @SerializedName("ts")
-    private int ts;
+    private long ts;
     @SerializedName("code")
     private int code;
 
@@ -24,11 +24,11 @@ public class LogoutResponseEntity {
         this.message = message;
     }
 
-    public int getTs() {
+    public long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(long ts) {
         this.ts = ts;
     }
 

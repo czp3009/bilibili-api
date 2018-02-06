@@ -10,7 +10,7 @@ public class KeyEntity {
      */
 
     @SerializedName("ts")
-    private int ts;
+    private long ts;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -18,11 +18,11 @@ public class KeyEntity {
     @SerializedName("data")
     private DataEntity data;
 
-    public int getTs() {
+    public long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(long ts) {
         this.ts = ts;
     }
 

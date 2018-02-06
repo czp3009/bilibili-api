@@ -10,7 +10,7 @@ public class InfoEntity {
      */
 
     @SerializedName("ts")
-    private int ts;
+    private long ts;
     @SerializedName("code")
     private int code;
     @SerializedName("message")
@@ -18,11 +18,11 @@ public class InfoEntity {
     @SerializedName("data")
     private DataEntity data;
 
-    public int getTs() {
+    public long getTs() {
         return ts;
     }
 
-    public void setTs(int ts) {
+    public void setTs(long ts) {
         this.ts = ts;
     }
 
@@ -61,23 +61,23 @@ public class InfoEntity {
          */
 
         @SerializedName("mid")
-        private int mid;
+        private long mid;
         @SerializedName("appid")
         private int appid;
         @SerializedName("access_token")
         private String accessToken;
         @SerializedName("expires_in")
-        private int expiresIn;
+        private long expiresIn;
         @SerializedName("userid")
         private String userid;
         @SerializedName("uname")
         private String uname;
 
-        public int getMid() {
+        public long getMid() {
             return mid;
         }
 
-        public void setMid(int mid) {
+        public void setMid(long mid) {
             this.mid = mid;
         }
 
@@ -97,11 +97,11 @@ public class InfoEntity {
             this.accessToken = accessToken;
         }
 
-        public int getExpiresIn() {
+        public long getExpiresIn() {
             return expiresIn;
         }
 
-        public void setExpiresIn(int expiresIn) {
+        public void setExpiresIn(long expiresIn) {
             this.expiresIn = expiresIn;
         }
 
