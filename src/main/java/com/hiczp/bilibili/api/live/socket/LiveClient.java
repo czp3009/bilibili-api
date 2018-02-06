@@ -3,7 +3,9 @@ package com.hiczp.bilibili.api.live.socket;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.hiczp.bilibili.api.BilibiliServiceProvider;
+import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
+import com.hiczp.bilibili.api.live.entity.SendBulletScreenResponseEntity;
 import com.hiczp.bilibili.api.live.socket.codec.PackageDecoder;
 import com.hiczp.bilibili.api.live.socket.codec.PackageEncoder;
 import com.hiczp.bilibili.api.live.socket.event.ConnectionCloseEvent;
@@ -32,7 +34,7 @@ public class LiveClient implements Closeable {
     private final long showRoomId;
     private final long userId;
 
-    private Long roomId;
+    private LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity;
 
     private EventLoopGroup eventLoopGroup;
     private Channel channel;
@@ -66,12 +68,12 @@ public class LiveClient implements Closeable {
         }
 
         LOGGER.info("Fetching info of live room {}", showRoomId);
-        LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity = bilibiliServiceProvider.getLiveService()
+        liveRoomEntity = bilibiliServiceProvider.getLiveService()
                 .getRoomInfo(showRoomId)
                 .execute()
                 .body()
                 .getData();
-        roomId = liveRoomEntity.getRoomId();
+        long roomId = liveRoomEntity.getRoomId();
         LOGGER.info("Get actual room id {}", roomId);
 
         eventLoopGroup = new NioEventLoopGroup(1);
@@ -91,7 +93,6 @@ public class LiveClient implements Closeable {
                                         0
                                 ))
                                 .addLast(new IdleStateHandler(40, 0, 0))
-                                //.addLast(new LoggingHandler(LogLevel.DEBUG))
                                 .addLast(new PackageEncoder())
                                 .addLast(new PackageDecoder())
                                 .addLast(new LiveClientHandler(roomId, userId, eventBus));
@@ -148,6 +149,24 @@ public class LiveClient implements Closeable {
         return this;
     }
 
+    public SendBulletScreenResponseEntity sendBulletScreen(String message) throws IOException {
+        return bilibiliServiceProvider.getLiveService()
+                .sendBulletScreen(
+                        new BulletScreenEntity(
+                                liveRoomEntity != null ? liveRoomEntity.getRoomId() : showRoomId,
+                                userId,
+                                message
+                        )
+                )
+                .execute()
+                .body();
+    }
+
+    //TODO 弹幕发送队列
+    public void sendBulletScreenInBlockingQueue(String message) {
+        throw new UnsupportedOperationException();
+    }
+
     public long getShowRoomId() {
         return showRoomId;
     }
@@ -156,7 +175,7 @@ public class LiveClient implements Closeable {
         return userId;
     }
 
-    public Optional<Long> getRoomId() {
-        return Optional.of(roomId);
+    public Optional<LiveRoomInfoEntity.LiveRoomEntity> getRoomInfo() {
+        return Optional.of(liveRoomEntity);
     }
 }
