@@ -4,6 +4,7 @@ import com.hiczp.bilibili.api.interceptor.*;
 import com.hiczp.bilibili.api.live.LiveService;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.passport.PassportService;
+import com.hiczp.bilibili.api.passport.entity.InfoEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
@@ -248,6 +249,27 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         bilibiliAccount.reset();
         LOGGER.info("Logout succeed with userId: {}", userId);
         return logoutResponseEntity;
+    }
+
+    public InfoEntity getAccountInfo() throws IOException, LoginException {
+        InfoEntity infoEntity = getPassportService()
+                .getInfo(bilibiliAccount.getAccessToken())
+                .execute()
+                .body();
+        switch (infoEntity.getCode()) {
+            case ServerErrorCode.Common.OK: {
+
+            }
+            break;
+            case ServerErrorCode.Passport.NO_LOGIN: {
+                throw new LoginException("no login");
+            }
+            default: {
+                throw new IOException(infoEntity.getMessage());
+            }
+        }
+
+        return infoEntity;
     }
 
     @Override
