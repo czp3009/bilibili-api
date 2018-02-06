@@ -1,5 +1,5 @@
 group = 'com.hiczp'
-version = '0.0.3'
+version = '0.0.4'
 description = 'Bilibili android client API library written in Java'
 
 apply plugin: 'idea'
@@ -28,7 +28,7 @@ dependencies {
     // https://mvnrepository.com/artifact/io.netty/netty-all
     compile group: 'io.netty', name: 'netty-all', version: '4.1.20.Final'
     // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '23.6-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '24.0-jre'
 }
 
 dependencies {
