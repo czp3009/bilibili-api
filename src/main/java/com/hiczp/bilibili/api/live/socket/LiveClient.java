@@ -150,14 +150,18 @@ public class LiveClient implements Closeable {
     }
 
     public SendBulletScreenResponseEntity sendBulletScreen(String message) throws IOException {
-        return bilibiliServiceProvider.getLiveService()
-                .sendBulletScreen(
-                        new BulletScreenEntity(
-                                liveRoomEntity != null ? liveRoomEntity.getRoomId() : showRoomId,
-                                userId,
-                                message
-                        )
+        return sendBulletScreen(
+                new BulletScreenEntity(
+                        liveRoomEntity != null ? liveRoomEntity.getRoomId() : showRoomId,
+                        userId,
+                        message
                 )
+        );
+    }
+
+    public SendBulletScreenResponseEntity sendBulletScreen(BulletScreenEntity bulletScreenEntity) throws IOException {
+        return bilibiliServiceProvider.getLiveService()
+                .sendBulletScreen(bulletScreenEntity)
                 .execute()
                 .body();
     }
