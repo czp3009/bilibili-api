@@ -66,7 +66,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void activityEvent(ActivityEventPackageEvent activityEventPackageEvent) {
-            ActivityEventEntity.Data data = activityEventPackageEvent.getActivityEventEntity().getData();
+            ActivityEventEntity.Data data = activityEventPackageEvent.getEntity().getData();
             LOGGER.info("[ActivityEvent] keyword: {}, type: {}, progress: {}%",
                     data.getKeyword(),
                     data.getType(),
@@ -86,7 +86,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void danMuMsg(DanMuMsgPackageEvent danMuMsgPackageEvent) {
-            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getDanMuMsgEntity();
+            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getEntity();
             StringBuilder stringBuilder = new StringBuilder("[DanMuMsg] ");
 
             danMuMsgEntity.getFansMedalName().ifPresent(fansMedalName ->
@@ -110,17 +110,17 @@ public class LiveClientTest {
 
         @Subscribe
         public void live(LivePackageEvent livePackageEvent) {
-            LOGGER.info("[Live] Room {} start live", livePackageEvent.getLiveEntity().getRoomId());
+            LOGGER.info("[Live] Room {} start live", livePackageEvent.getEntity().getRoomId());
         }
 
         @Subscribe
         public void preparing(PreparingPackageEvent preparingPackageEvent) {
-            LOGGER.info("[Preparing] Room {} stop live", preparingPackageEvent.getPreparingEntity().getRoomId());
+            LOGGER.info("[Preparing] Room {} stop live", preparingPackageEvent.getEntity().getRoomId());
         }
 
         @Subscribe
         public void sendGift(SendGiftPackageEvent sendGiftPackageEvent) {
-            SendGiftEntity.DataEntity dataEntity = sendGiftPackageEvent.getSendGiftEntity().getData();
+            SendGiftEntity.DataEntity dataEntity = sendGiftPackageEvent.getEntity().getData();
             LOGGER.info("[SendGift] {} give {}*{}",
                     dataEntity.getUserName(),
                     dataEntity.getGiftName(),
@@ -130,7 +130,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void SysGift(SysGiftPackageEvent sysGiftPackageEvent) {
-            SysGiftEntity sysGiftEntity = sysGiftPackageEvent.getSysGiftEntity();
+            SysGiftEntity sysGiftEntity = sysGiftPackageEvent.getEntity();
             LOGGER.info("[SysGift] {}: {}",
                     sysGiftEntity.getMsg(),
                     sysGiftEntity.getUrl()
@@ -139,7 +139,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void SysMsg(SysMsgPackageEvent sysMsgPackageEvent) {
-            SysMsgEntity sysMsgEntity = sysMsgPackageEvent.getSysMsgEntity();
+            SysMsgEntity sysMsgEntity = sysMsgPackageEvent.getEntity();
             LOGGER.info("[SysMsg] {}: {}",
                     sysMsgEntity.getMsg(),
                     sysMsgEntity.getUrl()
@@ -153,7 +153,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void WelcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
-            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getWelcomeGuardEntity().getData();
+            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
             LOGGER.info("[WelcomeGuard] [GL {}] {}",
                     dataEntity.getGuardLevel(),
                     dataEntity.getUsername()
@@ -162,7 +162,7 @@ public class LiveClientTest {
 
         @Subscribe
         public void Welcome(WelcomePackageEvent welcomePackageEvent) {
-            WelcomeEntity.DataEntity dataEntity = welcomePackageEvent.getWelcomeEntity().getData();
+            WelcomeEntity.DataEntity dataEntity = welcomePackageEvent.getEntity().getData();
             StringBuilder stringBuilder = new StringBuilder("[Welcome] ");
             if (dataEntity.isAdmin()) {
                 stringBuilder.append("[ADMIN] ");

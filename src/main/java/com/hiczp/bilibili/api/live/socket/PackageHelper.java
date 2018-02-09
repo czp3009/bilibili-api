@@ -13,7 +13,7 @@ public class PackageHelper {
         );
     }
 
-    public static Package createHeatBeatPackage() {
+    public static Package createHeartBeatPackage() {
         return new Package(
                 Package.PackageType.HEART_BEAT,
                 new byte[0]

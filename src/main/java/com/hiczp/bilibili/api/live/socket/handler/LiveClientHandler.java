@@ -69,7 +69,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
             case ENTER_ROOM_SUCCESS: {
                 eventBus.post(new ConnectSucceedEvent(this));
                 ctx.executor().scheduleAtFixedRate(
-                        () -> ctx.writeAndFlush(PackageHelper.createHeatBeatPackage()),
+                        () -> {
+                            ctx.writeAndFlush(PackageHelper.createHeartBeatPackage());
+                            eventBus.post(new SendHeartBeatPackageEvent(this));
+                        },
                         0L,
                         30L,
                         TimeUnit.SECONDS
@@ -118,6 +121,22 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     break;
                     case "ACTIVITY_EVENT": {
                         eventCreationExpression = () -> new ActivityEventPackageEvent(this, GSON.fromJson(content, ActivityEventEntity.class));
+                    }
+                    break;
+                    case "WISH_BOTTLE": {
+                        eventCreationExpression = () -> new WishBottlePackageEvent(this, GSON.fromJson(content, WishBottleEntity.class));
+                    }
+                    break;
+                    case "ROOM_BLOCK_MSG": {
+                        eventCreationExpression = () -> new RoomBlockMsgPackageEvent(this, GSON.fromJson(content, RoomBlockMsgEntity.class));
+                    }
+                    break;
+                    case "ROOM_SILENT_OFF": {
+                        eventCreationExpression = () -> new RoomSilentOffPackageEvent(this, GSON.fromJson(content, RoomSilentOffEntity.class));
+                    }
+                    break;
+                    case "GUARD_MSG": {
+                        eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
                     }
                     break;
                     default: {

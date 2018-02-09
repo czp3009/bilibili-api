@@ -20,6 +20,7 @@ public interface LiveService {
     @GET("AppRoom/msg")
     Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") long roomId);
 
+    //登录后访问该 API 将在服务器新增一条直播间观看历史
     @GET("AppRoom/index")
     Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
 

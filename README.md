@@ -217,7 +217,7 @@ API 文档
         
         @Subscribe
         public void onDanMuMsg(DanMuMsgPackageEvent danMuMsgPackageEvent) {
-            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getDanMuMsgEntity();
+            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getEntity();
             System.out.pintf("%s: %s\n", danMuMsgEntity.getUsername(), danMuMsgEntity.getMessage());
         }
     }
@@ -236,19 +236,35 @@ API 文档
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
 | DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
+| GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |
 | PreparingPackageEvent | 收到 PREPARING 数据包 |
+| RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
+| RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
 | SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
+| SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 |
 | SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
 | SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
 | UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
 | ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
 | WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
 | WelcomePackageEvent | 收到 WELCOME 数据包 |
+| WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 |
 
 事件里面可以取到解析好的 POJO, 然后可以从里面取数据, 见上面的监听器示例.
 
 # 特别说明
+## DANMU_MSG 中的各个字段含义
+在直播间实时弹幕推送流中, 存在一种类型为 DANMU_MSG 的数据包, 它里面存储的 JSON, 全部都是 JsonArray, 并且每个元素类型不一样, 含义不一样.
+
+简单地说, 这个 JSON 完全无法自描述而且很多字段猜不到是什么含义, 它的示例见 /record 文件夹(还有一份带备注的版本, 里面记录了已经猜出的字段含义).
+
+已经猜出的字段, 可以直接从 DanMuMsgEntity 里面用对应的方法取得, 对于没有猜出的字段, 需要类似这样来获取:
+
+    int something = danMuMsgEntity.getInfo().get(0).getAsJsonArray().get(2).getAsInt();
+
+如果你可以明确其中的字段含义, 欢迎提交 issue.
+
 ## 直播间 ID 问题
 一个直播间, 我们用浏览器去访问它, 他可能是这样的
 
