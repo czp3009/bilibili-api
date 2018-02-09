@@ -39,6 +39,10 @@ public class LiveClient implements Closeable {
     private EventLoopGroup eventLoopGroup;
     private Channel channel;
 
+    private void initEventBus() {
+        eventBus.register(new ConnectionCloseListener());
+    }
+
     public LiveClient(BilibiliServiceProvider bilibiliServiceProvider, long showRoomId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
@@ -51,10 +55,6 @@ public class LiveClient implements Closeable {
         this.showRoomId = showRoomId;
         this.userId = userId;
         initEventBus();
-    }
-
-    private void initEventBus() {
-        eventBus.register(this);
     }
 
     public synchronized LiveClient connect() throws IOException {
@@ -130,9 +130,11 @@ public class LiveClient implements Closeable {
         }
     }
 
-    @Subscribe
-    public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
-        eventLoopGroup.shutdownGracefully();
+    private class ConnectionCloseListener {
+        @Subscribe
+        public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
+            eventLoopGroup.shutdownGracefully();
+        }
     }
 
     public EventBus getEventBus() {
