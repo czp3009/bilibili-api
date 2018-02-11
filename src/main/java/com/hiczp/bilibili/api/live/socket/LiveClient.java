@@ -3,6 +3,7 @@ package com.hiczp.bilibili.api.live.socket;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.hiczp.bilibili.api.BilibiliServiceProvider;
+import com.hiczp.bilibili.api.live.bulletScreen.BulletScreenConstDefinition;
 import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
 import com.hiczp.bilibili.api.live.entity.SendBulletScreenResponseEntity;
@@ -22,6 +23,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Optional;
@@ -29,7 +31,7 @@ import java.util.Optional;
 public class LiveClient implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClient.class);
 
-    private final EventBus eventBus = new EventBus("BilibiliLiveClient");
+    private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
     private final BilibiliServiceProvider bilibiliServiceProvider;
     private final long showRoomId;
     private final long userId;
@@ -43,18 +45,26 @@ public class LiveClient implements Closeable {
         eventBus.register(new ConnectionCloseListener());
     }
 
-    public LiveClient(BilibiliServiceProvider bilibiliServiceProvider, long showRoomId) {
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, long showRoomId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = 0;
         initEventBus();
     }
 
-    public LiveClient(BilibiliServiceProvider bilibiliServiceProvider, long showRoomId, long userId) {
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, long showRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.showRoomId = showRoomId;
         this.userId = userId;
         initEventBus();
+    }
+
+    public LiveRoomInfoEntity.LiveRoomEntity fetchRoomInfo() throws IOException {
+        return bilibiliServiceProvider.getLiveService()
+                .getRoomInfo(showRoomId)
+                .execute()
+                .body()
+                .getData();
     }
 
     public synchronized LiveClient connect() throws IOException {
@@ -68,11 +78,7 @@ public class LiveClient implements Closeable {
         }
 
         LOGGER.info("Fetching info of live room {}", showRoomId);
-        liveRoomEntity = bilibiliServiceProvider.getLiveService()
-                .getRoomInfo(showRoomId)
-                .execute()
-                .body()
-                .getData();
+        liveRoomEntity = fetchRoomInfo();
         long roomId = liveRoomEntity.getRoomId();
         LOGGER.info("Get actual room id {}", roomId);
 
@@ -141,36 +147,49 @@ public class LiveClient implements Closeable {
         return eventBus;
     }
 
-    public LiveClient registerListener(Object object) {
+    public LiveClient registerListener(@Nonnull Object object) {
         eventBus.register(object);
         return this;
     }
 
-    public LiveClient unregisterListeners(Object object) {
+    public LiveClient unregisterListeners(@Nonnull Object object) {
         eventBus.unregister(object);
         return this;
     }
 
-    public SendBulletScreenResponseEntity sendBulletScreen(String message) throws IOException {
-        return sendBulletScreen(
-                new BulletScreenEntity(
-                        liveRoomEntity != null ? liveRoomEntity.getRoomId() : showRoomId,
-                        userId,
-                        message
-                )
-        );
-    }
-
-    public SendBulletScreenResponseEntity sendBulletScreen(BulletScreenEntity bulletScreenEntity) throws IOException {
+    public SendBulletScreenResponseEntity sendBulletScreen(@Nonnull String message) throws IOException {
         return bilibiliServiceProvider.getLiveService()
-                .sendBulletScreen(bulletScreenEntity)
+                .sendBulletScreen(createBulletScreenEntity(message))
                 .execute()
                 .body();
     }
 
-    //TODO 弹幕发送队列
-    public void sendBulletScreenInBlockingQueue(String message) {
-        throw new UnsupportedOperationException();
+//    public void sendBulletScreenAsync(@Nonnull String message, @Nonnull BulletScreenSendingCallback bulletScreenSendingCallback, boolean autoSplit) {
+//        if (!autoSplit) {
+//            sendBulletScreenAsync(message, bulletScreenSendingCallback);
+//        } else {
+//            for (String s : BulletScreenHelper.splitMessageByFixedLength(message, getBulletScreenLengthLimitOrDefaultLengthLimit())) {
+//                sendBulletScreenAsync(s, bulletScreenSendingCallback);
+//            }
+//        }
+//    }
+//
+//    public void sendBulletScreenAsync(@Nonnull String message, @Nonnull BulletScreenSendingCallback bulletScreenSendingCallback) {
+//        BulletScreenSendingDequeHolder.addTask(
+//                new BulletScreenSendingTask(
+//                        bilibiliServiceProvider,
+//                        createBulletScreenEntity(message),
+//                        bulletScreenSendingCallback
+//                )
+//        );
+//    }
+
+    private BulletScreenEntity createBulletScreenEntity(String message) {
+        return new BulletScreenEntity(
+                getRoomIdOrShowRoomId(),
+                userId,
+                message
+        );
     }
 
     public long getShowRoomId() {
@@ -182,6 +201,21 @@ public class LiveClient implements Closeable {
     }
 
     public Optional<LiveRoomInfoEntity.LiveRoomEntity> getRoomInfo() {
+        if (liveRoomEntity == null) {
+            try {
+                liveRoomEntity = fetchRoomInfo();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return Optional.of(liveRoomEntity);
+    }
+
+    public long getRoomIdOrShowRoomId() {
+        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoomEntity::getRoomId).orElse(showRoomId);
+    }
+
+    public int getBulletScreenLengthLimitOrDefaultLengthLimit() {
+        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoomEntity::getMsgLength).orElse(BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT);
     }
 }
