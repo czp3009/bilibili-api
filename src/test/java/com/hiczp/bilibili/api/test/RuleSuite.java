@@ -26,20 +26,24 @@ public class RuleSuite {
     public static ExternalResource externalResource = new ExternalResource() {
         @Override
         protected void before() throws Throwable {
-            //初始化 slf4j
-            BasicConfigurator.configure();
-            //读取配置文件
-            try {
-                Config.setConfig(
-                        new Gson().fromJson(
-                                new BufferedReader(new InputStreamReader(Config.class.getResourceAsStream("/config.json"))),
-                                Config.class
-                        )
-                );
-            } catch (NullPointerException e) {
-                //抛出异常就可以取消测试
-                throw new RuntimeException("Please create config file before tests");
-            }
+            init();
         }
     };
+
+    public static void init() {
+        //初始化 slf4j
+        BasicConfigurator.configure();
+        //读取配置文件
+        try {
+            Config.setConfig(
+                    new Gson().fromJson(
+                            new BufferedReader(new InputStreamReader(Config.class.getResourceAsStream("/config.json"))),
+                            Config.class
+                    )
+            );
+        } catch (NullPointerException e) {
+            //抛出异常就可以取消测试
+            throw new RuntimeException("Please create config file before tests");
+        }
+    }
 }

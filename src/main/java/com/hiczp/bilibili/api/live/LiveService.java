@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.live;
 
+import com.hiczp.bilibili.api.BilibiliClientProperties;
 import com.hiczp.bilibili.api.live.entity.*;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -63,7 +64,7 @@ public interface LiveService {
     Call<SendOnlineHeartResponseEntity> sendOnlineHeart(@Field("room_id") long roomId, @Field("scale") String scale);
 
     default Call<SendOnlineHeartResponseEntity> sendOnlineHeart(long roomId) {
-        return sendOnlineHeart(roomId, "xxhdpi");
+        return sendOnlineHeart(roomId, BilibiliClientProperties.defaultSetting().getScale());
     }
 
     @POST("api/sendmsg")

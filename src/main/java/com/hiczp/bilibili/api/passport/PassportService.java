@@ -17,8 +17,12 @@ import javax.annotation.Nullable;
 public interface PassportService {
     //获取验证码
     default okhttp3.Call getCaptcha(@Nonnull String cookies) {
+        return getCaptcha(cookies, HttpLoggingInterceptor.Level.BASIC);
+    }
+
+    default okhttp3.Call getCaptcha(@Nonnull String cookies, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         return new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(logLevel))
                 .build()
                 .newCall(
                         new Request.Builder()
