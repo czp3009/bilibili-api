@@ -16,10 +16,10 @@ public class SsoTest {
     @Ignore
     @Test
     public void test() throws Exception {
-        Object object = BILIBILI_API.getPassportService()
-                .sso(BILIBILI_API.getBilibiliAccount().getAccessToken(), null)
-                .execute()
-                .body();
-        LOGGER.info("{}", object.toString());
+//        Object object = BILIBILI_API.getPassportService()
+//                .sso(BILIBILI_API.getBilibiliAccount().getAccessToken(), null)
+//                .execute()
+//                .body();
+//        LOGGER.info("{}", object.toString());
     }
 }

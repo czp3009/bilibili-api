@@ -164,6 +164,7 @@ public class LiveClient implements Closeable {
                 .body();
     }
 
+    //TODO 弹幕发送队列
 //    public void sendBulletScreenAsync(@Nonnull String message, @Nonnull BulletScreenSendingCallback bulletScreenSendingCallback, boolean autoSplit) {
 //        if (!autoSplit) {
 //            sendBulletScreenAsync(message, bulletScreenSendingCallback);

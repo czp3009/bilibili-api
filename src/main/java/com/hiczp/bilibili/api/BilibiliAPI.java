@@ -65,13 +65,15 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     @Override
     public PassportService getPassportService() {
         if (passportService == null) {
-            passportService = getPassportServiceWithCustomInterceptors(Collections.emptyList());
+            passportService = getPassportService(Collections.emptyList(), HttpLoggingInterceptor.Level.BASIC);
         }
         return passportService;
     }
 
-    public PassportService getPassportServiceWithCustomInterceptors(@Nonnull List<Interceptor> interceptors) {
+    public PassportService getPassportService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         Objects.requireNonNull(interceptors);
+        Objects.requireNonNull(logLevel);
+
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         interceptors.forEach(okHttpClientBuilder::addInterceptor);
@@ -88,7 +90,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                 .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
                 .addInterceptor(new ErrorResponseConverterInterceptor())
-                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
 
         return new Retrofit.Builder()
                 .baseUrl(BaseUrlDefinition.PASSPORT)
@@ -101,13 +103,15 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     @Override
     public LiveService getLiveService() {
         if (liveService == null) {
-            liveService = getLiveServiceWithCustomInterceptors(Collections.emptyList());
+            liveService = getLiveService(Collections.emptyList(), HttpLoggingInterceptor.Level.BASIC);
         }
         return liveService;
     }
 
-    public LiveService getLiveServiceWithCustomInterceptors(@Nonnull List<Interceptor> interceptors) {
+    public LiveService getLiveService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         Objects.requireNonNull(interceptors);
+        Objects.requireNonNull(logLevel);
+
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         interceptors.forEach(okHttpClientBuilder::addInterceptor);
@@ -147,7 +151,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
                 .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
                 .addInterceptor(new ErrorResponseConverterInterceptor())
-                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
 
         return new Retrofit.Builder()
                 .baseUrl(BaseUrlDefinition.LIVE)
