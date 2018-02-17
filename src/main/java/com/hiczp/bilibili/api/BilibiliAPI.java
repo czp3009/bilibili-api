@@ -25,7 +25,6 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
@@ -71,9 +70,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     }
 
     public PassportService getPassportService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
-        Objects.requireNonNull(interceptors);
-        Objects.requireNonNull(logLevel);
-
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         interceptors.forEach(okHttpClientBuilder::addInterceptor);
@@ -109,9 +105,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     }
 
     public LiveService getLiveService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
-        Objects.requireNonNull(interceptors);
-        Objects.requireNonNull(logLevel);
-
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         interceptors.forEach(okHttpClientBuilder::addInterceptor);

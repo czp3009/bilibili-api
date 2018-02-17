@@ -1,6 +1,6 @@
 package com.hiczp.bilibili.api;
 
-import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class BilibiliClientProperties {
     private String appKey = "1d8b6e7d45233436";
@@ -63,8 +63,7 @@ public class BilibiliClientProperties {
         return version;
     }
 
-    public BilibiliClientProperties setVersion(String version) {
-        Objects.requireNonNull(version);
+    public BilibiliClientProperties setVersion(@Nonnull String version) {
         this.version = version;
         generateBuildProperty();
         return this;
