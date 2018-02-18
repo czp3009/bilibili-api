@@ -138,4 +138,23 @@ public interface LiveService {
     //无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
     @GET("AppUser/getSignInfo")
     Call<SignInfoEntity> getSignInfo();
+
+    //获得关注列表("关注主播" 页面)
+    //未登录时返回 32205
+    @GET("AppFeed/index")
+    Call<FollowedHostsEntity> getFollowedHosts(@Query("page") long page, @Query("pagesize") long pageSize);
+
+    //type 为 room 时只返回 房间 的搜索结果
+    //type 为 user 时只返回 用户 的搜索结果
+    //type 为 all 时 房间 与 用户 的搜索结果都有
+    @GET("AppSearch/index")
+    Call<SearchResponseEntity> search(@Query("keyword") String keyword, @Query("page") long page, @Query("pagesize") long pageSize, @Query("type") String type);
+
+    default Call<SearchResponseEntity> search(String keyword, long page, long pageSize) {
+        return search(keyword, page, pageSize, "all");
+    }
+
+    //"直播" 页面下面的推荐, 每个分类有六个的那种
+    @GET("mobile/rooms")
+    Call<RoomsEntity> getRooms();
 }
