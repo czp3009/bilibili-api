@@ -25,6 +25,7 @@ public interface LiveService {
     @GET("AppRoom/index")
     Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
 
+    //未登录时返回 401
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
 
@@ -43,10 +44,11 @@ public interface LiveService {
     @GET("appUser/getTitle")
     Call<TitlesEntity> getTitle();
 
-    //这个 API 不是很明确, 所有房间都一样
+    //这个 API 不是很明确, 所有房间都一样, 可能和什么活动有关
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
 
+    //未登录时返回 3
     @GET("mobile/getUser")
     Call<UserInfoEntity> getUserInfo();
 
@@ -59,6 +61,7 @@ public interface LiveService {
         return getPlayUrl(cid, "json");
     }
 
+    //未登录时返回 3
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
     Call<SendOnlineHeartResponseEntity> sendOnlineHeart(@Field("room_id") long roomId, @Field("scale") String scale);

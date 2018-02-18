@@ -5,24 +5,25 @@ import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.math.BigInteger;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BilibiliSecurityHelper {
-    private static String cipherPassword(BilibiliServiceProvider bilibiliServiceProvider,
-                                         String password) throws IOException {
+    private static String cipherPassword(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
+                                         @Nonnull String password) throws IOException {
         KeyEntity keyEntity = bilibiliServiceProvider.getPassportService().getKey().execute().body();
         //服务器返回异常错误码
         if (keyEntity.getCode() != 0) {
@@ -60,17 +61,49 @@ public class BilibiliSecurityHelper {
         return cipheredPassword;
     }
 
-    public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
-                                            String username,
-                                            String password) throws IOException {
+    //计算 sign
+    //传入值为 name1=value1 形式
+    //传入值必须已经排序
+    //value 必须已经 URLEncode
+    public static String calculateSign(@Nonnull List<String> nameAndValues, @Nonnull String appSecret) {
+        return calculateSign(nameAndValues.stream().collect(Collectors.joining("&")), appSecret);
+    }
+
+    public static String calculateSign(@Nonnull String encodedQuery, @Nonnull String appSecret) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update((encodedQuery + appSecret).getBytes());
+            String md5 = new BigInteger(1, messageDigest.digest()).toString(16);
+            //md5 不满 32 位时左边加 0
+            return ("00000000000000000000000000000000" + md5).substring(md5.length());
+        } catch (NoSuchAlgorithmException e) {
+            throw new Error(e);
+        }
+    }
+
+    //直接生成添加了 sign 的 query
+    //传入值为 name1=value1 形式
+    //传入值必须已经排序
+    //value 必须已经 URLEncode
+    public static String addSignToQuery(@Nonnull List<String> nameAndValues, @Nonnull String appSecret) {
+        return addSignToQuery(nameAndValues.stream().collect(Collectors.joining("&")), appSecret);
+    }
+
+    public static String addSignToQuery(@Nonnull String encodedQuery, @Nonnull String appSecret) {
+        return encodedQuery + String.format("&%s=%s", "sign", calculateSign(encodedQuery, appSecret));
+    }
+
+    public static LoginResponseEntity login(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
+                                            @Nonnull String username,
+                                            @Nonnull String password) throws IOException {
         return login(bilibiliServiceProvider, username, password, null, null);
     }
 
-    public static LoginResponseEntity login(BilibiliServiceProvider bilibiliServiceProvider,
-                                            String username,
-                                            String password,
-                                            String captcha,
-                                            String cookie) throws IOException {
+    public static LoginResponseEntity login(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
+                                            @Nonnull String username,
+                                            @Nonnull String password,
+                                            @Nullable String captcha,
+                                            @Nullable String cookie) throws IOException {
         return bilibiliServiceProvider.getPassportService()
                 .login(
                         username,
@@ -81,16 +114,16 @@ public class BilibiliSecurityHelper {
                 .body();
     }
 
-    public static RefreshTokenResponseEntity refreshToken(BilibiliServiceProvider bilibiliServiceProvider,
-                                                          String accessToken,
-                                                          String refreshToken) throws IOException {
+    public static RefreshTokenResponseEntity refreshToken(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
+                                                          @Nonnull String accessToken,
+                                                          @Nonnull String refreshToken) throws IOException {
         return bilibiliServiceProvider.getPassportService().refreshToken(accessToken, refreshToken)
                 .execute()
                 .body();
     }
 
-    public static LogoutResponseEntity logout(BilibiliServiceProvider bilibiliServiceProvider,
-                                              String accessToken) throws IOException {
+    public static LogoutResponseEntity logout(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
+                                              @Nonnull String accessToken) throws IOException {
         return bilibiliServiceProvider.getPassportService().logout(accessToken)
                 .execute()
                 .body();

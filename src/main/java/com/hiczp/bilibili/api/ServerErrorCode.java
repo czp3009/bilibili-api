@@ -29,13 +29,18 @@ public class ServerErrorCode {
     }
 
     //一些 API 未登录时返回 3, 一些返回 -101, 还有一些返回 401, 在网关上鉴权的 API 返回 -401
+    //甚至有一些 API 返回 32205 这种奇怪的错误码
     public static class Live {
         //"user no login"
         public static final int USER_NO_LOGIN = 3;
         //"请登录"
         public static final int PLEASE_LOGIN = 401;
+        //"请登录"
+        public static final int PLEASE_LOGIN0 = 32205;
         //"请先登录"
         public static final int NO_LOGIN = -101;
+        //"关键字不能小于2个字节或大于50字节"
+        public static final int KEYWORD_CAN_NOT_LESS_THAN_2_BYTES_OR_GREATER_THAN_50_BYTES = -609;
         //已经领取过这个宝箱
         public static final int THIS_SILVER_TASK_ALREADY_TOOK = -903;
         //今天所有的宝箱已经领完

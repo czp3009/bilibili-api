@@ -139,6 +139,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                         ServerErrorCode.Common.UNAUTHORIZED,
                         ServerErrorCode.Live.USER_NO_LOGIN,
                         ServerErrorCode.Live.PLEASE_LOGIN,
+                        ServerErrorCode.Live.PLEASE_LOGIN0,
                         ServerErrorCode.Live.NO_LOGIN
                 ))
                 .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
