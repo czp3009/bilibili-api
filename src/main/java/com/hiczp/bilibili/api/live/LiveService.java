@@ -18,13 +18,16 @@ public interface LiveService {
         return getBulletScreenConfig("all");
     }
 
+    //获得房间的历史弹幕(十条)
     @GET("AppRoom/msg")
     Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") long roomId);
 
+    //获取房间信息
     //登录后访问该 API 将在服务器新增一条直播间观看历史
     @GET("AppRoom/index")
     Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
 
+    //获得是否关注了一个主播
     //未登录时返回 401
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
@@ -33,6 +36,7 @@ public interface LiveService {
     @GET("AppBag/sendDaily")
     Call<SendDailyResponseEntity> sendDaily();
 
+    //获得所有礼物的列表
     @GET("AppIndex/getAllItem")
     Call<ItemsEntity> getAllItem();
 
@@ -40,6 +44,7 @@ public interface LiveService {
     @GET("AppSmallTV/index")
     Call<AppSmallTVEntity> getAppSmallTV();
 
+    //获得所有头衔的列表
     //这里的 Title 是头衔的意思
     @GET("appUser/getTitle")
     Call<TitlesEntity> getTitle();
@@ -48,10 +53,12 @@ public interface LiveService {
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
 
+    //获取自己的用户信息(live 站的个人信息, 非总站)
     //未登录时返回 3
     @GET("mobile/getUser")
     Call<UserInfoEntity> getUserInfo();
 
+    //获取一个直播间的流地址(flv)
     //这里的 cid 必须用实际的 room_id, 不能使用 show_room_id, 否则得不到 playUrl. 实际 room_id 要首先通过 getRoomInfo() 获取
     //outputType 为固定值 "json", 否则返回一个空的 JsonArray (以前是返回一个 XML)
     @GET("api/playurl")
@@ -61,6 +68,7 @@ public interface LiveService {
         return getPlayUrl(cid, "json");
     }
 
+    //发送一个 Restful 的心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
     //未登录时返回 3
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
@@ -70,6 +78,7 @@ public interface LiveService {
         return sendOnlineHeart(roomId, BilibiliClientProperties.defaultSetting().getScale());
     }
 
+    //发送一条弹幕
     @POST("api/sendmsg")
     @FormUrlEncoded
     Call<SendBulletScreenResponseEntity> sendBulletScreen(@Field("cid") long cid,
@@ -98,18 +107,23 @@ public interface LiveService {
         );
     }
 
+    //获取下一个宝箱任务的信息
     @GET("mobile/freeSilverCurrentTask")
     Call<FreeSilverCurrentTaskEntity> getFreeSilverCurrentTask();
 
+    //领取宝箱
     @GET("mobile/freeSilverAward")
     Call<FreeSilverAwardEntity> getFreeSilverAward();
 
+    //查看自己的背包(礼物)
     @GET("AppBag/playerBag")
     Call<PlayerBagEntity> getPlayerBag();
 
+    //查看哪些礼物是活动礼物, 在客户端上, 活动礼物会有一个右上角标记 "活动"
     @GET("AppRoom/activityGift")
     Call<ActivityGiftsEntity> getActivityGifts(@Query("room_id") long roomId);
 
+    //送礼物
     @POST("AppBag/send")
     @FormUrlEncoded
     Call<SendGiftResponseEntity> sendGift(@Field("giftId") long giftId,
@@ -132,18 +146,21 @@ public interface LiveService {
         );
     }
 
+    //获得礼物榜(七日榜)
     @GET("AppRoom/getGiftTop")
     Call<GiftTopEntity> getGiftTop(@Query("room_id") int roomId);
 
+    //签到(live 站签到, 非总站(虽然我也不知道总站有没有签到功能))(侧拉抽屉 -> 直播中心 -> 右上角日历图标)
     //无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
     @GET("AppUser/getSignInfo")
     Call<SignInfoEntity> getSignInfo();
 
-    //获得关注列表("关注主播" 页面)
+    //获得关注列表(直播 -> 关注)
     //未登录时返回 32205
     @GET("AppFeed/index")
     Call<FollowedHostsEntity> getFollowedHosts(@Query("page") long page, @Query("pagesize") long pageSize);
 
+    //live 站的搜索
     //type 为 room 时只返回 房间 的搜索结果
     //type 为 user 时只返回 用户 的搜索结果
     //type 为 all 时 房间 与 用户 的搜索结果都有
@@ -157,4 +174,13 @@ public interface LiveService {
     //"直播" 页面下面的推荐, 每个分类有六个的那种
     @GET("mobile/rooms")
     Call<RoomsEntity> getRooms();
+
+    //侧拉抽屉 -> 直播中心 -> 佩戴中心
+    //获得用户拥有的头衔
+    @GET("appUser/myTitleList")
+    Call<MyTitleListEntity> getMyTitleList();
+
+    //佩戴头衔
+    @GET("AppUser/wearTitle")
+    Call<WearTitleResponseEntity> wearTitle(@Query("title") String title);
 }
