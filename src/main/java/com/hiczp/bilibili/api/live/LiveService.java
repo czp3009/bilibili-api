@@ -183,4 +183,7 @@ public interface LiveService {
     //佩戴头衔
     @GET("AppUser/wearTitle")
     Call<WearTitleResponseEntity> wearTitle(@Query("title") String title);
+
+    //侧拉抽屉 -> 直播中心 -> 瓜子商店 -> 银瓜子兑换 -> 硬币银瓜子互换 ->　兑换硬币
+    //将 700 银瓜子兑换为 1 硬币, 每个用户每天只能换一次
 }

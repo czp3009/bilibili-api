@@ -59,12 +59,18 @@ public class LiveClient implements Closeable {
         initEventBus();
     }
 
+    @Nonnull
     public LiveRoomInfoEntity.LiveRoomEntity fetchRoomInfo() throws IOException {
-        return bilibiliServiceProvider.getLiveService()
+        LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity = bilibiliServiceProvider.getLiveService()
                 .getRoomInfo(showRoomId)
                 .execute()
                 .body()
                 .getData();
+        if (liveRoomEntity != null) {
+            return liveRoomEntity;
+        } else {
+            throw new IllegalArgumentException("Target room " + showRoomId + " not exists");
+        }
     }
 
     public synchronized LiveClient connect() throws IOException {
