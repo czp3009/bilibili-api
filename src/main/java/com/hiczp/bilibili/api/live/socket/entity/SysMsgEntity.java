@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SysMsgEntity {
+public class SysMsgEntity implements DataEntity {
     /**
      * cmd : SYS_MSG
      * msg : 【瑾然-】:?在直播间:?【3939852】:?赠送 小电视一个，请前往抽奖
@@ -38,6 +38,7 @@ public class SysMsgEntity {
     @SerializedName("tv_id")
     private String tvId;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SysGiftEntity {
+public class SysGiftEntity implements DataEntity {
     /**
      * cmd : SYS_GIFT
      * msg : あさひなみよう在直播间5135178开启了丰收祭典，一起来分享收获的福利吧！
@@ -34,6 +34,7 @@ public class SysGiftEntity {
     @SerializedName("msgTips")
     private int msgTips;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

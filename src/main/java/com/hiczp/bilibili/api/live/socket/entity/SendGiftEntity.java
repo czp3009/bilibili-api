@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SendGiftEntity {
+public class SendGiftEntity implements DataEntity {
     /**
      * cmd : SEND_GIFT
      * data : {"giftName":"辣条","num":64,"uname":"明暗纠结星","rcost":66347035,"uid":12768615,"top_list":[{"uid":9256,"userName":"SSR丶尧","coin":2905900,"face":"http://i0.hdslb.com/bfs/face/eba52abb1daaf3aecd7b986b9731451872d66613.jpg","guard_level":"3","rank":1,"score":2905900},{"uid":4986301,"userName":"乄夏沫丶","coin":1386000,"face":"http://i2.hdslb.com/bfs/face/b3969027a263d2610711317addf437fe59a9b97e.jpg","guard_level":0,"rank":2,"score":1386000},{"uid":5211302,"userName":"朝雾怜","coin":805700,"face":"http://i1.hdslb.com/bfs/face/d366be69d716469514d355642aa324ceba3fa122.jpg","guard_level":0,"rank":3,"score":805700}],"timestamp":1510498496,"giftId":1,"giftType":0,"action":"喂食","super":0,"price":100,"rnd":"1510498460","newMedal":0,"newTitle":0,"medal":[],"title":"","beatId":"0","biz_source":"live","metadata":"","remain":0,"gold":0,"silver":0,"eventScore":0,"eventNum":0,"smalltv_msg":[],"notice_msg":[],"capsule":{"normal":{"coin":13,"change":1,"progress":{"now":4000,"max":10000}},"colorful":{"coin":0,"change":0,"progress":{"now":0,"max":5000}}},"addFollow":0}
@@ -17,6 +17,7 @@ public class SendGiftEntity {
     @SerializedName("data")
     private DataEntity data;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

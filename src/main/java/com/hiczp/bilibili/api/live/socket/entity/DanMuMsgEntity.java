@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
-public class DanMuMsgEntity {
+public class DanMuMsgEntity implements DataEntity {
     private static final Gson GSON = new Gson();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {
     }.getType();
@@ -24,6 +24,7 @@ public class DanMuMsgEntity {
     @SerializedName("info")
     private JsonArray info;
 
+    @Override
     public String getCmd() {
         return cmd;
     }
