@@ -3,7 +3,7 @@ package com.hiczp.bilibili.api.live.socket.event;
 import com.hiczp.bilibili.api.live.socket.entity.DataEntity;
 
 public abstract class ReceiveDataPackageEvent<T extends DataEntity> extends ReceivePackageEvent<T> {
-    public ReceiveDataPackageEvent(Object source, T entity) {
+    ReceiveDataPackageEvent(Object source, T entity) {
         super(source, entity);
     }
 }
