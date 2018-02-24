@@ -6,4 +6,8 @@ public abstract class ReceiveRoomStatusPackageEvent<T extends RoomStatusEntity> 
     ReceiveRoomStatusPackageEvent(Object source, T entity) {
         super(source, entity);
     }
+
+    public RoomStatusEntity getEntity0() {
+        return entity;
+    }
 }

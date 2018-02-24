@@ -6,4 +6,8 @@ public abstract class ReceiveDataPackageEvent<T extends DataEntity> extends Rece
     ReceiveDataPackageEvent(Object source, T entity) {
         super(source, entity);
     }
+
+    public DataEntity getEntity0() {
+        return entity;
+    }
 }
