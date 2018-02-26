@@ -139,6 +139,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
                     }
                     break;
+                    case "TV_END": {
+                        eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(content, TVEndEntity.class));
+                    }
+                    break;
                     default: {
                         LOGGER.error("Received unknown json below: \n{}", formatJson(content));
                         eventCreationExpression = () -> new UnknownPackageEvent(this, content);

@@ -1,0 +1,21 @@
+{
+  "cmd": "TV_END",
+  "data": {
+    "id": "39077",
+    "uname": "かこゆきこvew",
+    "sname": "是你的苏苏吖",
+    "giftName": "10W银瓜子",
+    "mobileTips": "恭喜 かこゆきこvew 获得10W银瓜子",
+    "raffleId": "39077",
+    "type": "small_tv",
+    "from": "是你的苏苏吖",
+    "fromFace": "http://i0.hdslb.com/bfs/face/147f137d24138d1cfec5443d98ac8b03c4332398.jpg",
+    "win": {
+      "uname": "かこゆきこvew",
+      "face": "http://i0.hdslb.com/bfs/face/4d63bd62322e7f3ef38723a91440bc6930626d9f.jpg",
+      "giftName": "银瓜子",
+      "giftId": "silver",
+      "giftNum": 100000
+    }
+  }
+}

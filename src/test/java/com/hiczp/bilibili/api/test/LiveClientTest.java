@@ -129,7 +129,7 @@ public class LiveClientTest {
         }
 
         @Subscribe
-        public void SysGift(SysGiftPackageEvent sysGiftPackageEvent) {
+        public void sysGift(SysGiftPackageEvent sysGiftPackageEvent) {
             SysGiftEntity sysGiftEntity = sysGiftPackageEvent.getEntity();
             LOGGER.info("[SysGift] {}: {}",
                     sysGiftEntity.getMsg(),
@@ -138,7 +138,7 @@ public class LiveClientTest {
         }
 
         @Subscribe
-        public void SysMsg(SysMsgPackageEvent sysMsgPackageEvent) {
+        public void sysMsg(SysMsgPackageEvent sysMsgPackageEvent) {
             SysMsgEntity sysMsgEntity = sysMsgPackageEvent.getEntity();
             LOGGER.info("[SysMsg] {}: {}",
                     sysMsgEntity.getMsg(),
@@ -147,21 +147,16 @@ public class LiveClientTest {
         }
 
         @Subscribe
-        public void ViewerCount(ViewerCountPackageEvent viewerCountPackageEvent) {
-            LOGGER.info("[ViewerCount] {}", viewerCountPackageEvent.getViewerCount());
-        }
-
-        @Subscribe
-        public void WelcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
-            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
-            LOGGER.info("[WelcomeGuard] [GL {}] {}",
-                    dataEntity.getGuardLevel(),
-                    dataEntity.getUsername()
+        public void tvEnd(TVEndPackageEvent tvEndPackageEvent) {
+            TVEndEntity tvEndEntity = tvEndPackageEvent.getEntity();
+            LOGGER.info("[TVEnd] user {} win the {}",
+                    tvEndEntity.getData().getUname(),
+                    tvEndEntity.getData().getType()
             );
         }
 
         @Subscribe
-        public void Welcome(WelcomePackageEvent welcomePackageEvent) {
+        public void welcome(WelcomePackageEvent welcomePackageEvent) {
             WelcomeEntity.DataEntity dataEntity = welcomePackageEvent.getEntity().getData();
             StringBuilder stringBuilder = new StringBuilder("[Welcome] ");
             if (dataEntity.isAdmin()) {
@@ -170,6 +165,20 @@ public class LiveClientTest {
             stringBuilder.append(String.format("[VIP %d] ", dataEntity.getVip()))
                     .append(dataEntity.getUserName());
             LOGGER.info(stringBuilder.toString());
+        }
+
+        @Subscribe
+        public void welcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
+            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
+            LOGGER.info("[WelcomeGuard] [GL {}] {}",
+                    dataEntity.getGuardLevel(),
+                    dataEntity.getUsername()
+            );
+        }
+
+        @Subscribe
+        public void viewerCount(ViewerCountPackageEvent viewerCountPackageEvent) {
+            LOGGER.info("[ViewerCount] {}", viewerCountPackageEvent.getViewerCount());
         }
     }
 }
