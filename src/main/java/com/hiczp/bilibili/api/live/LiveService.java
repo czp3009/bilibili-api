@@ -22,10 +22,15 @@ public interface LiveService {
     @GET("AppRoom/msg")
     Call<LiveHistoryBulletScreensEntity> getHistoryBulletScreens(@Query("room_id") long roomId);
 
-    //获取房间信息
+    //获取直播间信息
     //登录后访问该 API 将在服务器新增一条直播间观看历史
     @GET("AppRoom/index")
     Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
+
+    //根据用户 ID 来获取房间信息, 通常用于获取自己的直播间信息
+    //该 API 不会增加直播间观看历史
+    @GET("assistant/getRoomInfo")
+    Call<AssistantRoomInfoEntity> getAssistantRoomInfo(@Query("uId") long userId);
 
     //获得是否关注了一个主播
     //未登录时返回 401
@@ -170,6 +175,10 @@ public interface LiveService {
     default Call<SearchResponseEntity> search(String keyword, long page, long pageSize) {
         return search(keyword, page, pageSize, "all");
     }
+
+    //获取自己的直播间的封面(获取其他人的封面会 -403)
+    @GET("mhand/assistant/getCover")
+    Call<CoverEntity> getCover(@Query("roomId") long roomId);
 
     //"直播" 页面下面的推荐, 每个分类有六个的那种
     @GET("mobile/rooms")

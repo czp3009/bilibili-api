@@ -5,6 +5,7 @@ public class ServerErrorCode {
     //服务网关上鉴权失败的话, 会返回这些标准错误码
     //B站后台设计很混乱, 不是所有鉴权都在服务网关上完成
     public static class Common {
+        public static final int API_SIGN_INVALID = -3;
         public static final int OK = 0;
         public static final int BAD_REQUEST = -400;
         public static final int UNAUTHORIZED = -401;
