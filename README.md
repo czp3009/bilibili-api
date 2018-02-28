@@ -237,6 +237,7 @@ API 文档
 | SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 |
 | SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
 | SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
+| TVEndPackageEvent | 收到 TV_END 数据包 |
 | UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
 | ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
 | WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
