@@ -151,7 +151,7 @@ B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访�
 
     bilibiliAPI.toCookies();
 
-来得到对应的 cookies, 类型为 Map<String, List\<Cookie>>, key 为 domain(可能是统配类型的, 例如 ".bilibili.com"), value 为此 domain 对应的 cookies.
+来得到对应的 cookies, 类型为 Map<String, List\<Cookie>>, key 为 domain(可能是通配类型的, 例如 ".bilibili.com"), value 为此 domain 对应的 cookies.
 
 如果只想得到用于进行 SSO 操作的那条 URL, 可以这么做
 
