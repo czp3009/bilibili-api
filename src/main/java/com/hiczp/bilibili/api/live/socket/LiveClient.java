@@ -2,7 +2,6 @@ package com.hiczp.bilibili.api.live.socket;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.hiczp.bilibili.api.BilibiliServiceProvider;
 import com.hiczp.bilibili.api.live.bulletScreen.BulletScreenConstDefinition;
 import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
@@ -11,6 +10,7 @@ import com.hiczp.bilibili.api.live.socket.codec.PackageDecoder;
 import com.hiczp.bilibili.api.live.socket.codec.PackageEncoder;
 import com.hiczp.bilibili.api.live.socket.event.ConnectionCloseEvent;
 import com.hiczp.bilibili.api.live.socket.handler.LiveClientHandler;
+import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

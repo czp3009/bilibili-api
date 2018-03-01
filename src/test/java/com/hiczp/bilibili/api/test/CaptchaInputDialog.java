@@ -1,7 +1,6 @@
 package com.hiczp.bilibili.api.test;
 
 import com.hiczp.bilibili.api.BilibiliAPI;
-import okhttp3.Response;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -47,17 +46,12 @@ public class CaptchaInputDialog extends JDialog {
 
     private void createUIComponents() {
         try {
-            cookie = new BilibiliAPI().getPassportService().getKey()
+            BilibiliAPI bilibiliAPI = new BilibiliAPI();
+            cookie = bilibiliAPI.getPassportService().getKey()
                     .execute()
                     .headers()
                     .get("Set-cookie");
-            Response response = Config.getBilibiliAPI().getPassportService()
-                    .getCaptcha(cookie)
-                    .execute();
-            if (response.code() != 200) {
-                throw new IOException(response.message());
-            }
-            label = new JLabel(new ImageIcon(ImageIO.read(response.body().byteStream())));
+            label = new JLabel(new ImageIcon(ImageIO.read(bilibiliAPI.getCaptchaService().getCaptchaAsStream(cookie))));
         } catch (IOException e) {
             e.printStackTrace();
         }

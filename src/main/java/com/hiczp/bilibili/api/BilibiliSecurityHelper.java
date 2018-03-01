@@ -4,6 +4,7 @@ import com.hiczp.bilibili.api.passport.entity.KeyEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
+import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

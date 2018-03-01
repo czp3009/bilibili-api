@@ -4,6 +4,7 @@ import com.hiczp.bilibili.api.cookie.SimpleCookieJar;
 import com.hiczp.bilibili.api.interceptor.*;
 import com.hiczp.bilibili.api.live.LiveService;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
+import com.hiczp.bilibili.api.passport.CaptchaService;
 import com.hiczp.bilibili.api.passport.PassportService;
 import com.hiczp.bilibili.api.passport.SsoService;
 import com.hiczp.bilibili.api.passport.entity.InfoEntity;
@@ -11,6 +12,9 @@ import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
+import com.hiczp.bilibili.api.provider.BilibiliCaptchaProvider;
+import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
+import com.hiczp.bilibili.api.provider.BilibiliSsoProvider;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
@@ -29,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class BilibiliAPI implements BilibiliServiceProvider, BilibiliSsoProvider, LiveClientProvider {
+public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProvider, BilibiliSsoProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
 
     private final Long apiInitTime = Instant.now().getEpochSecond();    //记录当前类被实例化的时间
@@ -41,6 +45,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliSsoProvider
     private String invalidRefreshToken;
 
     private PassportService passportService;
+    private CaptchaService captchaService;
     private LiveService liveService;
 
     public BilibiliAPI() {
@@ -160,6 +165,26 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliSsoProvider
                 .client(okHttpClientBuilder.build())
                 .build()
                 .create(LiveService.class);
+    }
+
+    @Override
+    public CaptchaService getCaptchaService() {
+        if (captchaService == null) {
+            captchaService = getCaptchaService(Collections.emptyList(), HttpLoggingInterceptor.Level.BASIC);
+        }
+        return captchaService;
+    }
+
+    public CaptchaService getCaptchaService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+        okHttpClientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
+
+        return new Retrofit.Builder()
+                .baseUrl(BaseUrlDefinition.PASSPORT)
+                .client(okHttpClientBuilder.build())
+                .build()
+                .create(CaptchaService.class);
     }
 
     public SsoService getSsoService() {

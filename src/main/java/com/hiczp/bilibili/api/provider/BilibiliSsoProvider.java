@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api;
+package com.hiczp.bilibili.api.provider;
 
 import com.hiczp.bilibili.api.passport.SsoService;
 import okhttp3.Cookie;

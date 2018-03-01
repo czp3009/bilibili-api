@@ -1,36 +1,13 @@
 package com.hiczp.bilibili.api.passport;
 
-import com.hiczp.bilibili.api.BaseUrlDefinition;
 import com.hiczp.bilibili.api.passport.entity.*;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-import javax.annotation.Nonnull;
-
 public interface PassportService {
-    //获取验证码
-    default okhttp3.Call getCaptcha(@Nonnull String cookies) {
-        return getCaptcha(cookies, HttpLoggingInterceptor.Level.BASIC);
-    }
-
-    default okhttp3.Call getCaptcha(@Nonnull String cookies, @Nonnull HttpLoggingInterceptor.Level logLevel) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(logLevel))
-                .build()
-                .newCall(
-                        new Request.Builder()
-                                .url(BaseUrlDefinition.PASSPORT + "captcha")
-                                .header("Cookie", cookies)
-                                .build()
-                );
-    }
-
     @POST("api/oauth2/getKey")
     Call<KeyEntity> getKey();
 
