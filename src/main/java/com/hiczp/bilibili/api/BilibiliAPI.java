@@ -226,6 +226,30 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
                 .create(SsoService.class);
     }
 
+    @Override
+    public HttpUrl getSsoUrl(@Nullable String goUrl) {
+        CancelRequestInterceptor cancelRequestInterceptor = new CancelRequestInterceptor();
+        try {
+            getSsoService(new SimpleCookieJar(), Collections.singletonList(cancelRequestInterceptor), HttpLoggingInterceptor.Level.BASIC)
+                    .sso(null)
+                    .execute();
+        } catch (IOException ignored) {
+
+        }
+        return cancelRequestInterceptor.getRequest().url();
+    }
+
+    @Override
+    public Map<String, List<Cookie>> toCookies() throws IOException {
+        return toCookies(BaseUrlDefinition.PASSPORT + "api/oauth2/getKey");
+    }
+
+    public Map<String, List<Cookie>> toCookies(@Nullable String goUrl) throws IOException {
+        SimpleCookieJar simpleCookieJar = new SimpleCookieJar();
+        getSsoService(simpleCookieJar).sso(goUrl).execute();
+        return simpleCookieJar.getCookiesMap();
+    }
+
     public LoginResponseEntity login(@Nonnull String username, @Nonnull String password) throws IOException, LoginException, CaptchaMismatchException {
         return login(username, password, null, null);
     }
@@ -339,30 +363,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         }
 
         return infoEntity;
-    }
-
-    @Override
-    public HttpUrl getSsoUrl(@Nullable String goUrl) {
-        CancelRequestInterceptor cancelRequestInterceptor = new CancelRequestInterceptor();
-        try {
-            getSsoService(new SimpleCookieJar(), Collections.singletonList(cancelRequestInterceptor), HttpLoggingInterceptor.Level.BASIC)
-                    .sso(null)
-                    .execute();
-        } catch (IOException ignored) {
-
-        }
-        return cancelRequestInterceptor.getRequest().url();
-    }
-
-    @Override
-    public Map<String, List<Cookie>> toCookies() throws IOException {
-        return toCookies(BaseUrlDefinition.PASSPORT + "api/oauth2/getKey");
-    }
-
-    public Map<String, List<Cookie>> toCookies(@Nullable String goUrl) throws IOException {
-        SimpleCookieJar simpleCookieJar = new SimpleCookieJar();
-        getSsoService(simpleCookieJar).sso(goUrl).execute();
-        return simpleCookieJar.getCookiesMap();
     }
 
     @Override

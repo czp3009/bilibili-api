@@ -35,9 +35,11 @@ B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一�
 ### 登录
 使用账户名和密码作为登录参数
 
-    BilibiliAPI bilibiliAPI = new BilibiliAPI()
-        .login(String username, String password) throws IOException, LoginException
-    
+    String username = "yourUsername";
+    String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    LoginResponseEntity loginResponseEntity = bilibiliAPI.login(String username, String password);
+
 IOException 在网络故障时抛出
 
 LoginException 在用户名密码不匹配时抛出
@@ -46,20 +48,20 @@ CaptchaMismatchException 在验证码不正确时抛出, 见下文 [验证码问
 
 login 方法的返回值为 LoginResponseEntity 类型, 使用
 
-    .login(...).toBilibiliAccount()
+    loginResponseEntity.toBilibiliAccount()
 
 来获得一个 BilibiliAccount 实例, 其中包含了 OAuth2 的用户凭证, 如果有需要, 可以将其持久化保存.
 
 将一个登陆状态恢复出来(从之前保存的 BilibiliAccount 实例)使用如下代码
 
-    BilibiliAPI bilibiliAPI = new BilibiliAPI(BilibiliAccount bilibiliAccount)
+    BilibiliAPI bilibiliAPI = new BilibiliAPI(BilibiliAccount bilibiliAccount);
 
 注意, 如果这个 BilibiliAccount 实例含有的 accessToken 是错误的或者过期的, 需要鉴权的 API 将全部 401.
 
 ### 刷新 Token
 OAuth2 的重要凭证有两个, token 与 refreshToken, token 到期之后, 并不需要再次用用户名密码登录一次, 仅需要用 refreshToken 刷新一次 token 即可(会得到新的 token 和 refreshToken, refreshToken 的有效期不是无限的. B站的 refreshToken 有效期不明确).
 
-    bilibiliAPI.refreshToken() throws IOException, LoginException
+    bilibiliAPI.refreshToken();
 
 IOException 在网络故障时抛出
 
@@ -67,7 +69,7 @@ LoginException 在 token 错误,或者 refreshToken 错误或过期时抛出.
 
 ### 登出
 
-    BilibiliRESTAPI.logout() throws IOException, LoginException
+    bilibiliAPI.logout();
 
 IOException 在网络故障时抛出
 
@@ -132,6 +134,37 @@ LoginException 在 accessToken 错误或过期时抛出
 至于验证码怎么处理, 可以显示给最终用户, 让用户来输入, 或者用一些预训练模型自动识别验证码.
 
 这个带验证码的登录接口也会继续抛出 CaptchaMismatchException, 如果验证码输入错误的话.
+
+### SSO
+通过 SSO API 可以将 accessToken 转为 cookie, 用 cookie 就可以访问 B站的 Web API.
+
+B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访问页面时, 处于登录状态).
+
+首先, 我们需要登录
+
+    String username = "yourUsername";
+    String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    bilibiliAPI.login(String username, String password);
+
+通过
+
+    bilibiliAPI.toCookies();
+
+来得到对应的 cookies, 类型为 Map<String, List\<Cookie>>, key 为 domain(可能是统配类型的, 例如 ".bilibili.com"), value 为此 domain 对应的 cookies.
+
+如果只想得到用于进行 SSO 操作的那条 URL, 可以这么做
+
+    final String goUrl = "https://account.bilibili.com/account/home";
+    bilibiliAPI.getSsoUrl();
+
+返回值是一个 HttpUrl, 里面 url 的值差不多是这样的
+
+    https://passport.bilibili.com/api/login/sso?access_key=13c346c203de77dfac8b67b169f3029b&appkey=1d8b6e7d45233436&build=515000&mobi_app=android&platform=android&ts=1519895404&sign=ee05f96c636e7745c38918fe343469ee
+
+如果 access_key 是正确的话, 这个 url 访问一下就登录 B站 了.
+
+如果想跟 B站 客户端一样弄一个什么内嵌 WebView 的话, 这个 API 就可以派上用场(只需要在 WebView 初始化完毕后让 WebView 去访问这个 url, 就登陆了)(goUrl 可以是任意值, 全部的 302 重定向完成后将进入这个地址).
 
 ### API 调用示例
 打印一个直播间的历史弹幕
