@@ -12,7 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public interface PassportService {
     //获取验证码
@@ -50,9 +49,4 @@ public interface PassportService {
 
     @POST("api/oauth2/revoke")
     Call<LogoutResponseEntity> logout(@Query("access_token") String accessToken);
-
-    //TODO sso 尚不明确
-    @Deprecated
-    @GET("api/login/sso")
-    Call sso(@Query("access_token") String accessToken, @Nullable @Query("gourl") String goUrl);
 }

@@ -1,25 +1,28 @@
 package com.hiczp.bilibili.api.test;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hiczp.bilibili.api.BilibiliAPI;
-import org.junit.Ignore;
+import okhttp3.Cookie;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Map;
+
 public class SsoTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoTest.class);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Logger LOGGER = LoggerFactory.getLogger(SsoTest.class);
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
 
-    @Ignore
     @Test
     public void test() throws Exception {
-//        Object object = BILIBILI_API.getPassportService()
-//                .sso(BILIBILI_API.getBilibiliAccount().getAccessToken(), null)
-//                .execute()
-//                .body();
-//        LOGGER.info("{}", object.toString());
+        Map<String, List<Cookie>> cookiesMap = BILIBILI_API.toCookies();
+        StringBuilder stringBuilder = new StringBuilder();
+        cookiesMap.forEach((domain, cookies) -> {
+            stringBuilder.append("domain: ").append(domain).append("\n");
+            cookies.forEach(cookie ->
+                    stringBuilder.append("\t").append(cookie.name()).append("=").append(cookie.value()).append("\n")
+            );
+        });
+        LOGGER.info("Cookies below: \n{}", stringBuilder.toString());
     }
 }

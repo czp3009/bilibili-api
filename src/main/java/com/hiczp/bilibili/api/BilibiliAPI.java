@@ -1,16 +1,17 @@
 package com.hiczp.bilibili.api;
 
+import com.hiczp.bilibili.api.cookie.SimpleCookieJar;
 import com.hiczp.bilibili.api.interceptor.*;
 import com.hiczp.bilibili.api.live.LiveService;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.passport.PassportService;
+import com.hiczp.bilibili.api.passport.SsoService;
 import com.hiczp.bilibili.api.passport.entity.InfoEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
+import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,8 +27,9 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider {
+public class BilibiliAPI implements BilibiliServiceProvider, BilibiliSsoProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
 
     private final Long apiInitTime = Instant.now().getEpochSecond();    //记录当前类被实例化的时间
@@ -72,8 +75,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
     public PassportService getPassportService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
-        interceptors.forEach(okHttpClientBuilder::addInterceptor);
-
         okHttpClientBuilder
                 .addInterceptor(new AddFixedParamsInterceptor(
                         "build", bilibiliClientProperties.getBuild(),
@@ -85,7 +86,11 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 ))
                 .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                 .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                .addInterceptor(new ErrorResponseConverterInterceptor())
+                .addInterceptor(new ErrorResponseConverterInterceptor());
+
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+
+        okHttpClientBuilder
                 .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
 
         return new Retrofit.Builder()
@@ -106,8 +111,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
 
     public LiveService getLiveService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-
-        interceptors.forEach(okHttpClientBuilder::addInterceptor);
 
         okHttpClientBuilder
                 .addInterceptor(new AddFixedHeadersInterceptor(
@@ -144,7 +147,11 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 ))
                 .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
                 .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties))
-                .addInterceptor(new ErrorResponseConverterInterceptor())
+                .addInterceptor(new ErrorResponseConverterInterceptor());
+
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+
+        okHttpClientBuilder
                 .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
 
         return new Retrofit.Builder()
@@ -153,6 +160,45 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
                 .client(okHttpClientBuilder.build())
                 .build()
                 .create(LiveService.class);
+    }
+
+    public SsoService getSsoService() {
+        return getSsoService(new SimpleCookieJar());
+    }
+
+    //sso 需要保存 cookie, 不对 SsoService 进行缓存
+    @Override
+    public SsoService getSsoService(CookieJar cookieJar) {
+        return getSsoService(cookieJar, Collections.emptyList(), HttpLoggingInterceptor.Level.BASIC);
+    }
+
+    public SsoService getSsoService(@Nonnull CookieJar cookieJar, @Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        okHttpClientBuilder
+                .cookieJar(cookieJar)
+                .addInterceptor(new AddFixedParamsInterceptor(
+                        "build", bilibiliClientProperties.getBuild(),
+                        "mobi_app", "android",
+                        "platform", "android"
+                ))
+                .addInterceptor(new AddDynamicParamsInterceptor(
+                        () -> "ts", () -> Long.toString(Instant.now().getEpochSecond())
+                ))
+                .addInterceptor(new AddAccessKeyInterceptor(bilibiliAccount))
+                .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
+                .addInterceptor(new SortParamsAndSignInterceptor(bilibiliClientProperties));
+
+        interceptors.forEach(okHttpClientBuilder::addInterceptor);
+
+        okHttpClientBuilder
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(logLevel));
+
+        return new Retrofit.Builder()
+                .baseUrl(BaseUrlDefinition.PASSPORT)
+                .client(okHttpClientBuilder.build())
+                .build()
+                .create(SsoService.class);
     }
 
     public LoginResponseEntity login(@Nonnull String username, @Nonnull String password) throws IOException, LoginException, CaptchaMismatchException {
@@ -268,6 +314,30 @@ public class BilibiliAPI implements BilibiliServiceProvider, LiveClientProvider 
         }
 
         return infoEntity;
+    }
+
+    @Override
+    public HttpUrl getSsoUrl(@Nullable String goUrl) {
+        CancelRequestInterceptor cancelRequestInterceptor = new CancelRequestInterceptor();
+        try {
+            getSsoService(new SimpleCookieJar(), Collections.singletonList(cancelRequestInterceptor), HttpLoggingInterceptor.Level.BASIC)
+                    .sso(null)
+                    .execute();
+        } catch (IOException ignored) {
+
+        }
+        return cancelRequestInterceptor.getRequest().url();
+    }
+
+    @Override
+    public Map<String, List<Cookie>> toCookies() throws IOException {
+        return toCookies(BaseUrlDefinition.PASSPORT + "api/oauth2/getKey");
+    }
+
+    public Map<String, List<Cookie>> toCookies(@Nullable String goUrl) throws IOException {
+        SimpleCookieJar simpleCookieJar = new SimpleCookieJar();
+        getSsoService(simpleCookieJar).sso(goUrl).execute();
+        return simpleCookieJar.getCookiesMap();
     }
 
     @Override
