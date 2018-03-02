@@ -2,6 +2,7 @@ package com.hiczp.bilibili.api.web;
 
 import com.hiczp.bilibili.api.BaseUrlDefinition;
 import com.hiczp.bilibili.api.interceptor.AddFixedHeadersInterceptor;
+import com.hiczp.bilibili.api.interceptor.ErrorResponseConverterInterceptor;
 import com.hiczp.bilibili.api.web.cookie.SimpleCookieJar;
 import com.hiczp.bilibili.api.web.live.LiveService;
 import okhttp3.Cookie;
@@ -53,7 +54,8 @@ public class BilibiliWebAPI {
                 .cookieJar(cookieJar)
                 .addInterceptor(new AddFixedHeadersInterceptor(
                         "User-Agent", browserProperties.getUserAgent()
-                ));
+                ))
+                .addInterceptor(new ErrorResponseConverterInterceptor());
 
         interceptors.forEach(okHttpClientBuilder::addInterceptor);
 

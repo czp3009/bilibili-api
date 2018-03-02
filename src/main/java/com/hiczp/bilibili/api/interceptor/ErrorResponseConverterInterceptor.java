@@ -24,13 +24,18 @@ public class ErrorResponseConverterInterceptor implements Interceptor {
         JsonObject jsonObject = InterceptorHelper.getJsonInBody(response);
         JsonElement code = jsonObject.get("code");
         //code 字段不存在
-        if (code == null) {
+        if (code == null || code.isJsonNull()) {
             return response;
         }
         //code 为 0
-        if (code.getAsInt() == ServerErrorCode.Common.OK) {
+        try {
+            if (code.getAsInt() == ServerErrorCode.Common.OK) {
+                return response;
+            }
+        } catch (NumberFormatException e) {    //如果 code 不是数字的话直接返回
             return response;
         }
+
         //打印 body
         LOGGER.error("Get error response below: \n{}",
                 new GsonBuilder()

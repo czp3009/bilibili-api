@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.web.live;
 
 import com.hiczp.bilibili.api.web.live.entity.SendHeartBeatResponseEntity;
+import com.hiczp.bilibili.api.web.live.entity.UserInfoEntity;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -14,5 +15,15 @@ public interface LiveService {
 
     default Call<SendHeartBeatResponseEntity> sendHeartBeat() {
         return sendHeartBeat(System.currentTimeMillis());
+    }
+
+    //获取用户信息
+    //成功时, code 为 "REPONSE_OK"
+    //未登录时返回 500
+    @GET("User/getUserInfo")
+    Call<UserInfoEntity> getUserInfo(@Query("ts") long timestamp);
+
+    default Call<UserInfoEntity> getUserInfo() {
+        return getUserInfo(System.currentTimeMillis());
     }
 }
