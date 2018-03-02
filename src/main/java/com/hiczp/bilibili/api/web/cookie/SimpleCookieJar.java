@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SimpleCookieJar implements CookieJar {
     private Map<String, List<Cookie>> cookiesMap;
@@ -59,6 +60,12 @@ public class SimpleCookieJar implements CookieJar {
             }
         });
         return cookieList;
+    }
+
+    public String getCookiesStringForHost(String host) {
+        return getCookiesForHost(host).stream()
+                .map(cookie -> String.format("%s=%s", cookie.name(), cookie.value()))
+                .collect(Collectors.joining(";"));
     }
 
     public Map<String, List<Cookie>> getCookiesMap() {

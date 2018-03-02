@@ -3,7 +3,7 @@
 
 由于B站即使更新客户端, 也会继续兼容以前的旧版本客户端, 所以短期内不用担心 API 失效的问题.
 
-对于一些 Bilibili Android APP 上没有的功能, 可以先[将 token 转换为 cookie](#SSO), 然后再去调用 Bilibili Web API.
+对于一些 Bilibili Android APP 上没有的功能, 可以先[将 token 转换为 cookie](#sso), 然后再去调用 Bilibili Web API.
 
 # API 不完全
 由于本项目还在开发初期, 大量 API 没有完成, 所以很可能没有你想要的 API.

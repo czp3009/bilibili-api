@@ -11,9 +11,9 @@ import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
 import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
-import com.hiczp.bilibili.api.provider.BilibiliCaptchaProvider;
-import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
-import com.hiczp.bilibili.api.provider.BilibiliSsoProvider;
+import com.hiczp.bilibili.api.provider.*;
+import com.hiczp.bilibili.api.web.BilibiliWebAPI;
+import com.hiczp.bilibili.api.web.BrowserProperties;
 import com.hiczp.bilibili.api.web.cookie.SimpleCookieJar;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProvider, BilibiliSsoProvider, LiveClientProvider {
+public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProvider, BilibiliSsoProvider, BilibiliWebAPIProvider, LiveClientProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(BilibiliAPI.class);
 
     private final Long apiInitTime = Instant.now().getEpochSecond();    //记录当前类被实例化的时间
@@ -248,6 +248,15 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         SimpleCookieJar simpleCookieJar = new SimpleCookieJar();
         getSsoService(simpleCookieJar).sso(goUrl).execute();
         return simpleCookieJar.getCookiesMap();
+    }
+
+    @Override
+    public BilibiliWebAPI getBilibiliWebAPI() throws IOException {
+        return new BilibiliWebAPI(toCookies());
+    }
+
+    public BilibiliWebAPI getBilibiliWebAPI(BrowserProperties browserProperties) throws IOException {
+        return new BilibiliWebAPI(browserProperties, toCookies());
     }
 
     public LoginResponseEntity login(@Nonnull String username, @Nonnull String password) throws IOException, LoginException, CaptchaMismatchException {
