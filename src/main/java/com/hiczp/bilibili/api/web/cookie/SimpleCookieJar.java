@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api.cookie;
+package com.hiczp.bilibili.api.web.cookie;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;

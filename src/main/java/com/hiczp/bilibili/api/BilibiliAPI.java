@@ -1,6 +1,5 @@
 package com.hiczp.bilibili.api;
 
-import com.hiczp.bilibili.api.cookie.SimpleCookieJar;
 import com.hiczp.bilibili.api.interceptor.*;
 import com.hiczp.bilibili.api.live.LiveService;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
@@ -15,6 +14,7 @@ import com.hiczp.bilibili.api.passport.exception.CaptchaMismatchException;
 import com.hiczp.bilibili.api.provider.BilibiliCaptchaProvider;
 import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 import com.hiczp.bilibili.api.provider.BilibiliSsoProvider;
+import com.hiczp.bilibili.api.web.cookie.SimpleCookieJar;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;

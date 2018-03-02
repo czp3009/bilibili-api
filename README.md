@@ -3,7 +3,7 @@
 
 由于B站即使更新客户端, 也会继续兼容以前的旧版本客户端, 所以短期内不用担心 API 失效的问题.
 
-注意, 该项目使用 Bilibili Android 客户端协议, 与 Web 端的协议有差异, 不要提交 Web 端有关的 API.
+对于一些 Bilibili Android APP 上没有的功能, 可以先[将 token 转换为 cookie](#SSO), 然后再去调用 Bilibili Web API.
 
 # API 不完全
 由于本项目还在开发初期, 大量 API 没有完成, 所以很可能没有你想要的 API.
@@ -332,6 +332,44 @@ room_id 的获取要通过
 因此只需要判断 code 是否是 0 即可知道 API 是否成功执行, 不需要异常捕获.
 
 (B站所有 API 无论是否执行成功, HttpStatus 都是 200, 判断 HTTP 状态码是无用的, 必须通过 JSON 中的 code 字段来知道 API 是否执行成功).
+
+# 继续开发
+如果您想加入到开发中, 欢迎提交 Merge Request.
+
+本项目的 Http 请求全部使用 Retrofit 完成, 因此请求的地址和参数需要放在接口中统一管理, 如果您对 Retrofit 不是很熟悉, 可以看[这篇文章](http://square.github.io/retrofit/).
+
+服务器返回值将被 Gson 转换为 Java POJO(Entity), 通过[这篇文章](https://github.com/google/gson/blob/master/UserGuide.md)来了解 Gson.
+
+POJO 使用 IDEA 插件 [GsonFormat](https://plugins.jetbrains.com/plugin/7654-gsonformat) 自动化生成, 而非手动编写, 并且尽可能避免对自动生成的结果进行修改以免导致可能出现混淆或含义不明确的情况.
+
+(插件必须开启 "use SerializedName" 选项从而保证字段名符合小驼峰命名法)
+
+由于 B站 一些 JSON 是瞎鸡巴来的, 比如可能出现以下这种情况
+
+    "list": [
+        {
+            "name": "value",
+        },
+        ...
+    ] 
+
+此时自动生成的类型将是
+
+    List<List> lists
+
+因此必须要为内层元素指定一个具有语义的名称, 例如 Name, 此时类型变为
+
+    List<Name> names
+
+API 尽可能按照 UI 位置来排序, 例如
+
+    侧拉抽屉 -> 直播中心 -> 我的关注
+
+这是 "直播中心" 页面的第一个可点击控件, 那么下一个 API 或 API 组就应该是第二个可点击组件 "观看历史".
+
+和 UI 不对应的 API, 按照执行顺序排序, 例如进入直播间会按顺序访问一系列 API, 这些 API 就按照时间顺序排序.
+
+对于不知道怎么排的 API, 瞎鸡巴排就好了.
 
 # License
 GPL V3
