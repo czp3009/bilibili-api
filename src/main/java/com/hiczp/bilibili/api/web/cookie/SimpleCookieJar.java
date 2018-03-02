@@ -5,20 +5,20 @@ import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class SimpleCookieJar implements CookieJar {
     private Map<String, List<Cookie>> cookiesMap;
 
     public SimpleCookieJar() {
-        cookiesMap = new HashMap<>();
+        cookiesMap = new ConcurrentHashMap<>();
     }
 
     public SimpleCookieJar(Map<String, List<Cookie>> cookiesMap) {
-        this.cookiesMap = new HashMap<>(cookiesMap);
+        this.cookiesMap = new ConcurrentHashMap<>(cookiesMap);
     }
 
     @Override

@@ -48,7 +48,7 @@ CaptchaMismatchException 在验证码不正确时抛出, 见下文 [验证码问
 
 login 方法的返回值为 LoginResponseEntity 类型, 使用
 
-    loginResponseEntity.toBilibiliAccount()
+    BilibiliAccount bilibiliAccount = loginResponseEntity.toBilibiliAccount();
 
 来获得一个 BilibiliAccount 实例, 其中包含了 OAuth2 的用户凭证, 如果有需要, 可以将其持久化保存.
 
@@ -66,6 +66,10 @@ OAuth2 的重要凭证有两个, token 与 refreshToken, token 到期之后, 并
 IOException 在网络故障时抛出
 
 LoginException 在 token 错误,或者 refreshToken 错误或过期时抛出.
+
+refreshToken 操作在正常情况下将在服务器返回 401(实际上 B站 不用 401 来表示未登录)时自动进行, 因此 BilibiliAPI 内部持有的 BilibiliAccount 的实例的内容可能会发生改变, 如果需要在应用关闭时持久化用户 token, 需要这样来取得最后的 BilibiliAccount 状态
+
+    BilibiliAccount bilibiliAccount = bilibiliAPI.getBilibiliAccount();
 
 ### 登出
 
@@ -165,6 +169,37 @@ B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访�
 如果 access_key 是正确的话, 这个 url 访问一下就登录 B站 了.
 
 如果想跟 B站 客户端一样弄一个什么内嵌 WebView 的话, 这个 API 就可以派上用场(只需要在 WebView 初始化完毕后让 WebView 去访问这个 url, 就登陆了)(goUrl 可以是任意值, 全部的 302 重定向完成后将进入这个地址).
+
+### Web API
+上文讲到, 通过 SSO API, 可以将 token 转为 cookie, 在本项目中, Web API 封装在 BilibiliWebAPI 中, 可以通过如下方式得到一个已经登录了的 BilibiliWebAPI 实例
+
+    String username = "yourUsername";
+    String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    bilibiliAPI.login(String username, String password);
+    BilibiliWebAPI bilibiliWebAPI = bilibiliAPI.getBilibiliWebAPI();
+
+IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
+
+如果将之前的 bilibiliAPI.toCookies() 的返回值(cookiesMap)持久化了下来的话, 下次可以通过以下方式直接获得一个已经登录了的 BilibiliWebAPI 实例(注意, cookie 没有 refreshToken 机制, 过期不会自动刷新, 因此不推荐持久化 cookie)
+
+    Map<String, List<Cookie>> cookiesMap = bilibiliAPI.toCookies();
+    //序列化后存储
+    //...
+    //反序列化后得到上次存储的 cookiesMap
+    BilibiliWebAPI bilibiliWebAPI = new BilibiliWebAPI(cookiesMap);
+
+有了 BilibiliWebAPI 实例之后, 通过类似以下代码的形式来获取对应的 Service, API 调用方法和基于 Token 方式的 API 一致
+
+    LiveService liveService = bilibiliWebAPI.getLiveService();
+
+(这个 LiveService 是 Web API 里的 LiveService)
+
+由于 Web API 是有状态的, 每个 BilibiliWebAPI 内部维护的 CookieJar 是同一个, 一些验证有关的 API 可能会改变 cookie.
+
+通过以下代码来获得一个 BilibiliWebAPI 中目前持有的 CookieJar 的引用
+
+    bilibiliWebAPI.getCookieJar();
 
 ### API 调用示例
 打印一个直播间的历史弹幕

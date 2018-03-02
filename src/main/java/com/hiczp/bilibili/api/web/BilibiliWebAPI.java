@@ -18,17 +18,17 @@ import java.util.Map;
 
 public class BilibiliWebAPI {
     private final BrowserProperties browserProperties;
-    private final SimpleCookieJar simpleCookieJar;
+    private final SimpleCookieJar cookieJar;
 
     private LiveService liveService;
 
-    public BilibiliWebAPI(BrowserProperties browserProperties, SimpleCookieJar simpleCookieJar) {
+    public BilibiliWebAPI(BrowserProperties browserProperties, SimpleCookieJar cookieJar) {
         this.browserProperties = browserProperties;
-        this.simpleCookieJar = simpleCookieJar;
+        this.cookieJar = cookieJar;
     }
 
-    public BilibiliWebAPI(SimpleCookieJar simpleCookieJar) {
-        this(BrowserProperties.defaultSetting(), simpleCookieJar);
+    public BilibiliWebAPI(SimpleCookieJar cookieJar) {
+        this(BrowserProperties.defaultSetting(), cookieJar);
     }
 
     public BilibiliWebAPI(BrowserProperties browserProperties, Map<String, List<Cookie>> cookiesMap) {
@@ -50,7 +50,7 @@ public class BilibiliWebAPI {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
         okHttpClientBuilder
-                .cookieJar(simpleCookieJar)
+                .cookieJar(cookieJar)
                 .addInterceptor(new AddFixedHeadersInterceptor(
                         "User-Agent", browserProperties.getUserAgent()
                 ));
@@ -68,7 +68,7 @@ public class BilibiliWebAPI {
                 .create(LiveService.class);
     }
 
-    public SimpleCookieJar getSimpleCookieJar() {
-        return simpleCookieJar;
+    public SimpleCookieJar getCookieJar() {
+        return cookieJar;
     }
 }
