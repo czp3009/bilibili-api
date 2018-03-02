@@ -27,11 +27,6 @@ public interface LiveService {
     @GET("AppRoom/index")
     Call<LiveRoomInfoEntity> getRoomInfo(@Query("room_id") long roomId);
 
-    //根据用户 ID 来获取房间信息, 通常用于获取自己的直播间信息
-    //该 API 不会增加直播间观看历史
-    @GET("assistant/getRoomInfo")
-    Call<AssistantRoomInfoEntity> getAssistantRoomInfo(@Query("uId") long userId);
-
     //获得是否关注了一个主播
     //未登录时返回 401
     @POST("feed/v1/feed/isFollowed")
@@ -155,17 +150,7 @@ public interface LiveService {
     @GET("AppRoom/getGiftTop")
     Call<GiftTopEntity> getGiftTop(@Query("room_id") int roomId);
 
-    //签到(live 站签到, 非总站(虽然我也不知道总站有没有签到功能))(侧拉抽屉 -> 直播中心 -> 右上角日历图标)
-    //无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
-    @GET("AppUser/getSignInfo")
-    Call<SignInfoEntity> getSignInfo();
-
-    //获得关注列表(直播 -> 关注)
-    //未登录时返回 32205
-    @GET("AppFeed/index")
-    Call<FollowedHostsEntity> getFollowedHosts(@Query("page") long page, @Query("pagesize") long pageSize);
-
-    //live 站的搜索
+    //live 站的搜索("直播" 页面)
     //type 为 room 时只返回 房间 的搜索结果
     //type 为 user 时只返回 用户 的搜索结果
     //type 为 all 时 房间 与 用户 的搜索结果都有
@@ -176,23 +161,98 @@ public interface LiveService {
         return search(keyword, page, pageSize, "all");
     }
 
-    //获取自己的直播间的封面(获取其他人的封面会 -403)
-    @GET("mhand/assistant/getCover")
-    Call<CoverEntity> getCover(@Query("roomId") long roomId);
+    //"直播" 页面(这个页面对应的后台数据, 包括 banner, 推荐主播, 各种分区的推荐等)
+    //这个 API 会读取 "_device"(固定参数) 或者 "device" 来判断平台, 只需要有一个就能正常工作, 客户端上是两个都有, 且值都为 "android"
+    @GET("room/v1/AppIndex/getAllList")
+    Call<AllListEntity> getAllList(@Query("device") String device);
 
-    //"直播" 页面下面的推荐, 每个分类有六个的那种
+    default Call<AllListEntity> getAllList() {
+        return getAllList("android");
+    }
+
+    //直播 -> 全部直播 -> 推荐直播
+    //似乎 推荐直播 与 最热直播 的返回值是一样的
     @GET("mobile/rooms")
     Call<RoomsEntity> getRooms();
 
-    //侧拉抽屉 -> 直播中心 -> 佩戴中心
+    //侧拉抽屉 -> 直播中心 -> 右上角日历图标
+    //签到(live 站签到, 非总站(虽然我也不知道总站有没有签到功能))
+    //无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
+    @GET("AppUser/getSignInfo")
+    Call<SignInfoEntity> getSignInfo();
+
+    //侧拉抽屉 -> 直播中心 -> 我的关注
+    //获得关注列表
+    //未登录时返回 32205
+    @GET("AppFeed/index")
+    Call<FollowedHostsEntity> getFollowedHosts(@Query("page") long page, @Query("pagesize") long pageSize);
+
+    //侧拉抽屉 -> 直播中心 -> 观看历史
+    @GET("AppUser/history")
+    Call<HistoryEntity> getHistory(@Query("page") long page, @Query("pagesize") long pageSize);
+
+    //TODO 佩戴中心
+    //侧拉抽屉 -> 直播中心 -> 佩戴中心 -> 粉丝勋章
+    //获得用户拥有的粉丝勋章
+    @GET("AppUser/medal")
+    Call<MyMedalListEntity> getMyMedalList();
+
+    //TODO 佩戴粉丝勋章
+    //TODO 删除粉丝勋章
+
+    //侧拉抽屉 -> 直播中心 -> 佩戴中心 -> 我的头衔 -> 佩戴头衔
     //获得用户拥有的头衔
     @GET("appUser/myTitleList")
     Call<MyTitleListEntity> getMyTitleList();
 
+    //获得当前佩戴着的头衔的详情
+    //当前未佩戴任何东西时, 返回的 code 为 -1, message 为 "nodata"
+    @GET("appUser/getWearTitle")
+    Call<WearTitleEntity> getWearTitle();
+
     //佩戴头衔
+    //是的, 你没看错, 是 GET 方式
     @GET("AppUser/wearTitle")
     Call<WearTitleResponseEntity> wearTitle(@Query("title") String title);
 
+    //TODO 获奖记录
+
+    //TODO 瓜子商店
     //侧拉抽屉 -> 直播中心 -> 瓜子商店 -> 银瓜子兑换 -> 硬币银瓜子互换 ->　兑换硬币
     //将 700 银瓜子兑换为 1 硬币, 每个用户每天只能换一次
+
+    //扭蛋机
+    //侧拉抽屉 -> 直播中心 -> 扭蛋机 -> 普通扭蛋
+    //获得 扭蛋机(普通扭蛋) 这个页面对应的后台数据
+    @GET("AppUser/capsuleInfo")
+    Call<CapsuleInfoEntity> getCapsuleInfo();
+
+    //抽扭蛋
+    //count 只能为 1, 10, 100
+    @POST("AppUser/capsuleInfoOpen")
+    @FormUrlEncoded
+    Call<OpenCapsuleResponseEntity> openCapsule(@Field("count") long count, @Field("type") String type);
+
+    //抽普通扭蛋
+    //侧拉抽屉 -> 直播中心 -> 扭蛋机 -> 普通扭蛋 -> 扭
+    //普通扭蛋的 type 为 "normal"
+    default Call<OpenCapsuleResponseEntity> openNormalCapsule(long count) {
+        return openCapsule(count, "normal");
+    }
+
+    //TODO 梦幻扭蛋(没抽过, 不知道 type 的值)
+
+    //房间设置
+    //侧拉抽屉 -> 直播中心 -> 房间设置 -> (上面的个人信息, 包括 房间号, 粉丝数, UP 经验)
+    //根据用户 ID 来获取房间信息, 通常用于获取自己的直播间信息(可以用来获取他人的房间信息)
+    //该 API 不会增加直播间观看历史
+    @GET("assistant/getRoomInfo")
+    Call<AssistantRoomInfoEntity> getAssistantRoomInfo(@Query("uId") long userId);
+
+    //侧拉抽屉 -> 直播中心 -> 房间设置 -> 我的封面
+    //获取自己的直播间的封面(获取其他人的封面会 -403)
+    @GET("mhand/assistant/getCover")
+    Call<CoverEntity> getCover(@Query("roomId") long roomId);
+
+    //TODO 粉丝勋章(尚未达到开通粉丝勋章的最低要求, 无法对该 API 截包)
 }

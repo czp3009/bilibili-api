@@ -32,6 +32,8 @@ public class ServerErrorCode {
     //一些 API 未登录时返回 3, 一些返回 -101, 还有一些返回 401, 在网关上鉴权的 API 返回 -401
     //甚至有一些 API 返回 32205 这种奇怪的错误码
     public static class Live {
+        //"invalid params"
+        public static final int INVALID_PARAMS = 1;
         //"user no login"
         public static final int USER_NO_LOGIN = 3;
         //"请登录"
