@@ -14,7 +14,12 @@ public class SsoTest {
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
 
     @Test
-    public void test() throws Exception {
+    public void getSsoUrlTest() {
+        LOGGER.info("SSO Url: {}", BILIBILI_API.getSsoUrl("https://account.bilibili.com/account/home"));
+    }
+
+    @Test
+    public void toCookiesTest() throws Exception {
         Map<String, List<Cookie>> cookiesMap = BILIBILI_API.toCookies();
         StringBuilder stringBuilder = new StringBuilder();
         cookiesMap.forEach((domain, cookies) -> {

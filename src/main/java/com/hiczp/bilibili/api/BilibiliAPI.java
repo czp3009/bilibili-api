@@ -231,7 +231,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         CancelRequestInterceptor cancelRequestInterceptor = new CancelRequestInterceptor();
         try {
             getSsoService(new SimpleCookieJar(), Collections.singletonList(cancelRequestInterceptor), HttpLoggingInterceptor.Level.BASIC)
-                    .sso(null)
+                    .sso(goUrl)
                     .execute();
         } catch (IOException ignored) {
 
@@ -241,6 +241,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
 
     @Override
     public Map<String, List<Cookie>> toCookies() throws IOException {
+        //用这个地址是因为这个地址一定不会改变(在 B站 未来的更新中)并且很省流量
         return toCookies(BaseUrlDefinition.PASSPORT + "api/oauth2/getKey");
     }
 

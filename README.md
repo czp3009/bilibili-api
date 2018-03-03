@@ -140,7 +140,7 @@ LoginException 在 accessToken 错误或过期时抛出
 这个带验证码的登录接口也会继续抛出 CaptchaMismatchException, 如果验证码输入错误的话.
 
 ### SSO
-通过 SSO API 可以将 accessToken 转为 cookie, 用 cookie 就可以访问 B站的 Web API.
+通过 SSO API 可以将 accessToken 转为 cookie, 用 cookie 就可以访问 B站 的 Web API.
 
 B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访问页面时, 处于登录状态).
 
@@ -160,15 +160,15 @@ B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访�
 如果只想得到用于进行 SSO 操作的那条 URL, 可以这么做
 
     final String goUrl = "https://account.bilibili.com/account/home";
-    bilibiliAPI.getSsoUrl();
+    bilibiliAPI.getSsoUrl(goUrl);
 
 返回值是一个 HttpUrl, 里面 url 的值差不多是这样的
 
-    https://passport.bilibili.com/api/login/sso?access_key=13c346c203de77dfac8b67b169f3029b&appkey=1d8b6e7d45233436&build=515000&mobi_app=android&platform=android&ts=1519895404&sign=ee05f96c636e7745c38918fe343469ee
+    https://passport.bilibili.com/api/login/sso?access_key=c3bf6002bd2e539f5bfce56308f14789&appkey=1d8b6e7d45233436&build=515000&gourl=https%3A%2F%2Faccount.bilibili.com%2Faccount%2Fhome&mobi_app=android&platform=android&ts=1520079995&sign=654e2d00aa827aa1d7acef6fbeb9ee70
 
 如果 access_key 是正确的话, 这个 url 访问一下就登录 B站 了.
 
-如果想跟 B站 客户端一样弄一个什么内嵌 WebView 的话, 这个 API 就可以派上用场(只需要在 WebView 初始化完毕后让 WebView 去访问这个 url, 就登陆了)(goUrl 可以是任意值, 全部的 302 重定向完成后将进入这个地址).
+如果想跟 B站 客户端一样弄一个什么内嵌 WebView 的话, 这个 API 就可以派上用场(只需要在 WebView 初始化完毕后让 WebView 去访问这个 url, 就登陆了)(goUrl 可以是任意值, 全部的 302 重定向完成后将进入这个地址, 如果 goUrl 不存在或为空则将跳转到B站首页).
 
 ### Web API
 上文讲到, 通过 SSO API, 可以将 token 转为 cookie, 在本项目中, Web API 封装在 BilibiliWebAPI 中, 可以通过如下方式得到一个已经登录了的 BilibiliWebAPI 实例
