@@ -38,6 +38,8 @@ public class ServerErrorCode {
         public static final int USER_NO_LOGIN = 3;
         //"请登录"
         public static final int PLEASE_LOGIN = 401;
+        //"每天最多能兑换 1 个"
+        public static final int FORBIDDEN = 403;
         //"请登录"
         public static final int PLEASE_LOGIN0 = 32205;
         //"请先登录"

@@ -214,12 +214,21 @@ public interface LiveService {
     //是的, 你没看错, 是 GET 方式
     @GET("AppUser/wearTitle")
     Call<WearTitleResponseEntity> wearTitle(@Query("title") String title);
+    //TODO 取消佩戴
 
     //TODO 获奖记录
 
-    //TODO 瓜子商店
+    //瓜子商店
     //侧拉抽屉 -> 直播中心 -> 瓜子商店 -> 银瓜子兑换 -> 硬币银瓜子互换 ->　兑换硬币
     //将 700 银瓜子兑换为 1 硬币, 每个用户每天只能换一次
+    //actionKey 是固定值, 为 "appkey"
+    //已经兑换过时返回 403
+    @POST("AppExchange/silver2coin")
+    Call<Silver2CoinResponseEntity> silver2Coin(@Query("actionKey") String actionKey);
+
+    default Call<Silver2CoinResponseEntity> silver2Coin() {
+        return silver2Coin("appkey");
+    }
 
     //扭蛋机
     //侧拉抽屉 -> 直播中心 -> 扭蛋机 -> 普通扭蛋
