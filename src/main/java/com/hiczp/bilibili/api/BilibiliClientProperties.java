@@ -8,19 +8,22 @@ public class BilibiliClientProperties {
     private String hardwareId = "JxdyESFAJkcjEicQbBBsCTlbal5uX2Y";
     private String scale = "xxhdpi";
     private String version = "5.15.0.515000";
+    private String simpleVersion;
     private String build;
     private String buvId = "JxdyESFAJkcjEicQbBBsCTlbal5uX2Yinfoc";
 
     private BilibiliClientProperties() {
-        generateBuildProperty();
+        onVersionChange();
     }
 
     public static BilibiliClientProperties defaultSetting() {
         return new BilibiliClientProperties();
     }
 
-    private void generateBuildProperty() {
-        this.build = version.substring(version.lastIndexOf(".") + 1);
+    private void onVersionChange() {
+        int lastIndexOfDot = version.lastIndexOf(".");
+        this.simpleVersion = version.substring(0, lastIndexOfDot);
+        this.build = version.substring(lastIndexOfDot + 1);
     }
 
     public String getAppKey() {
@@ -65,8 +68,12 @@ public class BilibiliClientProperties {
 
     public BilibiliClientProperties setVersion(@Nonnull String version) {
         this.version = version;
-        generateBuildProperty();
+        onVersionChange();
         return this;
+    }
+
+    public String getSimpleVersion() {
+        return simpleVersion;
     }
 
     public String getBuild() {

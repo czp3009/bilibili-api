@@ -120,7 +120,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         okHttpClientBuilder
                 .addInterceptor(new AddFixedHeadersInterceptor(
                         "Buvid", bilibiliClientProperties.getBuvId(),
-                        "User-Agent", "Mozilla/5.0 BiliDroid/5.15.0 (bbcallen@gmail.com)",
+                        "User-Agent", String.format("Mozilla/5.0 BiliDroid/%s (bbcallen@gmail.com)", bilibiliClientProperties.getSimpleVersion()),
                         "Device-ID", bilibiliClientProperties.getHardwareId()
                 ))
                 .addInterceptor(new AddDynamicHeadersInterceptor(
