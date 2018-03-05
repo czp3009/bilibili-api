@@ -47,7 +47,7 @@ public class BilibiliSecurityHelper {
         //加密密码
         String cipheredPassword;
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             cipheredPassword = new String(
                     Base64.getEncoder().encode(
