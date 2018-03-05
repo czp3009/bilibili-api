@@ -23,21 +23,21 @@ public class BilibiliWebAPI {
 
     private LiveService liveService;
 
-    public BilibiliWebAPI(BrowserProperties browserProperties, SimpleCookieJar cookieJar) {
+    public BilibiliWebAPI(BrowserProperties browserProperties, Map<String, List<Cookie>> cookiesMap) {
         this.browserProperties = browserProperties;
-        this.cookieJar = cookieJar;
+        this.cookieJar = new SimpleCookieJar(cookiesMap);
     }
 
     public BilibiliWebAPI(SimpleCookieJar cookieJar) {
-        this(BrowserProperties.defaultSetting(), cookieJar);
-    }
-
-    public BilibiliWebAPI(BrowserProperties browserProperties, Map<String, List<Cookie>> cookiesMap) {
-        this(browserProperties, new SimpleCookieJar(cookiesMap));
+        this(BrowserProperties.defaultSetting(), cookieJar.getCookiesMap());
     }
 
     public BilibiliWebAPI(Map<String, List<Cookie>> cookiesMap) {
-        this(BrowserProperties.defaultSetting(), new SimpleCookieJar(cookiesMap));
+        this(BrowserProperties.defaultSetting(), cookiesMap);
+    }
+
+    public BilibiliWebAPI(BrowserProperties browserProperties, SimpleCookieJar cookieJar) {
+        this(browserProperties, cookieJar.getCookiesMap());
     }
 
     public LiveService getLiveService() {
