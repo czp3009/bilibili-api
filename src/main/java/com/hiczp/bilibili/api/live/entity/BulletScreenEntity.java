@@ -7,7 +7,8 @@ public class BulletScreenEntity {
 
     private long mid;
 
-    //弹幕长度限制为 LiveRoomInfoEntity.getData().getMsgLength(), 但是实际上所有房间的弹幕长度限制都是 20
+    //弹幕长度限制为 LiveRoomInfoEntity.getData().getMsgLength(), 对于每个用户而言, 每个房间都一样
+    //通过完成 B站 有关任务, 获得成就, 可以加大这个限制(舰长, 老爷等可以直接加大限制), 最长好像是 40 个字
     @SerializedName("msg")
     private String message;
 

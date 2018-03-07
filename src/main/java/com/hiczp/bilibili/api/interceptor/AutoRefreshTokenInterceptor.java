@@ -13,20 +13,26 @@ import java.io.IOException;
 import java.util.stream.IntStream;
 
 //自动刷新 token
-public class RefreshTokenInterceptor implements Interceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RefreshTokenInterceptor.class);
+public class AutoRefreshTokenInterceptor implements Interceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutoRefreshTokenInterceptor.class);
 
     private BilibiliAPI bilibiliAPI;
+    private Boolean autoRefreshToken;
     private int[] codes;
 
-    public RefreshTokenInterceptor(BilibiliAPI bilibiliAPI, int... codes) {
+    public AutoRefreshTokenInterceptor(BilibiliAPI bilibiliAPI, Boolean autoRefreshToken, int... codes) {
         this.bilibiliAPI = bilibiliAPI;
+        this.autoRefreshToken = autoRefreshToken;
         this.codes = codes;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
+
+        if (!autoRefreshToken) {
+            return response;
+        }
 
         JsonObject jsonObject = InterceptorHelper.getJsonInBody(response);
         JsonElement codeElement = jsonObject.get("code");

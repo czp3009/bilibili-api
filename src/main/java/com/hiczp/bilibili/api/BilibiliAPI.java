@@ -40,6 +40,8 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
     private final BilibiliClientProperties bilibiliClientProperties;
     private final BilibiliAccount bilibiliAccount;
 
+    private Boolean autoRefreshToken = true;
+
     //用于阻止进行多次错误的 refreshToken 操作
     private String invalidToken;
     private String invalidRefreshToken;
@@ -142,8 +144,9 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
                         () -> "trace_id", () -> new SimpleDateFormat("yyyyMMddHHmm000ss").format(new Date())
                 ))
                 .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
-                .addInterceptor(new RefreshTokenInterceptor(
+                .addInterceptor(new AutoRefreshTokenInterceptor(
                         this,
+                        autoRefreshToken,
                         ServerErrorCode.Common.UNAUTHORIZED,
                         ServerErrorCode.Live.USER_NO_LOGIN,
                         ServerErrorCode.Live.PLEASE_LOGIN,
@@ -400,5 +403,14 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
 
     public BilibiliAccount getBilibiliAccount() {
         return bilibiliAccount;
+    }
+
+    public boolean isAutoRefreshToken() {
+        return autoRefreshToken;
+    }
+
+    public BilibiliAPI setAutoRefreshToken(boolean autoRefreshToken) {
+        this.autoRefreshToken = autoRefreshToken;
+        return this;
     }
 }

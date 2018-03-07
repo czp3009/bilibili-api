@@ -32,7 +32,7 @@ public interface LiveService {
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
 
-    //该 API 意义不明
+    //该 API 意义不明(似乎跟什么 每日背包任务 有关)
     @GET("AppBag/sendDaily")
     Call<SendDailyResponseEntity> sendDaily();
 
@@ -40,16 +40,19 @@ public interface LiveService {
     @GET("AppIndex/getAllItem")
     Call<ItemsEntity> getAllItem();
 
-    //该 API 的返回值意义不明确, 所有房间似乎都一样, 且返回的 code 为 -400
+    //查看可用的小电视抽奖
+    //当目标房间没有可用的小电视抽奖时返回 -400
     @GET("AppSmallTV/index")
-    Call<AppSmallTVEntity> getAppSmallTV();
+    Call<AppSmallTVEntity> getAppSmallTV(@Query("roomid") long roomId);
+    //TODO 参与抽奖
+    //TODO 查看抽奖结果
 
     //获得所有头衔的列表
     //这里的 Title 是头衔的意思
     @GET("appUser/getTitle")
     Call<TitlesEntity> getTitle();
 
-    //这个 API 不是很明确, 所有房间都一样, 可能和什么活动有关
+    //这个 API 不是很明确, 似乎和 节奏风暴 有关系
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
 
