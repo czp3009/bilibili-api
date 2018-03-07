@@ -132,6 +132,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
                 .addInterceptor(new AddFixedParamsInterceptor(
                         "_device", "android",
                         "_hwid", bilibiliClientProperties.getHardwareId(),
+                        "actionKey", "appkey",
                         "build", bilibiliClientProperties.getBuild(),
                         "mobi_app", "android",
                         "platform", "android",
