@@ -23,6 +23,7 @@ import java.nio.file.Paths;
         SecurityHelperTest.class,
         AuthenticatorTest.class,
         WebAPITest.class,
+        GetAwardsTest.class,
         LogoutTest.class
 })
 public class RuleSuite {

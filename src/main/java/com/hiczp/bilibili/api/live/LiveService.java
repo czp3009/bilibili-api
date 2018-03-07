@@ -220,6 +220,8 @@ public interface LiveService {
     //TODO 取消佩戴
 
     //TODO 获奖记录
+    @GET("AppUser/awards")
+    Call<AwardsEntity> getAwards();
 
     //瓜子商店
     //侧拉抽屉 -> 直播中心 -> 瓜子商店 -> 银瓜子兑换 -> 硬币银瓜子互换 ->　兑换硬币
