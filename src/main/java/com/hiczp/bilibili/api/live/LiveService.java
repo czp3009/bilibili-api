@@ -32,6 +32,7 @@ public interface LiveService {
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
 
+    //TODO 每日背包任务
     //该 API 意义不明(似乎跟什么 每日背包任务 有关)
     @GET("AppBag/sendDaily")
     Call<SendDailyResponseEntity> sendDaily();
@@ -40,6 +41,7 @@ public interface LiveService {
     @GET("AppIndex/getAllItem")
     Call<ItemsEntity> getAllItem();
 
+    //TODO 小电视
     //查看可用的小电视抽奖
     //当目标房间没有可用的小电视抽奖时返回 -400
     @GET("AppSmallTV/index")
@@ -52,6 +54,7 @@ public interface LiveService {
     @GET("appUser/getTitle")
     Call<TitlesEntity> getTitle();
 
+    //TODO 节奏风暴
     //这个 API 不是很明确, 似乎和 节奏风暴 有关系
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
@@ -220,6 +223,7 @@ public interface LiveService {
     //TODO 取消佩戴
 
     //TODO 获奖记录
+    //侧拉抽屉 -> 直播中心 -> 获奖记录
     @GET("AppUser/awards")
     Call<AwardsEntity> getAwards();
 
