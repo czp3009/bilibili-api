@@ -87,58 +87,73 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         .getAsString();
                 Supplier<Object> eventCreationExpression;   //try 不能写在 switch 外面, 用 lambda 来延迟执行
                 switch (cmd) {
+                    //弹幕消息
                     case "DANMU_MSG": {
                         eventCreationExpression = () -> new DanMuMsgPackageEvent(this, GSON.fromJson(content, DanMuMsgEntity.class));
                     }
                     break;
+                    //送礼
                     case "SEND_GIFT": {
                         eventCreationExpression = () -> new SendGiftPackageEvent(this, GSON.fromJson(content, SendGiftEntity.class));
                     }
                     break;
+                    //系统礼物(丰收庆典, 新春抽奖等)
                     case "SYS_GIFT": {
                         eventCreationExpression = () -> new SysGiftPackageEvent(this, GSON.fromJson(content, SysGiftEntity.class));
                     }
                     break;
+                    //系统消息(小电视等)
                     case "SYS_MSG": {
                         eventCreationExpression = () -> new SysMsgPackageEvent(this, GSON.fromJson(content, SysMsgEntity.class));
                     }
                     break;
+                    //欢迎
                     case "WELCOME": {
                         eventCreationExpression = () -> new WelcomePackageEvent(this, GSON.fromJson(content, WelcomeEntity.class));
                     }
                     break;
+                    //欢迎(舰队)
                     case "WELCOME_GUARD": {
                         eventCreationExpression = () -> new WelcomeGuardPackageEvent(this, GSON.fromJson(content, WelcomeGuardEntity.class));
                     }
                     break;
+                    //开始直播
                     case "LIVE": {
                         eventCreationExpression = () -> new LivePackageEvent(this, GSON.fromJson(content, LiveEntity.class));
                     }
                     break;
+                    //停止直播
                     case "PREPARING": {
                         eventCreationExpression = () -> new PreparingPackageEvent(this, GSON.fromJson(content, PreparingEntity.class));
                     }
                     break;
+                    //活动事件
                     case "ACTIVITY_EVENT": {
                         eventCreationExpression = () -> new ActivityEventPackageEvent(this, GSON.fromJson(content, ActivityEventEntity.class));
                     }
                     break;
+                    //许愿瓶
                     case "WISH_BOTTLE": {
                         eventCreationExpression = () -> new WishBottlePackageEvent(this, GSON.fromJson(content, WishBottleEntity.class));
                     }
                     break;
+                    //房间黑名单(添加了一个用户到黑名单)
                     case "ROOM_BLOCK_MSG": {
                         eventCreationExpression = () -> new RoomBlockMsgPackageEvent(this, GSON.fromJson(content, RoomBlockMsgEntity.class));
                     }
                     break;
+                    //TODO ROOM_SILENT_ON(禁止某一等级以下的用户发言)
+                    //房间结束禁言
                     case "ROOM_SILENT_OFF": {
                         eventCreationExpression = () -> new RoomSilentOffPackageEvent(this, GSON.fromJson(content, RoomSilentOffEntity.class));
                     }
                     break;
+                    //舰队消息(登船)
                     case "GUARD_MSG": {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
                     }
                     break;
+                    //小电视抽奖结束(大奖的获得者信息)
                     case "TV_END": {
                         eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(content, TVEndEntity.class));
                     }
