@@ -368,6 +368,15 @@ room_id 的获取要通过
 
 (B站所有 API 无论是否执行成功, HttpStatus 都是 200, 判断 HTTP 状态码是无用的, 必须通过 JSON 中的 code 字段来知道 API 是否执行成功).
 
+# 测试
+测试前需要先设置用户名和密码, 在 src/test/resources 目录下, 找到 config-template.json, 将其复制一份到同目录下并命名为 config.json 然后填写其中的字段即可.
+
+本项目使用 JUnit 作为单元测试框架. 命令行只需要执行
+
+    gradle test
+
+如果要在 IDEA 上进行测试, 需要运行 test 目录中的 RuleSuite 类(在 IDEA 中打开这个类, 点击行号上的重叠的两个向右箭头图标).
+
 # 继续开发
 如果您想加入到开发中, 欢迎提交 Merge Request.
 
