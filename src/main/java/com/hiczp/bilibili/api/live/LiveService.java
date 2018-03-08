@@ -178,7 +178,7 @@ public interface LiveService {
     }
 
     //获取对应分类和状态的直播间
-    //area_id 和 cate_id 不明确其含义
+    //cate_id 不明确其含义
     @GET("room/v1/Area/getRoomList")
     Call<RoomListEntity> getRoomList(
             @Query("area_id") int areaId,
