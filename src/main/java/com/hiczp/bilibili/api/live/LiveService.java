@@ -177,18 +177,30 @@ public interface LiveService {
         return recommendRefresh("android");
     }
 
-    //直播页面 下面的 普通分区(复数) 的刷新, 一次会返回 20 个结果, 客户端显示 6 个, 数据用完了之后再次访问该 API
+    //获取对应分类和状态的直播间
     //area_id 和 cate_id 不明确其含义
     @GET("room/v1/Area/getRoomList")
     Call<RoomListEntity> getRoomList(
             @Query("area_id") int areaId,
             @Query("cate_id") int categoryId,
             @Query("parent_area_id") int parentAreaId,
-            @Query("sort_type") String sortType
+            @Query("sort_type") String sortType,
+            @Query("page") Long page
     );
 
+    //直播页面 下面的 普通分区(复数) 的刷新, 一次会返回 20 个结果, 客户端显示 6 个, 数据用完了之后再次访问该 API
     default Call<RoomListEntity> getRoomList(int parentAreaId) {
-        return getRoomList(0, 0, parentAreaId, "dynamic");
+        return getRoomList(0, 0, parentAreaId, "dynamic", null);
+    }
+
+    //直播 -> 某个分区 -> 查看更多
+    //获取该页面上方的分类标签
+    @GET("room/v1/Area/getList")
+    Call<AreaListEntity> getAreaList(@Query("parent_id") int parentAreaId);
+
+    //获取该页面下的的直播间(areaId 为 0 表示选择了 "全部"(上方的分类标签), areaId 如果和 parentAreaId 不匹配将返回空的 data 字段)
+    default Call<RoomListEntity> getRoomList(int areaId, int parentAreaId, long page) {
+        return getRoomList(areaId, 0, parentAreaId, "online", page);
     }
 
     //直播 -> 全部直播(直播页面的最下面的一个按钮)
