@@ -55,7 +55,6 @@ public interface LiveService {
     Call<TitlesEntity> getTitle();
 
     //TODO 节奏风暴
-    //这个 API 不是很明确, 似乎和 节奏风暴 有关系
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
 

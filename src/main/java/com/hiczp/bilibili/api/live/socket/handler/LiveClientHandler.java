@@ -117,19 +117,13 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new WelcomeGuardPackageEvent(this, GSON.fromJson(content, WelcomeGuardEntity.class));
                     }
                     break;
-                    //开始直播
-                    case "LIVE": {
-                        eventCreationExpression = () -> new LivePackageEvent(this, GSON.fromJson(content, LiveEntity.class));
-                    }
-                    break;
-                    //停止直播
-                    case "PREPARING": {
-                        eventCreationExpression = () -> new PreparingPackageEvent(this, GSON.fromJson(content, PreparingEntity.class));
-                    }
-                    break;
                     //活动事件
                     case "ACTIVITY_EVENT": {
                         eventCreationExpression = () -> new ActivityEventPackageEvent(this, GSON.fromJson(content, ActivityEventEntity.class));
+                    }
+                    break;
+                    case "SPECIAL_GIFT": {
+                        eventCreationExpression = () -> new SpecialGiftPackageEvent(this, GSON.fromJson(content, SpecialGiftEntity.class));
                     }
                     break;
                     //许愿瓶
@@ -162,14 +156,25 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
                     }
                     break;
+                    //TODO TV_START
+                    //小电视抽奖结束(大奖的获得者信息)
+                    case "TV_END": {
+                        eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(content, TVEndEntity.class));
+                    }
+                    break;
                     //房管变更
                     case "ROOM_ADMINS": {
                         eventCreationExpression = () -> new RoomAdminsPackageEvent(this, GSON.fromJson(content, RoomAdminsEntity.class));
                     }
                     break;
-                    //小电视抽奖结束(大奖的获得者信息)
-                    case "TV_END": {
-                        eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(content, TVEndEntity.class));
+                    //开始直播
+                    case "LIVE": {
+                        eventCreationExpression = () -> new LivePackageEvent(this, GSON.fromJson(content, LiveEntity.class));
+                    }
+                    break;
+                    //停止直播
+                    case "PREPARING": {
+                        eventCreationExpression = () -> new PreparingPackageEvent(this, GSON.fromJson(content, PreparingEntity.class));
                     }
                     break;
                     default: {
