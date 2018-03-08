@@ -306,6 +306,7 @@ API 文档
 | RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 |
 | SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
 | SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 |
+| SpecialGiftPackageEvent | 收到 SPECIAL_GIFT 数据包 |
 | SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
 | SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
 | TVEndPackageEvent | 收到 TV_END 数据包 |
