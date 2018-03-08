@@ -157,6 +157,64 @@ public interface LiveService {
     @GET("AppRoom/getGiftTop")
     Call<GiftTopEntity> getGiftTop(@Query("room_id") int roomId);
 
+    //"直播" 页面(这个页面对应的后台数据, 包括 banner, 推荐主播, 各种分区的推荐等)
+    //这个 API 会读取 "_device"(固定参数) 或者 "device" 来判断平台, 只需要有一个就能正常工作, 客户端上是两个都有, 且值都为 "android"
+    @GET("room/v1/AppIndex/getAllList")
+    Call<AllListEntity> getAllList(@Query("device") String device);
+
+    default Call<AllListEntity> getAllList() {
+        return getAllList("android");
+    }
+
+    //刷新 "推荐主播" 区域, 必须有 device, platform, scala
+    //scala 为 xxhdpi 时返回 12 个, 客户端显示六个, 刷新两次后再次访问该 API
+    //该 API 返回的内容结构与 getAllList 返回的内容中的 recommend_data 字段是一样的
+    //该 API 返回的 banner_data 是在普通分区的推荐的上面的那个 banner, 在新版 APP 中, 点击这个 banner 会固定的跳转到 bilibili 相簿的 画友 标签页
+    @GET("room/v1/AppIndex/recRefresh")
+    Call<RecommendRoomRefreshResponseEntity> recommendRefresh(@Query("device") String device);
+
+    default Call<RecommendRoomRefreshResponseEntity> recommendRefresh() {
+        return recommendRefresh("android");
+    }
+
+    //直播页面 下面的 普通分区(复数) 的刷新, 一次会返回 20 个结果, 客户端显示 6 个, 数据用完了之后再次访问该 API
+    //area_id 和 cate_id 不明确其含义
+    @GET("room/v1/Area/getRoomList")
+    Call<RoomListEntity> getRoomList(
+            @Query("area_id") int areaId,
+            @Query("cate_id") int categoryId,
+            @Query("parent_area_id") int parentAreaId,
+            @Query("sort_type") String sortType
+    );
+
+    default Call<RoomListEntity> getRoomList(int parentAreaId) {
+        return getRoomList(0, 0, parentAreaId, "dynamic");
+    }
+
+    //直播 -> 全部直播(直播页面的最下面的一个按钮)
+    @GET("mobile/rooms")
+    Call<RoomsEntity> getRooms(@Query("area_id") int areaId, @Query("page") int page, @Query("sort") String sort);
+
+    //推荐直播
+    default Call<RoomsEntity> getSuggestionRooms(int page) {
+        return getRooms(0, page, "suggestion");
+    }
+
+    //最热直播
+    default Call<RoomsEntity> getHottestRooms(int page) {
+        return getRooms(0, page, "hottest");
+    }
+
+    //最新直播
+    default Call<RoomsEntity> getLatestRooms(int page) {
+        return getRooms(0, page, "latest");
+    }
+
+    //视频轮播
+    default Call<RoomsEntity> getRoundRooms(int page) {
+        return getRooms(0, page, "roundroom");
+    }
+
     //live 站的搜索("直播" 页面)
     //type 为 room 时只返回 房间 的搜索结果
     //type 为 user 时只返回 用户 的搜索结果
@@ -167,20 +225,6 @@ public interface LiveService {
     default Call<SearchResponseEntity> search(String keyword, long page, long pageSize) {
         return search(keyword, page, pageSize, "all");
     }
-
-    //"直播" 页面(这个页面对应的后台数据, 包括 banner, 推荐主播, 各种分区的推荐等)
-    //这个 API 会读取 "_device"(固定参数) 或者 "device" 来判断平台, 只需要有一个就能正常工作, 客户端上是两个都有, 且值都为 "android"
-    @GET("room/v1/AppIndex/getAllList")
-    Call<AllListEntity> getAllList(@Query("device") String device);
-
-    default Call<AllListEntity> getAllList() {
-        return getAllList("android");
-    }
-
-    //直播 -> 全部直播 -> 推荐直播
-    //似乎 推荐直播 与 最热直播 的返回值是一样的
-    @GET("mobile/rooms")
-    Call<RoomsEntity> getRooms();
 
     //侧拉抽屉 -> 直播中心 -> 右上角日历图标
     //签到(live 站签到, 非总站(虽然我也不知道总站有没有签到功能))
