@@ -74,7 +74,8 @@ public interface LiveService {
         return getPlayUrl(cid, "json");
     }
 
-    //发送一个 Restful 的心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
+    //发送一个 Restful 心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
+    //2018-03-06 开始, 只有老爷才能通过观看直播获得经验
     //未登录时返回 3
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
@@ -244,16 +245,19 @@ public interface LiveService {
     //count 只能为 1, 10, 100
     @POST("AppUser/capsuleInfoOpen")
     @FormUrlEncoded
-    Call<OpenCapsuleResponseEntity> openCapsule(@Field("count") long count, @Field("type") String type);
+    Call<OpenCapsuleResponseEntity> openCapsule(@Field("count") int count, @Field("type") String type);
 
     //抽普通扭蛋
     //侧拉抽屉 -> 直播中心 -> 扭蛋机 -> 普通扭蛋 -> 扭
     //普通扭蛋的 type 为 "normal"
-    default Call<OpenCapsuleResponseEntity> openNormalCapsule(long count) {
+    default Call<OpenCapsuleResponseEntity> openNormalCapsule(int count) {
         return openCapsule(count, "normal");
     }
 
-    //TODO 梦幻扭蛋(没抽过, 不知道 type 的值)
+    //梦幻扭蛋
+    default Call<OpenCapsuleResponseEntity> openColorfulCapsule(int count) {
+        return openCapsule(count, "colorful");
+    }
 
     //房间设置
     //侧拉抽屉 -> 直播中心 -> 房间设置 -> (上面的个人信息, 包括 房间号, 粉丝数, UP 经验)
