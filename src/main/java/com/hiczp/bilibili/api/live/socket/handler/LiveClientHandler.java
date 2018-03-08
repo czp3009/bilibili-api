@@ -142,15 +142,29 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new RoomBlockMsgPackageEvent(this, GSON.fromJson(content, RoomBlockMsgEntity.class));
                     }
                     break;
-                    //TODO ROOM_SILENT_ON(禁止某一等级以下的用户发言)
+                    //房间开启了禁言(禁止某一等级以下的用户发言)
+                    case "ROOM_SILENT_ON": {
+                        eventCreationExpression = () -> new RoomSilentOnPackageEvent(this, GSON.fromJson(content, RoomSilentOnEntity.class));
+                    }
+                    break;
                     //房间结束禁言
                     case "ROOM_SILENT_OFF": {
                         eventCreationExpression = () -> new RoomSilentOffPackageEvent(this, GSON.fromJson(content, RoomSilentOffEntity.class));
                     }
                     break;
+                    //船票购买
+                    case "GUARD_BUY": {
+                        eventCreationExpression = () -> new GuardBuyPackageEvent(this, GSON.fromJson(content, GuardBuyEntity.class));
+                    }
+                    break;
                     //舰队消息(登船)
                     case "GUARD_MSG": {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
+                    }
+                    break;
+                    //房管变更
+                    case "ROOM_ADMINS": {
+                        eventCreationExpression = () -> new RoomAdminsPackageEvent(this, GSON.fromJson(content, RoomAdminsEntity.class));
                     }
                     break;
                     //小电视抽奖结束(大奖的获得者信息)

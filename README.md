@@ -296,11 +296,14 @@ API 文档
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
 | DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
+| GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |
 | GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |
 | PreparingPackageEvent | 收到 PREPARING 数据包 |
+| RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 |
 | RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
 | RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
+| RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 |
 | SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
 | SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 |
 | SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
