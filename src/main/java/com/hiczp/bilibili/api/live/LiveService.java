@@ -198,16 +198,22 @@ public interface LiveService {
     @GET("AppUser/history")
     Call<HistoryEntity> getHistory(@Query("page") long page, @Query("pagesize") long pageSize);
 
-    //TODO 佩戴中心
+    //佩戴中心
     //侧拉抽屉 -> 直播中心 -> 佩戴中心 -> 粉丝勋章
     //获得用户拥有的粉丝勋章
     @GET("AppUser/medal")
     Call<MyMedalListEntity> getMyMedalList();
 
-    //TODO 佩戴粉丝勋章
-    //TODO 删除粉丝勋章
+    //佩戴粉丝勋章
+    @POST("AppUser/wearMedal")
+    Call<WearMedalResponseEntity> wearMedal(@Query("medal_id") int medalId);
 
-    //侧拉抽屉 -> 直播中心 -> 佩戴中心 -> 我的头衔 -> 佩戴头衔
+    //取消佩戴粉丝勋章(取消佩戴当前佩戴着的粉丝勋章)
+    //URL 上的 canel 不是拼写错误, 它原本就是这样的
+    @GET("AppUser/canelMedal")
+    Call<CancelMedalResponseEntity> cancelMedal();
+
+    //侧拉抽屉 -> 直播中心 -> 佩戴中心 -> 我的头衔
     //获得用户拥有的头衔
     @GET("appUser/myTitleList")
     Call<MyTitleListEntity> getMyTitleList();
@@ -218,12 +224,16 @@ public interface LiveService {
     Call<WearTitleEntity> getWearTitle();
 
     //佩戴头衔
-    //是的, 你没看错, 是 GET 方式
-    @GET("AppUser/wearTitle")
+    @POST("AppUser/wearTitle")
     Call<WearTitleResponseEntity> wearTitle(@Query("title") String title);
-    //TODO 取消佩戴
 
-    //TODO 获奖记录
+    //取消佩戴头衔(取消佩戴当前佩戴着的头衔)
+    @GET("appUser/cancelTitle")
+    Call<CancelTitleResponseEntity> cancelTitle();
+
+    //TODO 头衔工坊(没有可升级头衔, 暂不明确此 API)
+
+    //TODO 获奖记录(没有获奖记录, 暂不明确返回值)
     //侧拉抽屉 -> 直播中心 -> 获奖记录
     @GET("AppUser/awards")
     Call<AwardsEntity> getAwards();

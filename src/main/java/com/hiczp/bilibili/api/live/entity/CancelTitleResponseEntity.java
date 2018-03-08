@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class WearTitleResponseEntity {
+public class CancelTitleResponseEntity {
     /**
      * code : 0
      * msg : success

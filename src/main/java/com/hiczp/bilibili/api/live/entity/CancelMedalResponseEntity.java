@@ -4,18 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class WearTitleResponseEntity {
+public class CancelMedalResponseEntity {
     /**
      * code : 0
-     * msg : success
-     * message : success
+     * message : OK
      * data : []
      */
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
     @SerializedName("message")
     private String message;
     @SerializedName("data")
@@ -27,14 +24,6 @@ public class WearTitleResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public String getMessage() {
