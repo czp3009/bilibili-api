@@ -15,7 +15,7 @@ public class DanMuMsgEntity implements DataEntity {
     }.getType();
 
     /**
-     * info : [[0,1,25,16777215,1510498713,"1510498712",0,"8a0f75dc",0],"网易云音乐库在当前直播间已停留0天0时39分41秒",[39042255,"夏沫丶琉璃浅梦",0,1,0,10000,1],[13,"夏沫","乄夏沫丶","1547306",16746162,""],[41,0,16746162,6603],[],0,0]
+     * info : [[0,1,25,16777215,1520664535,1662637384,0,"88874b7b",0],"czpnb",[15723776,"Dough君",0,0,0,"10000",1,""],[],[10,0,9868950,">50000"],[],0,0,{"uname_color":""}]
      * cmd : DANMU_MSG
      */
 
@@ -151,5 +151,10 @@ public class DanMuMsgEntity implements DataEntity {
     //获得用户头衔
     public List<String> getUserTitles() {
         return GSON.fromJson(info.get(5), STRING_LIST_TYPE);
+    }
+
+    //获得用户名颜色
+    public String getUsernameColor() {
+        return info.get(8).getAsJsonObject().get("uname_color").getAsString();
     }
 }
