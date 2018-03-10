@@ -62,23 +62,6 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Package msg) throws Exception {
         switch (msg.getPackageType()) {
-            case VIEWER_COUNT: {
-                eventBus.post(new ViewerCountPackageEvent(this, ByteBuffer.wrap(msg.getContent()).getInt()));
-            }
-            break;
-            case ENTER_ROOM_SUCCESS: {
-                eventBus.post(new ConnectSucceedEvent(this));
-                ctx.executor().scheduleAtFixedRate(
-                        () -> {
-                            ctx.writeAndFlush(PackageHelper.createHeartBeatPackage());
-                            eventBus.post(new SendHeartBeatPackageEvent(this));
-                        },
-                        0L,
-                        30L,
-                        TimeUnit.SECONDS
-                );
-            }
-            break;
             case DATA: {
                 String content = new String(msg.getContent());
                 String cmd = JSON_PARSER.parse(content)
@@ -97,9 +80,19 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new SendGiftPackageEvent(this, GSON.fromJson(content, SendGiftEntity.class));
                     }
                     break;
-                    //系统礼物(丰收庆典, 新春抽奖等)
-                    case "SYS_GIFT": {
-                        eventCreationExpression = () -> new SysGiftPackageEvent(this, GSON.fromJson(content, SysGiftEntity.class));
+                    //欢迎
+                    case "WELCOME": {
+                        eventCreationExpression = () -> new WelcomePackageEvent(this, GSON.fromJson(content, WelcomeEntity.class));
+                    }
+                    break;
+                    //许愿瓶
+                    case "WISH_BOTTLE": {
+                        eventCreationExpression = () -> new WishBottlePackageEvent(this, GSON.fromJson(content, WishBottleEntity.class));
+                    }
+                    break;
+                    //欢迎(舰队)
+                    case "WELCOME_GUARD": {
+                        eventCreationExpression = () -> new WelcomeGuardPackageEvent(this, GSON.fromJson(content, WelcomeGuardEntity.class));
                     }
                     break;
                     //系统消息(小电视等)
@@ -107,14 +100,9 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new SysMsgPackageEvent(this, GSON.fromJson(content, SysMsgEntity.class));
                     }
                     break;
-                    //欢迎
-                    case "WELCOME": {
-                        eventCreationExpression = () -> new WelcomePackageEvent(this, GSON.fromJson(content, WelcomeEntity.class));
-                    }
-                    break;
-                    //欢迎(舰队)
-                    case "WELCOME_GUARD": {
-                        eventCreationExpression = () -> new WelcomeGuardPackageEvent(this, GSON.fromJson(content, WelcomeGuardEntity.class));
+                    //系统礼物(丰收庆典, 新春抽奖等)
+                    case "SYS_GIFT": {
+                        eventCreationExpression = () -> new SysGiftPackageEvent(this, GSON.fromJson(content, SysGiftEntity.class));
                     }
                     break;
                     //活动事件
@@ -124,11 +112,6 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     break;
                     case "SPECIAL_GIFT": {
                         eventCreationExpression = () -> new SpecialGiftPackageEvent(this, GSON.fromJson(content, SpecialGiftEntity.class));
-                    }
-                    break;
-                    //许愿瓶
-                    case "WISH_BOTTLE": {
-                        eventCreationExpression = () -> new WishBottlePackageEvent(this, GSON.fromJson(content, WishBottleEntity.class));
                     }
                     break;
                     //房间黑名单(添加了一个用户到黑名单)
@@ -156,7 +139,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(this, GSON.fromJson(content, GuardMsgEntity.class));
                     }
                     break;
-                    //TODO TV_START
+                    case "TV_START": {
+                        eventCreationExpression = () -> new TVStartPackageEvent(this, GSON.fromJson(content, TVStartEntity.class));
+                    }
+                    break;
                     //小电视抽奖结束(大奖的获得者信息)
                     case "TV_END": {
                         eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(content, TVEndEntity.class));
@@ -189,6 +175,23 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 } catch (JsonParseException e) {
                     LOGGER.error("Json parse error: {}, json below: \n{}", e.getMessage(), formatJson(content));
                 }
+            }
+            break;
+            case VIEWER_COUNT: {
+                eventBus.post(new ViewerCountPackageEvent(this, ByteBuffer.wrap(msg.getContent()).getInt()));
+            }
+            break;
+            case ENTER_ROOM_SUCCESS: {
+                eventBus.post(new ConnectSucceedEvent(this));
+                ctx.executor().scheduleAtFixedRate(
+                        () -> {
+                            ctx.writeAndFlush(PackageHelper.createHeartBeatPackage());
+                            eventBus.post(new SendHeartBeatPackageEvent(this));
+                        },
+                        0L,
+                        30L,
+                        TimeUnit.SECONDS
+                );
             }
             break;
         }
