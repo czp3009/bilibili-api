@@ -204,7 +204,7 @@ IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
 ### API 调用示例
 打印一个直播间的历史弹幕
 
-    int roomId = 3;
+    long roomId = 3;
     new BilibiliAPI()
         .getLiveService()
         .getHistoryBulletScreens(roomId)
@@ -223,7 +223,7 @@ IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
 
     String username = "yourUsername";
     String password = "yourPassword";
-    int roomId = 3;
+    long roomId = 3;
     
     BilibiliAPI bilibiliAPI = new BilibiliAPI()
         .login(username, password);
@@ -246,7 +246,7 @@ API 文档
 ## Socket
 ### 获取直播间实时弹幕
 
-    int roomId = 3;
+    long roomId = 3;
     LiveClient liveClient = new BilibiliAPI()
         .getLiveClient(roomId)
         .registerListener(new MyListener())
@@ -310,6 +310,7 @@ API 文档
 | SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
 | SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
 | TVEndPackageEvent | 收到 TV_END 数据包 |
+| TVStartPackageEvent | 收到 TV_START 数据包 |
 | UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
 | ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
 | WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
@@ -353,8 +354,8 @@ room_id 的获取要通过
 
 在代码中我们这样做
 
-    int showRoomId = 3;
-    int roomId = bilibiliAPI.getLiveService()
+    long showRoomId = 3;
+    long roomId = bilibiliAPI.getLiveService()
                     .getRoomInfo(showRoomId)
                     .execute()
                     .body()
