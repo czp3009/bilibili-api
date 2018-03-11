@@ -261,10 +261,6 @@ API 文档
 
 多个 LiveClient 可以复用同一个 EventLoopGroup.
 
-    eventLoopGroup.shutdownGracefully();
-
-将异步关闭所有使用这个 EventLoopGroup 的 LiveClient.
-
 (connect 方法运行结束只代表 socket 确实是连上了, 但是服务器还没有响应进房请求数据包)
 
 (当服务器响应进房请求数据包时才代表真的连上了, 此时会有一个连接成功的事件, 见下文)
@@ -298,6 +294,10 @@ API 文档
     liveClient.closeChannelAsync();
 
 即可异步关闭连接.
+
+    eventLoopGroup.shutdownGracefully();
+
+即可关闭事件循环, 结束 Nio 工作线程(所有使用这个 EventLoopGroup 的 LiveClient 也将在此时被关闭).
 
 所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
 
