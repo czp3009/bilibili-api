@@ -1,71 +1,66 @@
 package com.hiczp.bilibili.api.live.socket;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.hiczp.bilibili.api.live.bulletScreen.BulletScreenConstDefinition;
 import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
 import com.hiczp.bilibili.api.live.entity.LiveRoomInfoEntity;
 import com.hiczp.bilibili.api.live.entity.SendBulletScreenResponseEntity;
 import com.hiczp.bilibili.api.live.socket.codec.PackageDecoder;
 import com.hiczp.bilibili.api.live.socket.codec.PackageEncoder;
-import com.hiczp.bilibili.api.live.socket.event.ConnectionCloseEvent;
 import com.hiczp.bilibili.api.live.socket.handler.LiveClientHandler;
 import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import retrofit2.Call;
 
 import javax.annotation.Nonnull;
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.Optional;
 
-public class LiveClient implements Closeable {
+public class LiveClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClient.class);
 
-    private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
     private final BilibiliServiceProvider bilibiliServiceProvider;
+    private final EventLoopGroup eventLoopGroup;
     private final long showRoomId;
     private final long userId;
+    private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
 
     private LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity;
 
-    private EventLoopGroup eventLoopGroup;
     private Channel channel;
 
-    private void initEventBus() {
-        eventBus.register(new ConnectionCloseListener());
-    }
-
-    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, long showRoomId) {
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, EventLoopGroup eventLoopGroup, long showRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
-        this.showRoomId = showRoomId;
-        this.userId = 0;
-        initEventBus();
-    }
-
-    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, long showRoomId, long userId) {
-        this.bilibiliServiceProvider = bilibiliServiceProvider;
+        this.eventLoopGroup = eventLoopGroup;
         this.showRoomId = showRoomId;
         this.userId = userId;
-        initEventBus();
     }
 
-    @Nonnull
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, EventLoopGroup eventLoopGroup, long showRoomId) {
+        this(bilibiliServiceProvider, eventLoopGroup, showRoomId, 0);
+    }
+
+    public Call<LiveRoomInfoEntity> fetchRoomInfoAsync() {
+        return bilibiliServiceProvider.getLiveService()
+                .getRoomInfo(showRoomId);
+    }
+
     public LiveRoomInfoEntity.LiveRoomEntity fetchRoomInfo() throws IOException {
-        LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity = bilibiliServiceProvider.getLiveService()
-                .getRoomInfo(showRoomId)
-                .execute()
-                .body()
-                .getData();
+        LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity =
+                fetchRoomInfoAsync()
+                        .execute()
+                        .body()
+                        .getData();
         if (liveRoomEntity != null) {
             return liveRoomEntity;
         } else {
@@ -79,16 +74,11 @@ public class LiveClient implements Closeable {
             return this;
         }
 
-        if (eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
-        }
-
         LOGGER.info("Fetching info of live room {}", showRoomId);
         liveRoomEntity = fetchRoomInfo();
         long roomId = liveRoomEntity.getRoomId();
         LOGGER.info("Get actual room id {}", roomId);
 
-        eventLoopGroup = new NioEventLoopGroup(1);
         LOGGER.debug("Init SocketChannel Bootstrap");
         Bootstrap bootstrap = new Bootstrap()
                 .group(eventLoopGroup)
@@ -107,7 +97,7 @@ public class LiveClient implements Closeable {
                                 .addLast(new IdleStateHandler(40, 0, 0))
                                 .addLast(new PackageEncoder())
                                 .addLast(new PackageDecoder())
-                                .addLast(new LiveClientHandler(roomId, userId, eventBus));
+                                .addLast(new LiveClientHandler(self(), showRoomId, roomId, userId));
                     }
                 });
 
@@ -120,32 +110,28 @@ public class LiveClient implements Closeable {
                     .channel();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            close();
         } catch (Exception e) { //有可能在此时出现网络错误
-            close();
             throw new IOException(e);
         }
 
         return this;
     }
 
-    @Override
-    public synchronized void close() {
-        if (eventLoopGroup != null) {
+    public synchronized ChannelFuture closeChannelAsync() {
+        if (channel != null) {
             LOGGER.info("Closing connection");
-            try {
-                eventLoopGroup.shutdownGracefully().sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            eventLoopGroup = null;
+            ChannelFuture channelFuture = channel.close();
+            channel = null;
+            return channelFuture;
+        } else {
+            return null;
         }
     }
 
-    private class ConnectionCloseListener {
-        @Subscribe
-        public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
-            eventLoopGroup.shutdownGracefully();
+    public void closeChannel() {
+        ChannelFuture channelFuture = closeChannelAsync();
+        if (channelFuture != null) {
+            channelFuture.awaitUninterruptibly();
         }
     }
 
@@ -163,33 +149,22 @@ public class LiveClient implements Closeable {
         return this;
     }
 
-    public SendBulletScreenResponseEntity sendBulletScreen(@Nonnull String message) throws IOException {
+    public Call<SendBulletScreenResponseEntity> sendBulletScreenAsync(@Nonnull String message) {
         return bilibiliServiceProvider.getLiveService()
-                .sendBulletScreen(createBulletScreenEntity(message))
+                .sendBulletScreen(createBulletScreenEntity(message));
+    }
+
+    public SendBulletScreenResponseEntity sendBulletScreen(@Nonnull String message) throws IOException {
+        return sendBulletScreenAsync(message)
                 .execute()
                 .body();
     }
 
+    private LiveClient self() {
+        return this;
+    }
+
     //TODO 弹幕发送队列
-//    public void sendBulletScreenAsync(@Nonnull String message, @Nonnull BulletScreenSendingCallback bulletScreenSendingCallback, boolean autoSplit) {
-//        if (!autoSplit) {
-//            sendBulletScreenAsync(message, bulletScreenSendingCallback);
-//        } else {
-//            for (String s : BulletScreenHelper.splitMessageByFixedLength(message, getBulletScreenLengthLimitOrDefaultLengthLimit())) {
-//                sendBulletScreenAsync(s, bulletScreenSendingCallback);
-//            }
-//        }
-//    }
-//
-//    public void sendBulletScreenAsync(@Nonnull String message, @Nonnull BulletScreenSendingCallback bulletScreenSendingCallback) {
-//        BulletScreenSendingDequeHolder.addTask(
-//                new BulletScreenSendingTask(
-//                        bilibiliServiceProvider,
-//                        createBulletScreenEntity(message),
-//                        bulletScreenSendingCallback
-//                )
-//        );
-//    }
 
     private BulletScreenEntity createBulletScreenEntity(String message) {
         return new BulletScreenEntity(
@@ -224,5 +199,9 @@ public class LiveClient implements Closeable {
 
     public int getBulletScreenLengthLimitOrDefaultLengthLimit() {
         return getRoomInfo().map(LiveRoomInfoEntity.LiveRoomEntity::getMsgLength).orElse(BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT);
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 }

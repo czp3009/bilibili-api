@@ -5,6 +5,8 @@ import com.hiczp.bilibili.api.BilibiliAPI;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.live.socket.entity.*;
 import com.hiczp.bilibili.api.live.socket.event.*;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,8 +26,9 @@ public class LiveClientTest {
     @Ignore
     @Test
     public void _0_duplicateConnectAndCloseTest() throws Exception {
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         LiveClient liveClient = BILIBILI_API
-                .getLiveClient(ROOM_ID);
+                .getLiveClient(eventLoopGroup, ROOM_ID);
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(5000);
@@ -33,31 +36,34 @@ public class LiveClientTest {
         liveClient.connect();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
+        eventLoopGroup.shutdownGracefully();
     }
 
     @Ignore
     @Test
     public void _1_longTimeTest() throws Exception {
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         LiveClient liveClient = BILIBILI_API
-                .getLiveClient(ROOM_ID)
+                .getLiveClient(eventLoopGroup, ROOM_ID)
                 .registerListener(new Listener());
         LOGGER.debug("Start long-time test");
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(TEST_TIME);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
+        eventLoopGroup.shutdownGracefully();
         Thread.sleep(5000);
     }
 

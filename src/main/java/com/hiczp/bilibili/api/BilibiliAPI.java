@@ -15,6 +15,7 @@ import com.hiczp.bilibili.api.provider.*;
 import com.hiczp.bilibili.api.web.BilibiliWebAPI;
 import com.hiczp.bilibili.api.web.BrowserProperties;
 import com.hiczp.bilibili.api.web.cookie.SimpleCookieJar;
+import io.netty.channel.EventLoopGroup;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
@@ -380,10 +381,10 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
     }
 
     @Override
-    public LiveClient getLiveClient(long showRoomId) {
+    public LiveClient getLiveClient(EventLoopGroup eventLoopGroup, long showRoomId) {
         return bilibiliAccount.getUserId() == null ?
-                new LiveClient(this, showRoomId) :
-                new LiveClient(this, showRoomId, bilibiliAccount.getUserId());
+                new LiveClient(this, eventLoopGroup, showRoomId) :
+                new LiveClient(this, eventLoopGroup, showRoomId, bilibiliAccount.getUserId());
     }
 
     private void markCurrentTokenAndRefreshTokenInvalid() {

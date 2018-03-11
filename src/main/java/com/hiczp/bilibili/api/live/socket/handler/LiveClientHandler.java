@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.live.socket.Package;
 import com.hiczp.bilibili.api.live.socket.PackageHelper;
 import com.hiczp.bilibili.api.live.socket.entity.*;
@@ -25,14 +26,18 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
     private static final Gson GSON = new Gson();
     private static final JsonParser JSON_PARSER = new JsonParser();
 
-    private long roomId;
-    private long userId;
-    private EventBus eventBus;
+    private final LiveClient liveClient;
+    private final EventBus eventBus;
+    private final long showRoomId;
+    private final long roomId;
+    private final long userId;
 
-    public LiveClientHandler(long roomId, long userId, EventBus eventBus) {
+    public LiveClientHandler(LiveClient liveClient, long showRoomId, long roomId, long userId) {
+        this.liveClient = liveClient;
+        this.eventBus = liveClient.getEventBus();
+        this.showRoomId = showRoomId;
         this.roomId = roomId;
         this.userId = userId;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -202,5 +207,21 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 .setPrettyPrinting()
                 .create()
                 .toJson(JSON_PARSER.parse(json));
+    }
+
+    public LiveClient getLiveClient() {
+        return liveClient;
+    }
+
+    public long getShowRoomId() {
+        return showRoomId;
+    }
+
+    public long getRoomId() {
+        return roomId;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 }

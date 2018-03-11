@@ -13,7 +13,7 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.8'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.9'
 
 # 名词解释
 B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
@@ -99,7 +99,7 @@ LoginException 在 accessToken 错误或过期时抛出
     try {
         bilibiliAPI.login(username, password);
     } catch (CaptchaMismatchException e) {  //如果该账号现在需要验证码来进行登录, 就会抛出异常
-        final cookie = "sid=123456";    //自己造一个 cookie 或者从服务器取得
+        cookie = "sid=123456";    //自己造一个 cookie 或者从服务器取得
         Response response = bilibiliAPI.getPassportService()
                 .getCaptcha(cookie)
                 .execute();
@@ -159,7 +159,7 @@ B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访�
 
 如果只想得到用于进行 SSO 操作的那条 URL, 可以这么做
 
-    final String goUrl = "https://account.bilibili.com/account/home";
+    String goUrl = "https://account.bilibili.com/account/home";
     bilibiliAPI.getSsoUrl(goUrl);
 
 返回值是一个 HttpUrl, 里面 url 的值差不多是这样的
@@ -247,16 +247,23 @@ API 文档
 ### 获取直播间实时弹幕
 
     long roomId = 3;
+    EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     LiveClient liveClient = new BilibiliAPI()
-        .getLiveClient(roomId)
+        .getLiveClient(eventLoopGroup, roomId)
         .registerListener(new MyListener())
         .connect();
 
 .connect() 会抛出 IOException 当网络故障时.
 
-(connect 以及 close 方法都是阻塞的)
+(connect 是阻塞的)
 
 使用 .getLiveClient() 前可以先登录也可以不登陆直接用, 如果 API 已经登录, 那么进房数据包中会带有用户ID, 尚不明确有什么作用, 可能与一些统计有关.
+
+多个 LiveClient 可以复用同一个 EventLoopGroup.
+
+    eventLoopGroup.shutdownGracefully();
+
+将异步关闭所有使用这个 EventLoopGroup 的 LiveClient.
 
 (connect 方法运行结束只代表 socket 确实是连上了, 但是服务器还没有响应进房请求数据包)
 
@@ -284,9 +291,13 @@ API 文档
 
 如果持续 40 秒(心跳包为 30 秒)没有收到任何消息, 将视为掉线, 会跟服务器主动断开连接一样(这通常是发送了服务器无法读取的数据包)触发一次 ConnectionCloseEvent.
 
-    liveClient.close();
+    liveClient.closeChannel();
 
-即可关闭连接.
+即可阻塞关闭连接.
+
+    liveClient.closeChannelAsync();
+
+即可异步关闭连接.
 
 所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
 
