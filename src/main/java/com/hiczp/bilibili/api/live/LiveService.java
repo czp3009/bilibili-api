@@ -41,13 +41,18 @@ public interface LiveService {
     @GET("AppIndex/getAllItem")
     Call<ItemsEntity> getAllItem();
 
-    //TODO 小电视
     //查看可用的小电视抽奖
     //当目标房间没有可用的小电视抽奖时返回 -400
     @GET("AppSmallTV/index")
     Call<AppSmallTVEntity> getAppSmallTV(@Query("roomid") long roomId);
-    //TODO 参与抽奖
-    //TODO 查看抽奖结果
+
+    //参与小电视抽奖
+    //房间号必须与小电视号对应
+    //目标小电视不存在时(房间号与小电视号不匹配时也视为不存在)返回 -400 "不存在小电视信息"
+    @POST("AppSmallTV/join")
+    Call<JoinAppSmallTVResponseEntity> joinAppSmallTV(@Query("roomid") long roomId, @Query("id") long tvId);
+
+    //TODO 查看小电视抽奖结果
 
     //获得所有头衔的列表
     //这里的 Title 是头衔的意思
@@ -57,6 +62,7 @@ public interface LiveService {
     //TODO 节奏风暴
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
+    //TODO 参与节奏风暴抽奖
 
     //获取自己的用户信息(live 站的个人信息, 非总站)
     //未登录时返回 3
