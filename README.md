@@ -100,7 +100,7 @@ LoginException 在 accessToken 错误或过期时抛出
         bilibiliAPI.login(username, password);
     } catch (CaptchaMismatchException e) {  //如果该账号现在需要验证码来进行登录, 就会抛出异常
         cookie = "sid=123456";    //自己造一个 cookie 或者从服务器取得
-        Response response = bilibiliAPI.getPassportService()
+        Response response = bilibiliAPI.getCaptchaService()
                 .getCaptcha(cookie)
                 .execute();
         InputStream inputStream = response.body().byteStream();
@@ -219,14 +219,23 @@ IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
                 liveHistoryBulletScreenEntity.getText())
         );
 
-发送一条弹幕到指定直播间
+签到
 
     String username = "yourUsername";
     String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    bilibiliAPI.login(username, password);
+    bilibiliAPI.getLiveService()
+        .getSignInfo()
+        .execute();
+
+发送一条弹幕到指定直播间
+
     long roomId = 3;
-    
-    BilibiliAPI bilibiliAPI = new BilibiliAPI()
-        .login(username, password);
+    String username = "yourUsername";
+    String password = "yourPassword";
+    BilibiliAPI bilibiliAPI = new BilibiliAPI();
+    bilibiliAPI.login(username, password);
     
     bilibiliAPI.getLiveService()
         .sendBulletScreen(
@@ -235,7 +244,8 @@ IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
                     bilibiliAPI.getBilibiliAccount().getUserId(),   //实际上并不需要包含 mid 就可以正常发送弹幕, 但是真实的 Android 客户端确实发送了 mid
                     "这是自动发送的弹幕"
             )
-        ).execute();
+        )
+        .execute();
 
 (如果要调用需要鉴权的 API, 需要先登录)
 
@@ -298,6 +308,11 @@ API 文档
     eventLoopGroup.shutdownGracefully();
 
 即可关闭事件循环, 结束 Nio 工作线程(所有使用这个 EventLoopGroup 的 LiveClient 也将在此时被关闭).
+
+如果需要在直播间发送弹幕可以直接使用如下代码(需要先登录)
+
+    String message = "这是一条弹幕";
+    liveClient.sendBulletScreen(message);
 
 所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
 
