@@ -72,7 +72,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     jsonObject = JSON_PARSER.parse(new InputStreamReader(new ByteArrayInputStream(msg.getContent())))
                             .getAsJsonObject();
                 } catch (JsonSyntaxException | IllegalStateException e) {
-                    LOGGER.error("Receive invalid json: \n{}", msg.getContent());
+                    LOGGER.error("Receive invalid json: \n{}", new String(msg.getContent()));
                     e.printStackTrace();
                     break;
                 }
