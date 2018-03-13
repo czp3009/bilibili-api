@@ -345,6 +345,7 @@ API 文档
 | TVStartPackageEvent | 收到 TV_START 数据包 |
 | UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
 | ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
+| WelcomeActivityPackageEvent | 收到 WELCOME_ACTIVITY 数据包 |
 | WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
 | WelcomePackageEvent | 收到 WELCOME 数据包 |
 | WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 |

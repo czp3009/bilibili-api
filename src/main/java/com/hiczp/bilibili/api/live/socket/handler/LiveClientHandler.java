@@ -172,6 +172,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new TVEndPackageEvent(this, GSON.fromJson(jsonObject, TVEndEntity.class));
                     }
                     break;
+                    //欢迎(活动)
+                    case "WELCOME_ACTIVITY": {
+                        eventCreationExpression = () -> new WelcomeActivityPackageEvent(this, GSON.fromJson(jsonObject, WelcomeActivityEntity.class));
+                    }
+                    break;
                     //房管变更
                     case "ROOM_ADMINS": {
                         eventCreationExpression = () -> new RoomAdminsPackageEvent(this, GSON.fromJson(jsonObject, RoomAdminsEntity.class));
