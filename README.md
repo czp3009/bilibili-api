@@ -326,6 +326,7 @@ API 文档
 | GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |
 | PreparingPackageEvent | 收到 PREPARING 数据包 |
+| ReceiveDataPackageDebugEvent | 该事件用于调试, 收到任何 Data 数据包时都会触发 |
 | RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 |
 | RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
 | RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
