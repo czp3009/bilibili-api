@@ -16,6 +16,7 @@ public class RaffleEndEntity implements DataEntity {
     @SerializedName("data")
     private Data data;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

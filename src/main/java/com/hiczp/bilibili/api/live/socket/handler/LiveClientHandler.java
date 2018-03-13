@@ -124,8 +124,12 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new SpecialGiftPackageEvent(this, GSON.fromJson(jsonObject, SpecialGiftEntity.class));
                     }
                     break;
-                    //TODO RAFFLE_START
-                    //抽奖结束(小奖, 通常是不定期活动)
+                    //抽奖开始(小奖, 通常是不定期活动)
+                    case "RAFFLE_START": {
+                        eventCreationExpression = () -> new RaffleStartPackageEvent(this, GSON.fromJson(jsonObject, RaffleStartEntity.class));
+                    }
+                    break;
+                    //抽奖
                     case "RAFFLE_END": {
                         eventCreationExpression = () -> new RaffleEndPackageEvent(this, GSON.fromJson(jsonObject, RaffleEndEntity.class));
                     }
