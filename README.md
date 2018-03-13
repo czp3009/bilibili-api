@@ -332,6 +332,7 @@ API 文档
 | ReceiveDataPackageDebugEvent | 该事件用于调试, 收到任何 Data 数据包时都会触发 |
 | RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 |
 | RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
+| RoomShieldPackageEvent | 收到 ROOM_SHIELD 数据包 |
 | RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
 | RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 |
 | SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
