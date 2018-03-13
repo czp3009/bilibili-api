@@ -322,6 +322,7 @@ API 文档
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
 | DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
+| EventCmdPackageEvent | 收到 EVENT_CMD 数据包 |
 | GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |
 | GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |

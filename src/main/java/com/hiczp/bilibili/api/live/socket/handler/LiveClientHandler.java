@@ -134,6 +134,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new RaffleEndPackageEvent(this, GSON.fromJson(jsonObject, RaffleEndEntity.class));
                     }
                     break;
+                    case "EVENT_CMD": {
+                        eventCreationExpression = () -> new EventCmdPackageEvent(this, GSON.fromJson(jsonObject, EventCmdEntity.class));
+                    }
+                    break;
                     //房间黑名单(添加了一个用户到黑名单)
                     case "ROOM_BLOCK_MSG": {
                         eventCreationExpression = () -> new RoomBlockMsgPackageEvent(this, GSON.fromJson(jsonObject, RoomBlockMsgEntity.class));
