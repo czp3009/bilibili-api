@@ -49,10 +49,19 @@ public interface LiveService {
     //参与小电视抽奖
     //房间号必须与小电视号对应
     //目标小电视不存在时(房间号与小电视号不匹配时也视为不存在)返回 -400 "不存在小电视信息"
+    //SYS_MSG 里面取得的小电视编号是一个字符串, 实际上它肯定是一个数字
     @POST("AppSmallTV/join")
-    Call<JoinAppSmallTVResponseEntity> joinAppSmallTV(@Query("roomid") long roomId, @Query("id") long tvId);
+    Call<JoinAppSmallTVResponseEntity> joinAppSmallTV(@Query("roomid") long roomId, @Query("id") String tvId);
 
-    //TODO 查看小电视抽奖结果
+    //通过 getAppSmallTV 取得的小电视编号是一个数字
+    default Call<JoinAppSmallTVResponseEntity> joinAppSmallTV(long roomId, long tvId) {
+        return joinAppSmallTV(roomId, String.valueOf(tvId));
+    }
+
+    //获得小电视抽奖结果(不访问这个 API, 奖励也会自动进入背包)
+    //其中的 status 为 0 时, 表示返回正常开奖结果, 1 为没有参与抽奖或小电视已过期, 2 为正在开奖过程中.
+    @GET("AppSmallTV/getReward")
+    Call<GetAppSmallTVRewardResponseEntity> getAppSmallTVReward(@Query("id") long tvId);
 
     //获得所有头衔的列表
     //这里的 Title 是头衔的意思

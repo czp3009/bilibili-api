@@ -61,17 +61,17 @@ public class AppSmallTVEntity {
          */
 
         @SerializedName("lastid")
-        private int lastid;
+        private long lastid;
         @SerializedName("join")
         private List<Join> join;
         @SerializedName("unjoin")
         private List<Unjoin> unjoin;
 
-        public int getLastid() {
+        public long getLastid() {
             return lastid;
         }
 
-        public void setLastid(int lastid) {
+        public void setLastid(long lastid) {
             this.lastid = lastid;
         }
 
@@ -98,15 +98,15 @@ public class AppSmallTVEntity {
              */
 
             @SerializedName("id")
-            private int id;
+            private long id;
             @SerializedName("dtime")
             private int dtime;
 
-            public int getId() {
+            public long getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(long id) {
                 this.id = id;
             }
 
@@ -126,15 +126,15 @@ public class AppSmallTVEntity {
              */
 
             @SerializedName("id")
-            private int id;
+            private long id;
             @SerializedName("dtime")
             private int dtime;
 
-            public int getId() {
+            public long getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(long id) {
                 this.id = id;
             }
 

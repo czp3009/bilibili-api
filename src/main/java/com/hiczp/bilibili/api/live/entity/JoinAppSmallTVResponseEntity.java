@@ -59,17 +59,17 @@ public class JoinAppSmallTVResponseEntity {
          */
 
         @SerializedName("id")
-        private int id;
+        private long id;
         @SerializedName("dtime")
         private int dtime;
         @SerializedName("status")
         private int status;
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
 
