@@ -321,6 +321,7 @@ API 文档
 | ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 |
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
+| CutOffPackageEvent | 收到 CUT_OFF 数据包 |
 | DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
 | EventCmdPackageEvent | 收到 EVENT_CMD 数据包 |
 | GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |

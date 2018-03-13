@@ -192,6 +192,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new RoomShieldPackageEvent(this, GSON.fromJson(jsonObject, RoomShieldEntity.class));
                     }
                     break;
+                    //被 B站 管理员强制中断
+                    case "CUT_OFF": {
+                        eventCreationExpression = () -> new CutOffPackageEvent(this, GSON.fromJson(jsonObject, CutOffEntity.class));
+                    }
+                    break;
                     default: {
                         LOGGER.error("Received unknown json below: \n{}", formatJson(jsonObject));
                         eventCreationExpression = () -> new UnknownPackageEvent(this, jsonObject);
