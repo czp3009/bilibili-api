@@ -115,7 +115,7 @@ public class RaffleEndEntity implements DataEntity {
             @SerializedName("face")
             private String face;
             @SerializedName("giftId")
-            private int giftId;
+            private String giftId;  //礼物如果是 经验原石 一类的东西, 它的 id 是个字符串, 例如 "stuff-1"
             @SerializedName("giftName")
             private String giftName;
             @SerializedName("giftNum")
@@ -137,11 +137,11 @@ public class RaffleEndEntity implements DataEntity {
                 this.face = face;
             }
 
-            public int getGiftId() {
+            public String getGiftId() {
                 return giftId;
             }
 
-            public void setGiftId(int giftId) {
+            public void setGiftId(String giftId) {
                 this.giftId = giftId;
             }
 
