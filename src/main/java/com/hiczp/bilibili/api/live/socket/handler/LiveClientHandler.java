@@ -197,6 +197,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new RoomShieldPackageEvent(this, GSON.fromJson(jsonObject, RoomShieldEntity.class));
                     }
                     break;
+                    //更换房间背景图片
+                    case "CHANGE_ROOM_INFO": {
+                        eventCreationExpression = () -> new ChangeRoomInfoPackageEvent(this, GSON.fromJson(jsonObject, ChangeRoomInfoEntity.class));
+                    }
+                    break;
                     //被 B站 管理员强制中断
                     case "CUT_OFF": {
                         eventCreationExpression = () -> new CutOffPackageEvent(this, GSON.fromJson(jsonObject, CutOffEntity.class));

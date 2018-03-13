@@ -319,6 +319,7 @@ API 文档
 | 事件 | 抛出条件 |
 | :--- | :--- |
 | ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 |
+| ChangeRoomInfoPackageEvent | 收到 CHANGE_ROOM_INFO 数据包 |
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
 | CutOffPackageEvent | 收到 CUT_OFF 数据包 |

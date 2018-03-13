@@ -1,7 +1,6 @@
 package com.hiczp.bilibili.api.test;
 
 import com.hiczp.bilibili.api.BilibiliAPI;
-import com.hiczp.bilibili.api.interceptor.PrintResponseBodyInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.Test;
 
@@ -13,7 +12,7 @@ public class GetAwardsTest {
     @Test
     public void getAwards() throws Exception {
         BILIBILI_API
-                .getLiveService(Collections.singletonList(new PrintResponseBodyInterceptor()), HttpLoggingInterceptor.Level.BODY)
+                .getLiveService(Collections.emptyList(), HttpLoggingInterceptor.Level.BODY)
                 .getAwards()
                 .execute()
                 .body();
