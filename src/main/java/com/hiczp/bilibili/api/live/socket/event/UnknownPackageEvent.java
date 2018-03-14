@@ -1,13 +1,12 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
 import com.google.gson.JsonObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-import java.util.EventObject;
-
-public class UnknownPackageEvent extends EventObject {
+public class UnknownPackageEvent extends Event {
     private JsonObject jsonObject;
 
-    public UnknownPackageEvent(Object source, JsonObject jsonObject) {
+    public UnknownPackageEvent(LiveClient source, JsonObject jsonObject) {
         super(source);
         this.jsonObject = jsonObject;
     }

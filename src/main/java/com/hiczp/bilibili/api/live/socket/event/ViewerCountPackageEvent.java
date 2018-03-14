@@ -1,11 +1,11 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
-import java.util.EventObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-public class ViewerCountPackageEvent extends EventObject {
+public class ViewerCountPackageEvent extends Event {
     private int viewerCount;
 
-    public ViewerCountPackageEvent(Object source, int viewerCount) {
+    public ViewerCountPackageEvent(LiveClient source, int viewerCount) {
         super(source);
         this.viewerCount = viewerCount;
     }

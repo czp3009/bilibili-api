@@ -1,11 +1,11 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
-import java.util.EventObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-public abstract class ReceivePackageEvent<T> extends EventObject {
+public abstract class ReceivePackageEvent<T> extends Event {
     protected T entity;
 
-    ReceivePackageEvent(Object source, T entity) {
+    ReceivePackageEvent(LiveClient source, T entity) {
         super(source);
         this.entity = entity;
     }

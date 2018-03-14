@@ -97,7 +97,7 @@ public class LiveClient {
                                 .addLast(new IdleStateHandler(40, 0, 0))
                                 .addLast(new PackageEncoder())
                                 .addLast(new PackageDecoder())
-                                .addLast(new LiveClientHandler(self(), showRoomId, roomId, userId));
+                                .addLast(new LiveClientHandler(self(), roomId, userId));
                     }
                 });
 

@@ -1,9 +1,9 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
-import java.util.EventObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-public class SendHeartBeatPackageEvent extends EventObject {
-    public SendHeartBeatPackageEvent(Object source) {
+public class SendHeartBeatPackageEvent extends Event {
+    public SendHeartBeatPackageEvent(LiveClient source) {
         super(source);
     }
 }

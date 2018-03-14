@@ -1,9 +1,9 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
-import java.util.EventObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-public class ConnectSucceedEvent extends EventObject {
-    public ConnectSucceedEvent(Object source) {
+public class ConnectSucceedEvent extends Event {
+    public ConnectSucceedEvent(LiveClient source) {
         super(source);
     }
 }
