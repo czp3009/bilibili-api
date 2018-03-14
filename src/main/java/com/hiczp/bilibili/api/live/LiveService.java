@@ -45,9 +45,9 @@ public interface LiveService {
 
     /**
      * 获得是否关注了一个主播
-     * 未登录时返回 401
      *
      * @param hostUserId 主播的用户 ID
+     * @return 未登录时返回 401
      */
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
@@ -65,9 +65,9 @@ public interface LiveService {
 
     /**
      * 查看可用的小电视抽奖
-     * 当目标房间没有可用的小电视抽奖时返回 -400
      *
      * @param roomId 房间号
+     * @return 当目标房间没有可用的小电视抽奖时返回 -400
      */
     @GET("AppSmallTV/index")
     Call<AppSmallTVEntity> getAppSmallTV(@Query("roomid") long roomId);
@@ -75,11 +75,11 @@ public interface LiveService {
     /**
      * 参与小电视抽奖
      * 房间号必须与小电视号对应
-     * 目标小电视不存在时(房间号与小电视号不匹配时也视为不存在)返回 -400 "不存在小电视信息"
      * SYS_MSG 里面取得的小电视编号是一个字符串, 实际上它肯定是一个数字
      *
      * @param roomId 房间号
      * @param tvId   小电视号
+     * @return 目标小电视不存在时(房间号与小电视号不匹配时也视为不存在)返回 -400 "不存在小电视信息"
      */
     @POST("AppSmallTV/join")
     Call<JoinAppSmallTVResponseEntity> joinAppSmallTV(@Query("roomid") long roomId, @Query("id") String tvId);
@@ -117,7 +117,8 @@ public interface LiveService {
 
     /**
      * 获取自己的用户信息(live 站的个人信息, 非总站)
-     * 未登录时返回 3
+     *
+     * @return 未登录时返回 3
      */
     @GET("mobile/getUser")
     Call<UserInfoEntity> getUserInfo();
@@ -143,10 +144,10 @@ public interface LiveService {
     /**
      * 发送一个 Restful 心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
      * 2018-03-06 开始, 只有老爷才能通过观看直播获得经验
-     * 未登录时返回 3
      *
      * @param roomId 房间号
      * @param scale  屏幕大小
+     * @return 未登录时返回 3
      */
     @POST("mobile/userOnlineHeart")
     @FormUrlEncoded
@@ -432,7 +433,8 @@ public interface LiveService {
     /**
      * 侧拉抽屉 -> 直播中心 -> 右上角日历图标
      * 签到(live 站签到, 非总站(虽然我也不知道总站有没有签到功能))
-     * 无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
+     *
+     * @return 无论是否已经签到, 返回的 code 都是 0. 除了字符串比对, 要想知道是否已经签到要通过 getUserInfo().getIsSign()
      */
     @GET("AppUser/getSignInfo")
     Call<SignInfoEntity> getSignInfo();
@@ -489,7 +491,8 @@ public interface LiveService {
 
     /**
      * 获得当前佩戴着的头衔的详情
-     * 当前未佩戴任何东西时, 返回的 code 为 -1, message 为 "nodata"
+     *
+     * @return 当前未佩戴任何东西时, 返回的 code 为 -1, message 为 "nodata"
      */
     @GET("appUser/getWearTitle")
     Call<WearTitleEntity> getWearTitle();
@@ -519,7 +522,8 @@ public interface LiveService {
      * 瓜子商店
      * 侧拉抽屉 -> 直播中心 -> 瓜子商店 -> 银瓜子兑换 -> 硬币银瓜子互换 ->　兑换硬币
      * 将 700 银瓜子兑换为 1 硬币, 每个用户每天只能换一次
-     * 已经兑换过时返回 403
+     *
+     * @return 已经兑换过时返回 403
      */
     @POST("AppExchange/silver2coin")
     Call<Silver2CoinResponseEntity> silver2Coin();
@@ -575,9 +579,10 @@ public interface LiveService {
 
     /**
      * 侧拉抽屉 -> 直播中心 -> 房间设置 -> 我的封面
-     * 获取自己的直播间的封面(获取其他人的封面会 -403)
+     * 获取自己的直播间的封面
      *
      * @param roomId 房间号
+     * @return 获取其他人的封面会 -403
      */
     @GET("mhand/assistant/getCover")
     Call<CoverEntity> getCover(@Query("roomId") long roomId);

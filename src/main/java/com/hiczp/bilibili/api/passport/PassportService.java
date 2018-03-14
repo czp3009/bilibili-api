@@ -26,16 +26,19 @@ public interface PassportService {
     /**
      * 带验证码的登录
      * 在一段时间内进行多次错误的登录, 将被要求输入验证码
+     *
      * @param username 用户名
      * @param password 密码
-     * @param captcha 验证码
-     * @param cookies cookies
+     * @param captcha  验证码
+     * @param cookies  cookies
+     * @see CaptchaService
      */
     @POST("api/oauth2/login")
     Call<LoginResponseEntity> login(@Query("username") String username, @Query("password") String password, @Query("captcha") String captcha, @Header("Cookie") String cookies);
 
     /**
      * 获得账户信息
+     *
      * @param accessToken token
      */
     @GET("api/oauth2/info")
@@ -43,7 +46,8 @@ public interface PassportService {
 
     /**
      * 刷新 token
-     * @param accessToken token
+     *
+     * @param accessToken  token
      * @param refreshToken refreshToken
      */
     @POST("api/oauth2/refreshToken")
@@ -51,6 +55,7 @@ public interface PassportService {
 
     /**
      * 注销
+     *
      * @param accessToken token
      */
     @POST("api/oauth2/revoke")

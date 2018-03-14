@@ -7,6 +7,12 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
+/**
+ * 这个拦截器用于取消请求
+ * 如果需要让数据经过其他拦截器处理, 但是不想发生真实的网络请求, 就可以使用这个
+ *
+ * @see UserCancelRequestException
+ */
 public class CancelRequestInterceptor implements Interceptor {
     private Request request;
 

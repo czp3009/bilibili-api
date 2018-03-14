@@ -3,7 +3,9 @@ package com.hiczp.bilibili.api.live.socket.event;
 import com.google.gson.JsonObject;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-//这个事件用于调试, 任何 Data 数据包都会触发一次这个事件
+/**
+ * 这个事件用于调试, 任何 Data 数据包都会触发一次这个事件
+ */
 public class ReceiveDataPackageDebugEvent extends Event {
     private JsonObject jsonObject;
     private String cmd;

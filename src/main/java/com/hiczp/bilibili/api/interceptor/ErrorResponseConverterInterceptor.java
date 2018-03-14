@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-//由于服务器返回错误时的 data 字段类型不固定, 会导致 json 反序列化出错.
-//该拦截器将在返回的 code 不为 0 时, 将 response 转换为包含一个空 data 的 json 字符串.
+/**
+ * 错误返回码内容转换拦截器
+ * 由于服务器返回错误时的 data 字段类型不固定, 会导致 json 反序列化出错.
+ * 该拦截器将在返回的 code 不为 0 时, 将 response 转换为包含一个空 data 的 json 字符串.
+ */
 public class ErrorResponseConverterInterceptor implements Interceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorResponseConverterInterceptor.class);
     private static final Gson GSON = new Gson();

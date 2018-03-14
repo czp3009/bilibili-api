@@ -12,7 +12,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-//自动刷新 token
+/**
+ * 自动刷新 token
+ * 如果一次请求的返回值表示鉴权失败, 会尝试刷新一次 token 然后自动重放请求
+ * 刷新 token 的行为将只发生一次, 如果刷新 token 失败, 下次请求的时候不会再次执行刷新 token 操作而会直接返回原本的返回内容
+ */
 public class AutoRefreshTokenInterceptor implements Interceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutoRefreshTokenInterceptor.class);
 

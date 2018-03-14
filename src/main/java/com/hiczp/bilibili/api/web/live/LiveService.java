@@ -7,9 +7,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface LiveService {
-    //直播间心跳包
-    //参数为时间戳(不是 unix 时间戳)
-    //未登录时返回 401
+    /**
+     * 直播间心跳包
+     *
+     * @param timestamp 时间戳(不是 unix 时间戳)
+     * @return 未登录时返回 401
+     */
     @GET("feed/v1/feed/heartBeat")
     Call<SendHeartBeatResponseEntity> sendHeartBeat(@Query("_") long timestamp);
 
@@ -17,9 +20,12 @@ public interface LiveService {
         return sendHeartBeat(System.currentTimeMillis());
     }
 
-    //获取用户信息
-    //成功时, code 为 "REPONSE_OK"
-    //未登录时返回 500
+    /**
+     * 获取用户信息
+     *
+     * @param timestamp 成功时, code 为 "REPONSE_OK"
+     * @return 未登录时返回 500
+     */
     @GET("User/getUserInfo")
     Call<UserInfoEntity> getUserInfo(@Query("ts") long timestamp);
 

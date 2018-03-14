@@ -7,6 +7,9 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.List;
 
+/**
+ * 数据包解码器
+ */
 public class PackageDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
