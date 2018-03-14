@@ -23,8 +23,8 @@ public interface LiveService {
     /**
      * 获取用户信息
      *
-     * @param timestamp 成功时, code 为 "REPONSE_OK"
-     * @return 未登录时返回 500
+     * @param timestamp 时间戳(不是 unix 时间戳)
+     * @return 成功时, code 为 "REPONSE_OK", 未登录时返回 500
      */
     @GET("User/getUserInfo")
     Call<UserInfoEntity> getUserInfo(@Query("ts") long timestamp);
