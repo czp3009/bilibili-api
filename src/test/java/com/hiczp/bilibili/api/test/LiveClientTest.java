@@ -128,7 +128,7 @@ public class LiveClientTest {
         public void sendGift(SendGiftPackageEvent sendGiftPackageEvent) {
             SendGiftEntity.DataEntity dataEntity = sendGiftPackageEvent.getEntity().getData();
             LOGGER.info("[SendGift] {} give {}*{}",
-                    dataEntity.getUserName(),
+                    dataEntity.getUsername(),
                     dataEntity.getGiftName(),
                     dataEntity.getNum()
             );
