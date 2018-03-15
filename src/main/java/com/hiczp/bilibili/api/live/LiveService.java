@@ -142,6 +142,38 @@ public interface LiveService {
     }
 
     /**
+     * 获取当前这段时间的活动(不定期活动, 每次持续几周)和信仰任务
+     *
+     * @param roomId 房间号
+     */
+    @GET("activity/v1/Common/mobileActivity")
+    Call<MobileActivityEntity> getMobileActivity(@Query("roomid") long roomId);
+
+    /**
+     * 获取用户的信仰任务列表
+     *
+     * @return 2018-02 现在只有 double_watch_task 这个任务是有效的
+     */
+    @GET("activity/v1/task/user_tasks")
+    Call<UserTasksEntity> getUserTasks();
+
+    /**
+     * 领取一个信仰任务
+     *
+     * @param taskId 任务名
+     * @return 任务未完成或者已领取返回 -400
+     */
+    @POST("activity/v1/task/receive_award")
+    Call<ReceiveUserTaskAward> receiveUserTaskAward(@Query("task_id") String taskId);
+
+    /**
+     * 领取 double_watch_task 任务的奖励
+     */
+    default Call<ReceiveUserTaskAward> receiveDoubleWatchTaskAward() {
+        return receiveUserTaskAward("double_watch_task");
+    }
+
+    /**
      * 发送一个 Restful 心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
      * 2018-03-06 开始, 只有老爷才能通过观看直播获得经验
      *
