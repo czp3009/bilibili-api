@@ -51,6 +51,8 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
     private CaptchaService captchaService;
     private LiveService liveService;
 
+    private BilibiliWebAPI bilibiliWebAPI;
+
     public BilibiliAPI() {
         this.bilibiliClientProperties = BilibiliClientProperties.defaultSetting();
         this.bilibiliAccount = BilibiliAccount.emptyInstance();
@@ -71,7 +73,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         this.bilibiliAccount = new BilibiliAccount(bilibiliAccount);
     }
 
-    //TODO 不明确客户端访问 passport.bilibili.com 时使用的 UA
     @Override
     public PassportService getPassportService() {
         if (passportService == null) {
@@ -83,7 +84,15 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
     public PassportService getPassportService(@Nonnull List<Interceptor> interceptors, @Nonnull HttpLoggingInterceptor.Level logLevel) {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
 
+        //TODO 不明确客户端访问 passport.bilibili.com 时使用的 UA
         okHttpClientBuilder
+                .addInterceptor(new AddFixedHeadersInterceptor(
+                        "Buvid", bilibiliClientProperties.getBuvId(),
+                        "User-Agent", "bili-universal/6560 CFNetwork/894 Darwin/17.4.0" //这是 IOS 的 UA
+                ))
+                .addInterceptor(new AddDynamicHeadersInterceptor(
+                        () -> "Display-ID", () -> String.format("%s-%d", bilibiliAccount.getUserId() == null ? bilibiliClientProperties.getBuvId() : bilibiliAccount.getUserId(), apiInitTime)
+                ))
                 .addInterceptor(new AddFixedParamsInterceptor(
                         "build", bilibiliClientProperties.getBuild(),
                         "mobi_app", "android",
@@ -148,7 +157,6 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
                 .addInterceptor(new AddAppKeyInterceptor(bilibiliClientProperties))
                 .addInterceptor(new AutoRefreshTokenInterceptor(
                         this,
-                        autoRefreshToken,
                         ServerErrorCode.Common.UNAUTHORIZED,
                         ServerErrorCode.Live.USER_NO_LOGIN,
                         ServerErrorCode.Live.PLEASE_LOGIN,
@@ -258,11 +266,14 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
 
     @Override
     public BilibiliWebAPI getBilibiliWebAPI() throws IOException {
-        return new BilibiliWebAPI(toCookies());
+        return getBilibiliWebAPI(BrowserProperties.defaultSetting());
     }
 
     public BilibiliWebAPI getBilibiliWebAPI(BrowserProperties browserProperties) throws IOException {
-        return new BilibiliWebAPI(browserProperties, toCookies());
+        if (bilibiliWebAPI == null) {
+            bilibiliWebAPI = new BilibiliWebAPI(browserProperties, toCookies());
+        }
+        return bilibiliWebAPI;
     }
 
     public LoginResponseEntity login(@Nonnull String username, @Nonnull String password) throws IOException, LoginException, CaptchaMismatchException {
@@ -301,6 +312,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
             }
         }
         bilibiliAccount.copyFrom(loginResponseEntity.toBilibiliAccount());
+        bilibiliWebAPI = null;
         LOGGER.info("Login succeed with username: {}", username);
         return loginResponseEntity;
     }
@@ -334,6 +346,7 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
             }
         }
         bilibiliAccount.copyFrom(refreshTokenResponseEntity.toBilibiliAccount());
+        bilibiliWebAPI = null;
         LOGGER.info("RefreshToken succeed with userId: {}", bilibiliAccount.getUserId());
         return refreshTokenResponseEntity;
     }

@@ -21,12 +21,10 @@ public class AutoRefreshTokenInterceptor implements Interceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutoRefreshTokenInterceptor.class);
 
     private BilibiliAPI bilibiliAPI;
-    private Boolean autoRefreshToken;
     private int[] codes;
 
-    public AutoRefreshTokenInterceptor(BilibiliAPI bilibiliAPI, Boolean autoRefreshToken, int... codes) {
+    public AutoRefreshTokenInterceptor(BilibiliAPI bilibiliAPI, int... codes) {
         this.bilibiliAPI = bilibiliAPI;
-        this.autoRefreshToken = autoRefreshToken;
         this.codes = codes;
     }
 
@@ -34,7 +32,7 @@ public class AutoRefreshTokenInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
 
-        if (!autoRefreshToken) {
+        if (!bilibiliAPI.isAutoRefreshToken()) {
             return response;
         }
 

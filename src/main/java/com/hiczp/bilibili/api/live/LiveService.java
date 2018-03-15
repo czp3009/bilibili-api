@@ -52,8 +52,8 @@ public interface LiveService {
     @POST("feed/v1/feed/isFollowed")
     Call<IsFollowedResponseEntity> isFollowed(@Query("follow") long hostUserId);
 
-    //TODO 每日背包任务
-    //该 API 意义不明(似乎跟什么 每日背包任务 有关)
+    //TODO sendDaily
+    //该 API 意义不明
     @GET("AppBag/sendDaily")
     Call<SendDailyResponseEntity> sendDaily();
 
@@ -110,10 +110,11 @@ public interface LiveService {
     @GET("appUser/getTitle")
     Call<TitlesEntity> getTitle();
 
-    //TODO 节奏风暴
+    //TODO 查看房间里是否有节奏风暴
     @GET("SpecialGift/room/{roomId}")
     Call<SpecialGiftEntity> getSpecialGift(@Path("roomId") long roomId);
     //TODO 参与节奏风暴抽奖
+    //TODO 查看节奏风暴奖励
 
     /**
      * 获取自己的用户信息(live 站的个人信息, 非总站)
@@ -172,6 +173,10 @@ public interface LiveService {
     default Call<ReceiveUserTaskAward> receiveDoubleWatchTaskAward() {
         return receiveUserTaskAward("double_watch_task");
     }
+
+    //TODO 查看一个房间是否有活动抽奖
+    //TODO 参与活动抽奖
+    //TODO 查看活动抽奖奖励
 
     /**
      * 发送一个 Restful 心跳包, 五分钟一次. 这被用于统计观看直播的时间, 可以提升观众等级
