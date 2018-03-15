@@ -91,6 +91,11 @@ public class ServerErrorCode {
          */
         public static final int PLEASE_LOGIN0 = 32205;
         /**
+         * "message": "invalid request"
+         * "data": "bad token"
+         */
+        public static final int INVALID_REQUEST = 65530;
+        /**
          * "请先登录"
          */
         public static final int NO_LOGIN = -101;

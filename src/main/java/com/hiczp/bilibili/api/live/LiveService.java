@@ -247,7 +247,7 @@ public interface LiveService {
      * @param bagId      礼物在自己背包里的 ID
      * @param random     随机数
      * @return roomUserId 与 roomId 不匹配时返回 200012
-     * @return bagId 错误时(背包里没有这个礼物)返回 200019
+     * bagId 错误时(背包里没有这个礼物)返回 200019
      */
     @POST("AppBag/send")
     @FormUrlEncoded
@@ -526,6 +526,7 @@ public interface LiveService {
      * 将 700 银瓜子兑换为 1 硬币, 每个用户每天只能换一次
      *
      * @return 已经兑换过时返回 403
+     * 2018-03-15 访问此 API 必须有一个合法的 UA, 否则返回 65530
      */
     @POST("AppExchange/silver2coin")
     Call<Silver2CoinResponseEntity> silver2Coin();
