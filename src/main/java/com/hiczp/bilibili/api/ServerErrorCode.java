@@ -77,6 +77,16 @@ public class ServerErrorCode {
          */
         public static final int FORBIDDEN = 403;
         /**
+         * 送礼物时房间号与用户号不匹配
+         * "只能送给主播(591)"
+         */
+        public static final int ONLY_CAN_SEND_TO_HOST = 200012;
+        /**
+         * 赠送一个不存在的礼物
+         * "获取包裹数据失败"
+         */
+        public static final int GET_BAG_DATA_FAIL = 200019;
+        /**
          * "请登录"
          */
         public static final int PLEASE_LOGIN0 = 32205;
@@ -85,6 +95,7 @@ public class ServerErrorCode {
          */
         public static final int NO_LOGIN = -101;
         /**
+         * 搜索时, 关键字字数过少或过多
          * "关键字不能小于2个字节或大于50字节"
          */
         public static final int KEYWORD_CAN_NOT_LESS_THAN_2_BYTES_OR_GREATER_THAN_50_BYTES = -609;

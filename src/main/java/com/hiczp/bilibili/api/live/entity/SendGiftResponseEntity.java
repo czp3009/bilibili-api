@@ -9,12 +9,15 @@ import java.util.List;
 public class SendGiftResponseEntity {
     /**
      * code : 0
-     * message : ok
+     * msg : success
+     * message : success
      * data : {"silver":"2696","gold":"0","data":{"giftName":"辣条","num":1,"uname":"czp3009","rcost":31134,"uid":20293030,"top_list":[{"uid":20293030,"uname":"czp3009","coin":25100,"face":"http://i0.hdslb.com/bfs/face/4f65e79399ad5a1bf3f877851b2f819d5870b494.jpg","guard_level":0,"rank":1,"score":25100},{"uid":19946822,"uname":"罗非鱼追上来了","coin":8000,"face":"http://i2.hdslb.com/bfs/face/e71031a931125617fad2c148213381bb6e0e9f26.jpg","guard_level":0,"rank":2,"score":8000},{"uid":8353249,"uname":"TcCoke","coin":3500,"face":"http://i2.hdslb.com/bfs/face/7c3c131f89380db0046024d1a903d3a6e4dc6128.jpg","guard_level":0,"rank":3,"score":3500}],"timestamp":1509972225,"giftId":1,"giftType":0,"action":"喂食","super":0,"price":100,"rnd":"1430788195","newMedal":0,"newTitle":0,"medal":[],"title":"","beatId":0,"biz_source":"live","metadata":"","remain":1,"gold":0,"silver":0,"eventScore":0,"eventNum":0,"smalltv_msg":[],"specialGift":null,"notice_msg":[],"capsule":{"normal":{"coin":10,"change":0,"progress":{"now":2900,"max":10000}},"colorful":{"coin":0,"change":0,"progress":{"now":0,"max":5000}}},"addFollow":0},"remain":1}
      */
 
     @SerializedName("code")
     private int code;
+    @SerializedName("msg")
+    private String msg;
     @SerializedName("message")
     private String message;
     @SerializedName("data")
@@ -26,6 +29,14 @@ public class SendGiftResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getMessage() {
@@ -138,7 +149,7 @@ public class SendGiftResponseEntity {
             @SerializedName("uid")
             private int uid;
             @SerializedName("timestamp")
-            private int timestamp;
+            private long timestamp;
             @SerializedName("giftId")
             private int giftId;
             @SerializedName("giftType")
@@ -181,12 +192,15 @@ public class SendGiftResponseEntity {
             private int addFollow;
             @SerializedName("top_list")
             private List<TopListEntity> topList;
+            /**
+             * medal 可能是空的 JsonArray, 也可能是一个 JsonObject
+             */
             @SerializedName("medal")
-            private List<?> medal;
+            private JsonElement medal;
             @SerializedName("smalltv_msg")
-            private List<?> smalltvMsg;
+            private JsonElement smalltvMsg;
             @SerializedName("notice_msg")
-            private List<?> noticeMsg;
+            private JsonElement noticeMsg;
 
             public String getGiftName() {
                 return giftName;
@@ -228,11 +242,11 @@ public class SendGiftResponseEntity {
                 this.uid = uid;
             }
 
-            public int getTimestamp() {
+            public long getTimestamp() {
                 return timestamp;
             }
 
-            public void setTimestamp(int timestamp) {
+            public void setTimestamp(long timestamp) {
                 this.timestamp = timestamp;
             }
 
@@ -404,27 +418,27 @@ public class SendGiftResponseEntity {
                 this.topList = topList;
             }
 
-            public List<?> getMedal() {
+            public JsonElement getMedal() {
                 return medal;
             }
 
-            public void setMedal(List<?> medal) {
+            public void setMedal(JsonElement medal) {
                 this.medal = medal;
             }
 
-            public List<?> getSmalltvMsg() {
+            public JsonElement getSmalltvMsg() {
                 return smalltvMsg;
             }
 
-            public void setSmalltvMsg(List<?> smalltvMsg) {
+            public void setSmalltvMsg(JsonElement smalltvMsg) {
                 this.smalltvMsg = smalltvMsg;
             }
 
-            public List<?> getNoticeMsg() {
+            public JsonElement getNoticeMsg() {
                 return noticeMsg;
             }
 
-            public void setNoticeMsg(List<?> noticeMsg) {
+            public void setNoticeMsg(JsonElement noticeMsg) {
                 this.noticeMsg = noticeMsg;
             }
 

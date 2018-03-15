@@ -246,6 +246,8 @@ public interface LiveService {
      * @param timeStamp  时间戳
      * @param bagId      礼物在自己背包里的 ID
      * @param random     随机数
+     * @return roomUserId 与 roomId 不匹配时返回 200012
+     * @return bagId 错误时(背包里没有这个礼物)返回 200019
      */
     @POST("AppBag/send")
     @FormUrlEncoded
