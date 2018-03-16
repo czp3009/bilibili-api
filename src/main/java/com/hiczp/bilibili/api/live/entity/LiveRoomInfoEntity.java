@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Map;
 public class LiveRoomInfoEntity {
     /**
      * code : 0
-     * data : {"room_id":29434,"title":"继续玩游戏~","cover":"http://i0.hdslb.com/bfs/live/744637d38c9f0a994bf7164a3b73493f537c3876.jpg","mid":2866663,"uname":"hyx5020","face":"http://i2.hdslb.com/bfs/face/0434dccc0ec4de223e8ca374dea06a6e1e8eb471.jpg","m_face":"http://i2.hdslb.com/bfs/face/0434dccc0ec4de223e8ca374dea06a6e1e8eb471.jpg","background_id":1,"attention":310,"is_attention":0,"online":261,"create":1438266869,"create_at":"2015-07-30 22:34:29","sch_id":0,"status":"PREPARING","area":"单机联机","area_id":1,"area_v2_id":107,"area_v2_parent_id":2,"schedule":{"cid":10029434,"sch_id":0,"title":"继续玩游戏~","mid":2866663,"manager":[],"start":1438266869,"start_at":"2015-07-30 22:34:29","aid":0,"stream_id":20393,"online":261,"status":"PREPARING","meta_id":0,"pending_meta_id":0},"meta":{"tag":["坎巴拉太空计划"],"description":"<p><br><\/p><h1><br><\/h1><p><br><\/p>","typeid":1,"tag_ids":{"0":24},"cover":"http://i0.hdslb.com/bfs/live/744637d38c9f0a994bf7164a3b73493f537c3876.jpg","check_status":"VERIFY","aid":0},"cmt":"livecmt-2.bilibili.com","cmt_port":88,"cmt_port_goim":2243,"recommend":[{"owner":{"face":"http://i1.hdslb.com/bfs/face/cdb0ddf5087248eb30c05ac9257f3f87c3f9f42d.jpg","mid":13661517,"name":"萌萌哒少女深海酱"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1081638.jpg?11020048"},"title":"ASMR~鸽子王主播居然......","room_id":1081638,"online":7708},{"owner":{"face":"http://i0.hdslb.com/bfs/face/b60b42e1a570589cac62e4e3c6f5d0e8a4c994a7.jpg","mid":4186467,"name":"鹿島ちゃんは可愛い"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1266586.jpg?11020045"},"title":"想找个萌妹连麦","room_id":1266586,"online":5520}],"toplist":[],"isvip":0,"opentime":0,"prepare":"主播正在摔♂跤中...","isadmin":0,"hot_word":[{"id":45,"words":"当然是选择原谅她啊！"},{"id":44,"words":"还有这种操作！"},{"id":42,"words":"怕是要修仙哦"},{"id":41,"words":"gay里gay气"},{"id":39,"words":"请大家注意弹幕礼仪哦！"},{"id":37,"words":"那你很棒哦！"},{"id":36,"words":"向大佬低头"},{"id":30,"words":"bilibili-(゜-゜)つロ乾杯~"},{"id":25,"words":"prprpr"},{"id":22,"words":"excuse me？"},{"id":21,"words":"gg"},{"id":20,"words":"你为什么这么熟练啊"},{"id":19,"words":"老司机带带我"},{"id":13,"words":"666666666"},{"id":12,"words":"啪啪啪啪啪"},{"id":11,"words":"Yooooooo"},{"id":10,"words":"FFFFFFFFFF"},{"id":9,"words":"色情主播"},{"id":7,"words":"红红火火恍恍惚惚"},{"id":5,"words":"喂，妖妖零吗"},{"id":3,"words":"_(:з」∠)_"},{"id":2,"words":"2333333"}],"roomgifts":[{"id":7,"name":"666","price":666,"type":1,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-7.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/7.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":8,"name":"233","price":233,"type":1,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-8.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/8.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":25,"name":"小电视","price":1245000,"type":0,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-25.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/25.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":1,"super_num":1,"count_map":{"1":"高能","2":"高能","3":"高能","4":"高能","5":"高能"}},{"id":3,"name":"B坷垃","price":9900,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-3.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/3.gif?20171010161652","count_set":"1,10,46,520,1314","combo_num":1,"super_num":46,"count_map":{"1":"连击","10":"连击","46":"高能","520":"高能","1314":"高能"}},{"id":4,"name":"喵娘","price":5200,"type":0,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-4.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/4.gif?20171010161652","count_set":"1,2,10,87,520","combo_num":2,"super_num":87,"count_map":{"1":"","2":"连击","10":"连击","87":"高能","520":"高能"}},{"id":6,"name":"亿圆","price":1000,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-6.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/6.gif?20171010161652","count_set":"1,10,99,450,1314","combo_num":10,"super_num":450,"count_map":{"1":"","10":"连击","99":"连击","450":"高能","1314":"高能"}},{"id":1,"name":"辣条","price":100,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-1.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/1.gif?20171010161652","count_set":"1,10,99,520,4500","combo_num":99,"super_num":4500,"count_map":{"1":"","10":"","99":"连击","520":"连击","4500":"高能"}}],"ignore_gift":[{"id":1,"num":10},{"id":21,"num":10}],"msg_mode":1,"msg_color":16777215,"msg_length":20,"master_level":11,"master_level_color":5805790,"broadcast_type":0,"activity_gift":[],"check_version":0,"activity_id":0,"event_corner":[],"guard_level":0,"guard_info":{"heart_status":0,"heart_time":300},"guard_notice":0,"guard_tip_flag":0,"new_year_ceremony":0,"special_gift_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901","show_room_id":29434}
+     * data : {"room_id":23058,"title":"哔哩哔哩音悦台","cover":"http://i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg","mid":11153765,"uname":"3号直播间","face":"http://i0.hdslb.com/bfs/face/5d35da6e93fbfb1a77ad6d1f1004b08413913f9a.jpg","m_face":"http://i0.hdslb.com/bfs/face/5d35da6e93fbfb1a77ad6d1f1004b08413913f9a.jpg","background_id":1,"attention":313994,"is_attention":1,"online":25101,"create":1434695375,"create_at":"2015-06-19 14:29:35","sch_id":0,"status":"LIVE","area":"放映厅","area_id":7,"area_v2_id":34,"area_v2_parent_id":1,"area_v2_name":"音乐台","area_v2_parent_name":"娱乐","schedule":{"cid":10023058,"sch_id":0,"title":"哔哩哔哩音悦台","mid":11153765,"manager":[],"start":1434695375,"start_at":"2015-06-19 14:29:35","aid":0,"stream_id":13998,"online":25101,"status":"LIVE","meta_id":0,"pending_meta_id":0},"meta":{"tag":["ACG音乐"],"description":"<p>这里是哔哩哔哩官方音乐台喔！<\/p><p>一起来听音乐吧ε=ε=(ノ≧∇≦)ノ<\/p><p>没想到蒸汽配圣诞下装，意外的很暴露呢=3=<\/p>\n","typeid":1,"tag_ids":{"0":24},"cover":"http://i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg","check_status":"VERIFY","aid":0},"cmt":"livecmt-2.bilibili.com","cmt_port":88,"cmt_port_goim":2243,"recommend":[{"owner":{"face":"http://i2.hdslb.com/bfs/face/941f199204fd885cca123cbe8be6eedb6639d0e0.jpg","mid":14117221,"name":"就决定是你了长生"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1170236.jpg?03160920"},"title":"【长生】唱的不好听算我输！","room_id":1170236,"online":3649},{"owner":{"face":"http://i2.hdslb.com/bfs/face/2af1a482007bee57d176559defc861cd39481dcf.jpg","mid":2756858,"name":"咿呀哥哥"},"cover":{"src":"http://i0.hdslb.com/bfs/live/2532274.jpg?03160920"},"title":"暖音哥哥 数羊哄睡","room_id":2532274,"online":92}],"toplist":[{"name":"桃花榜","type":"lover_2018"}],"isvip":0,"opentime":33690,"prepare":"主播正在嘿嘿嘿中...","isadmin":0,"hot_word":[{"id":48,"words":"打call"},{"id":47,"words":"囍"},{"id":44,"words":"还有这种操作！"},{"id":41,"words":"gay里gay气"},{"id":39,"words":"请大家注意弹幕礼仪哦！"},{"id":36,"words":"向大佬低头"},{"id":25,"words":"prprpr"},{"id":21,"words":"gg"},{"id":20,"words":"你为什么这么熟练啊"},{"id":19,"words":"老司机带带我"},{"id":13,"words":"666666666"},{"id":12,"words":"啪啪啪啪啪"},{"id":11,"words":"Yooooooo"},{"id":10,"words":"FFFFFFFFFF"},{"id":9,"words":"色情主播"},{"id":7,"words":"红红火火恍恍惚惚"},{"id":5,"words":"喂，妖妖零吗"},{"id":2,"words":"2333333"}],"roomgifts":[{"id":116,"name":"情书","price":2000,"type":2,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-116.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/116.gif?20180314161652","count_set":"1,5,10,99,225","combo_num":5,"super_num":225,"count_map":{"1":"","5":"","10":"","99":"","225":"高能"}},{"id":25,"name":"小电视","price":1245000,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-25.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/25.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":1,"super_num":1,"count_map":{"1":"高能","2":"高能","3":"高能","4":"高能","5":"高能"}},{"id":3,"name":"B坷垃","price":9900,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-3.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/3.gif?20180314161652","count_set":"1,10,46,520,1314","combo_num":1,"super_num":46,"count_map":{"1":"","10":"","46":"高能","520":"高能","1314":"高能"}},{"id":4,"name":"喵娘","price":5200,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-4.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/4.gif?20180314161652","count_set":"1,2,10,87,520","combo_num":2,"super_num":87,"count_map":{"1":"","2":"","10":"","87":"高能","520":"高能"}},{"id":6,"name":"亿圆","price":1000,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-6.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/6.gif?20180314161652","count_set":"1,10,99,450,1314","combo_num":10,"super_num":450,"count_map":{"1":"","10":"","99":"","450":"高能","1314":"高能"}},{"id":7,"name":"666","price":666,"type":1,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-7.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/7.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":8,"name":"233","price":233,"type":1,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-8.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/8.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":1,"name":"辣条","price":100,"type":0,"coin_type":{"silver":"silver"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-1.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/1.gif?20180314161652","count_set":"1,10,99,520,4500","combo_num":0,"super_num":0,"count_map":{"1":"","10":"","99":"","520":"","4500":""}}],"ignore_gift":[{"id":1,"num":10},{"id":21,"num":10}],"msg_mode":1,"msg_color":16777215,"msg_length":30,"master_level":36,"master_level_color":16746162,"broadcast_type":0,"activity_gift":[{"id":115,"bag_id":67456406,"name":"桃花","num":1,"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-115.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/115.gif?20180314161652","combo_num":0,"super_num":0,"count_set":"1,1","count_map":{"1":"全部"}}],"check_version":0,"activity_id":0,"event_corner":[],"guard_level":0,"guard_info":{"heart_status":0,"heart_time":300},"guard_notice":0,"guard_tip_flag":1,"new_year_ceremony":0,"special_gift_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901","show_room_id":3}
      */
 
     @SerializedName("code")
@@ -44,56 +45,58 @@ public class LiveRoomInfoEntity {
 
     public static class LiveRoomEntity {
         /**
-         * room_id : 29434
-         * title : 继续玩游戏~
-         * cover : http://i0.hdslb.com/bfs/live/744637d38c9f0a994bf7164a3b73493f537c3876.jpg
-         * mid : 2866663
-         * uname : hyx5020
-         * face : http://i2.hdslb.com/bfs/face/0434dccc0ec4de223e8ca374dea06a6e1e8eb471.jpg
-         * m_face : http://i2.hdslb.com/bfs/face/0434dccc0ec4de223e8ca374dea06a6e1e8eb471.jpg
+         * room_id : 23058
+         * title : 哔哩哔哩音悦台
+         * cover : http://i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg
+         * mid : 11153765
+         * uname : 3号直播间
+         * face : http://i0.hdslb.com/bfs/face/5d35da6e93fbfb1a77ad6d1f1004b08413913f9a.jpg
+         * m_face : http://i0.hdslb.com/bfs/face/5d35da6e93fbfb1a77ad6d1f1004b08413913f9a.jpg
          * background_id : 1
-         * attention : 310
-         * is_attention : 0
-         * online : 261
-         * create : 1438266869
-         * create_at : 2015-07-30 22:34:29
+         * attention : 313994
+         * is_attention : 1
+         * online : 25101
+         * create : 1434695375
+         * create_at : 2015-06-19 14:29:35
          * sch_id : 0
-         * status : PREPARING
-         * area : 单机联机
-         * area_id : 1
-         * area_v2_id : 107
-         * area_v2_parent_id : 2
-         * schedule : {"cid":10029434,"sch_id":0,"title":"继续玩游戏~","mid":2866663,"manager":[],"start":1438266869,"start_at":"2015-07-30 22:34:29","aid":0,"stream_id":20393,"online":261,"status":"PREPARING","meta_id":0,"pending_meta_id":0}
-         * meta : {"tag":["坎巴拉太空计划"],"description":"<p><br><\/p><h1><br><\/h1><p><br><\/p>","typeid":1,"tag_ids":{"0":24},"cover":"http://i0.hdslb.com/bfs/live/744637d38c9f0a994bf7164a3b73493f537c3876.jpg","check_status":"VERIFY","aid":0}
+         * status : LIVE
+         * area : 放映厅
+         * area_id : 7
+         * area_v2_id : 34
+         * area_v2_parent_id : 1
+         * area_v2_name : 音乐台
+         * area_v2_parent_name : 娱乐
+         * schedule : {"cid":10023058,"sch_id":0,"title":"哔哩哔哩音悦台","mid":11153765,"manager":[],"start":1434695375,"start_at":"2015-06-19 14:29:35","aid":0,"stream_id":13998,"online":25101,"status":"LIVE","meta_id":0,"pending_meta_id":0}
+         * meta : {"tag":["ACG音乐"],"description":"<p>这里是哔哩哔哩官方音乐台喔！<\/p><p>一起来听音乐吧ε=ε=(ノ≧∇≦)ノ<\/p><p>没想到蒸汽配圣诞下装，意外的很暴露呢=3=<\/p>\n","typeid":1,"tag_ids":{"0":24},"cover":"http://i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg","check_status":"VERIFY","aid":0}
          * cmt : livecmt-2.bilibili.com
          * cmt_port : 88
          * cmt_port_goim : 2243
-         * recommend : [{"owner":{"face":"http://i1.hdslb.com/bfs/face/cdb0ddf5087248eb30c05ac9257f3f87c3f9f42d.jpg","mid":13661517,"name":"萌萌哒少女深海酱"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1081638.jpg?11020048"},"title":"ASMR~鸽子王主播居然......","room_id":1081638,"online":7708},{"owner":{"face":"http://i0.hdslb.com/bfs/face/b60b42e1a570589cac62e4e3c6f5d0e8a4c994a7.jpg","mid":4186467,"name":"鹿島ちゃんは可愛い"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1266586.jpg?11020045"},"title":"想找个萌妹连麦","room_id":1266586,"online":5520}]
-         * toplist : []
+         * recommend : [{"owner":{"face":"http://i2.hdslb.com/bfs/face/941f199204fd885cca123cbe8be6eedb6639d0e0.jpg","mid":14117221,"name":"就决定是你了长生"},"cover":{"src":"http://i0.hdslb.com/bfs/live/1170236.jpg?03160920"},"title":"【长生】唱的不好听算我输！","room_id":1170236,"online":3649},{"owner":{"face":"http://i2.hdslb.com/bfs/face/2af1a482007bee57d176559defc861cd39481dcf.jpg","mid":2756858,"name":"咿呀哥哥"},"cover":{"src":"http://i0.hdslb.com/bfs/live/2532274.jpg?03160920"},"title":"暖音哥哥 数羊哄睡","room_id":2532274,"online":92}]
+         * toplist : [{"name":"桃花榜","type":"lover_2018"}]
          * isvip : 0
-         * opentime : 0
-         * prepare : 主播正在摔♂跤中...
+         * opentime : 33690
+         * prepare : 主播正在嘿嘿嘿中...
          * isadmin : 0
-         * hot_word : [{"id":45,"words":"当然是选择原谅她啊！"},{"id":44,"words":"还有这种操作！"},{"id":42,"words":"怕是要修仙哦"},{"id":41,"words":"gay里gay气"},{"id":39,"words":"请大家注意弹幕礼仪哦！"},{"id":37,"words":"那你很棒哦！"},{"id":36,"words":"向大佬低头"},{"id":30,"words":"bilibili-(゜-゜)つロ乾杯~"},{"id":25,"words":"prprpr"},{"id":22,"words":"excuse me？"},{"id":21,"words":"gg"},{"id":20,"words":"你为什么这么熟练啊"},{"id":19,"words":"老司机带带我"},{"id":13,"words":"666666666"},{"id":12,"words":"啪啪啪啪啪"},{"id":11,"words":"Yooooooo"},{"id":10,"words":"FFFFFFFFFF"},{"id":9,"words":"色情主播"},{"id":7,"words":"红红火火恍恍惚惚"},{"id":5,"words":"喂，妖妖零吗"},{"id":3,"words":"_(:з」∠)_"},{"id":2,"words":"2333333"}]
-         * roomgifts : [{"id":7,"name":"666","price":666,"type":1,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-7.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/7.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":8,"name":"233","price":233,"type":1,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-8.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/8.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":25,"name":"小电视","price":1245000,"type":0,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-25.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/25.gif?20171010161652","count_set":"1,2,3,4,5","combo_num":1,"super_num":1,"count_map":{"1":"高能","2":"高能","3":"高能","4":"高能","5":"高能"}},{"id":3,"name":"B坷垃","price":9900,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-3.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/3.gif?20171010161652","count_set":"1,10,46,520,1314","combo_num":1,"super_num":46,"count_map":{"1":"连击","10":"连击","46":"高能","520":"高能","1314":"高能"}},{"id":4,"name":"喵娘","price":5200,"type":0,"coin_type":{"gold":"gold"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-4.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/4.gif?20171010161652","count_set":"1,2,10,87,520","combo_num":2,"super_num":87,"count_map":{"1":"","2":"连击","10":"连击","87":"高能","520":"高能"}},{"id":6,"name":"亿圆","price":1000,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-6.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/6.gif?20171010161652","count_set":"1,10,99,450,1314","combo_num":10,"super_num":450,"count_map":{"1":"","10":"连击","99":"连击","450":"高能","1314":"高能"}},{"id":1,"name":"辣条","price":100,"type":0,"coin_type":{"gold":"gold","silver":"silver"},"img":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-1.png?20171010161652","gift_url":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/1.gif?20171010161652","count_set":"1,10,99,520,4500","combo_num":99,"super_num":4500,"count_map":{"1":"","10":"","99":"连击","520":"连击","4500":"高能"}}]
+         * hot_word : [{"id":48,"words":"打call"},{"id":47,"words":"囍"},{"id":44,"words":"还有这种操作！"},{"id":41,"words":"gay里gay气"},{"id":39,"words":"请大家注意弹幕礼仪哦！"},{"id":36,"words":"向大佬低头"},{"id":25,"words":"prprpr"},{"id":21,"words":"gg"},{"id":20,"words":"你为什么这么熟练啊"},{"id":19,"words":"老司机带带我"},{"id":13,"words":"666666666"},{"id":12,"words":"啪啪啪啪啪"},{"id":11,"words":"Yooooooo"},{"id":10,"words":"FFFFFFFFFF"},{"id":9,"words":"色情主播"},{"id":7,"words":"红红火火恍恍惚惚"},{"id":5,"words":"喂，妖妖零吗"},{"id":2,"words":"2333333"}]
+         * roomgifts : [{"id":116,"name":"情书","price":2000,"type":2,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-116.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/116.gif?20180314161652","count_set":"1,5,10,99,225","combo_num":5,"super_num":225,"count_map":{"1":"","5":"","10":"","99":"","225":"高能"}},{"id":25,"name":"小电视","price":1245000,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-25.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/25.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":1,"super_num":1,"count_map":{"1":"高能","2":"高能","3":"高能","4":"高能","5":"高能"}},{"id":3,"name":"B坷垃","price":9900,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-3.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/3.gif?20180314161652","count_set":"1,10,46,520,1314","combo_num":1,"super_num":46,"count_map":{"1":"","10":"","46":"高能","520":"高能","1314":"高能"}},{"id":4,"name":"喵娘","price":5200,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-4.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/4.gif?20180314161652","count_set":"1,2,10,87,520","combo_num":2,"super_num":87,"count_map":{"1":"","2":"","10":"","87":"高能","520":"高能"}},{"id":6,"name":"亿圆","price":1000,"type":0,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-6.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/6.gif?20180314161652","count_set":"1,10,99,450,1314","combo_num":10,"super_num":450,"count_map":{"1":"","10":"","99":"","450":"高能","1314":"高能"}},{"id":7,"name":"666","price":666,"type":1,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-7.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/7.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":8,"name":"233","price":233,"type":1,"coin_type":{"gold":"gold"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-8.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/8.gif?20180314161652","count_set":"1,2,3,4,5","combo_num":0,"super_num":0,"count_map":{"1":"","2":"","3":"","4":"","5":""}},{"id":1,"name":"辣条","price":100,"type":0,"coin_type":{"silver":"silver"},"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-1.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/1.gif?20180314161652","count_set":"1,10,99,520,4500","combo_num":0,"super_num":0,"count_map":{"1":"","10":"","99":"","520":"","4500":""}}]
          * ignore_gift : [{"id":1,"num":10},{"id":21,"num":10}]
          * msg_mode : 1
          * msg_color : 16777215
-         * msg_length : 20
-         * master_level : 11
-         * master_level_color : 5805790
+         * msg_length : 30
+         * master_level : 36
+         * master_level_color : 16746162
          * broadcast_type : 0
-         * activity_gift : []
+         * activity_gift : [{"id":115,"bag_id":67456406,"name":"桃花","num":1,"img":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-115.png?20180314161652","gift_url":"http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/115.gif?20180314161652","combo_num":0,"super_num":0,"count_set":"1,1","count_map":{"1":"全部"}}]
          * check_version : 0
          * activity_id : 0
          * event_corner : []
          * guard_level : 0
          * guard_info : {"heart_status":0,"heart_time":300}
          * guard_notice : 0
-         * guard_tip_flag : 0
+         * guard_tip_flag : 1
          * new_year_ceremony : 0
          * special_gift_gif : http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901
-         * show_room_id : 29434
+         * show_room_id : 3
          */
 
         @SerializedName("room_id")
@@ -134,6 +137,10 @@ public class LiveRoomInfoEntity {
         private int areaV2Id;
         @SerializedName("area_v2_parent_id")
         private int areaV2ParentId;
+        @SerializedName("area_v2_name")
+        private String areaV2Name;
+        @SerializedName("area_v2_parent_name")
+        private String areaV2ParentName;
         @SerializedName("schedule")
         private ScheduleEntity schedule;
         @SerializedName("meta")
@@ -185,7 +192,7 @@ public class LiveRoomInfoEntity {
         @SerializedName("recommend")
         private List<RecommendEntity> recommend;
         @SerializedName("toplist")
-        private List<?> toplist;
+        private List<ToplistEntity> toplist;
         @SerializedName("hot_word")
         private List<HotWordEntity> hotWord;
         @SerializedName("roomgifts")
@@ -193,9 +200,9 @@ public class LiveRoomInfoEntity {
         @SerializedName("ignore_gift")
         private List<IgnoreGiftEntity> ignoreGift;
         @SerializedName("activity_gift")
-        private List<?> activityGift;
+        private List<ActivityGiftEntity> activityGift;
         @SerializedName("event_corner")
-        private List<?> eventCorner;
+        private JsonElement eventCorner;
 
         public long getRoomId() {
             return roomId;
@@ -347,6 +354,22 @@ public class LiveRoomInfoEntity {
 
         public void setAreaV2ParentId(int areaV2ParentId) {
             this.areaV2ParentId = areaV2ParentId;
+        }
+
+        public String getAreaV2Name() {
+            return areaV2Name;
+        }
+
+        public void setAreaV2Name(String areaV2Name) {
+            this.areaV2Name = areaV2Name;
+        }
+
+        public String getAreaV2ParentName() {
+            return areaV2ParentName;
+        }
+
+        public void setAreaV2ParentName(String areaV2ParentName) {
+            this.areaV2ParentName = areaV2ParentName;
         }
 
         public ScheduleEntity getSchedule() {
@@ -549,11 +572,11 @@ public class LiveRoomInfoEntity {
             this.recommend = recommend;
         }
 
-        public List<?> getToplist() {
+        public List<ToplistEntity> getToplist() {
             return toplist;
         }
 
-        public void setToplist(List<?> toplist) {
+        public void setToplist(List<ToplistEntity> toplist) {
             this.toplist = toplist;
         }
 
@@ -581,35 +604,35 @@ public class LiveRoomInfoEntity {
             this.ignoreGift = ignoreGift;
         }
 
-        public List<?> getActivityGift() {
+        public List<ActivityGiftEntity> getActivityGift() {
             return activityGift;
         }
 
-        public void setActivityGift(List<?> activityGift) {
+        public void setActivityGift(List<ActivityGiftEntity> activityGift) {
             this.activityGift = activityGift;
         }
 
-        public List<?> getEventCorner() {
+        public JsonElement getEventCorner() {
             return eventCorner;
         }
 
-        public void setEventCorner(List<?> eventCorner) {
+        public void setEventCorner(JsonElement eventCorner) {
             this.eventCorner = eventCorner;
         }
 
         public static class ScheduleEntity {
             /**
-             * cid : 10029434
+             * cid : 10023058
              * sch_id : 0
-             * title : 继续玩游戏~
-             * mid : 2866663
+             * title : 哔哩哔哩音悦台
+             * mid : 11153765
              * manager : []
-             * start : 1438266869
-             * start_at : 2015-07-30 22:34:29
+             * start : 1434695375
+             * start_at : 2015-06-19 14:29:35
              * aid : 0
-             * stream_id : 20393
-             * online : 261
-             * status : PREPARING
+             * stream_id : 13998
+             * online : 25101
+             * status : LIVE
              * meta_id : 0
              * pending_meta_id : 0
              */
@@ -748,11 +771,12 @@ public class LiveRoomInfoEntity {
 
         public static class MetaEntity {
             /**
-             * tag : ["坎巴拉太空计划"]
-             * description : <p><br></p><h1><br></h1><p><br></p>
+             * tag : ["ACG音乐"]
+             * description : <p>这里是哔哩哔哩官方音乐台喔！</p><p>一起来听音乐吧ε=ε=(ノ≧∇≦)ノ</p><p>没想到蒸汽配圣诞下装，意外的很暴露呢=3=</p>
+
              * typeid : 1
              * tag_ids : {"0":24}
-             * cover : http://i0.hdslb.com/bfs/live/744637d38c9f0a994bf7164a3b73493f537c3876.jpg
+             * cover : http://i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg
              * check_status : VERIFY
              * aid : 0
              */
@@ -876,11 +900,11 @@ public class LiveRoomInfoEntity {
 
         public static class RecommendEntity {
             /**
-             * owner : {"face":"http://i1.hdslb.com/bfs/face/cdb0ddf5087248eb30c05ac9257f3f87c3f9f42d.jpg","mid":13661517,"name":"萌萌哒少女深海酱"}
-             * cover : {"src":"http://i0.hdslb.com/bfs/live/1081638.jpg?11020048"}
-             * title : ASMR~鸽子王主播居然......
-             * room_id : 1081638
-             * online : 7708
+             * owner : {"face":"http://i2.hdslb.com/bfs/face/941f199204fd885cca123cbe8be6eedb6639d0e0.jpg","mid":14117221,"name":"就决定是你了长生"}
+             * cover : {"src":"http://i0.hdslb.com/bfs/live/1170236.jpg?03160920"}
+             * title : 【长生】唱的不好听算我输！
+             * room_id : 1170236
+             * online : 3649
              */
 
             @SerializedName("owner")
@@ -936,9 +960,9 @@ public class LiveRoomInfoEntity {
 
             public static class OwnerEntity {
                 /**
-                 * face : http://i1.hdslb.com/bfs/face/cdb0ddf5087248eb30c05ac9257f3f87c3f9f42d.jpg
-                 * mid : 13661517
-                 * name : 萌萌哒少女深海酱
+                 * face : http://i2.hdslb.com/bfs/face/941f199204fd885cca123cbe8be6eedb6639d0e0.jpg
+                 * mid : 14117221
+                 * name : 就决定是你了长生
                  */
 
                 @SerializedName("face")
@@ -975,7 +999,7 @@ public class LiveRoomInfoEntity {
 
             public static class CoverEntity {
                 /**
-                 * src : http://i0.hdslb.com/bfs/live/1081638.jpg?11020048
+                 * src : http://i0.hdslb.com/bfs/live/1170236.jpg?03160920
                  */
 
                 @SerializedName("src")
@@ -991,10 +1015,38 @@ public class LiveRoomInfoEntity {
             }
         }
 
+        public static class ToplistEntity {
+            /**
+             * name : 桃花榜
+             * type : lover_2018
+             */
+
+            @SerializedName("name")
+            private String name;
+            @SerializedName("type")
+            private String type;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+        }
+
         public static class HotWordEntity {
             /**
-             * id : 45
-             * words : 当然是选择原谅她啊！
+             * id : 48
+             * words : 打call
              */
 
             @SerializedName("id")
@@ -1021,21 +1073,21 @@ public class LiveRoomInfoEntity {
 
         public static class RoomgiftsEntity {
             /**
-             * id : 7
-             * name : 666
-             * price : 666
-             * type : 1
+             * id : 116
+             * name : 情书
+             * price : 2000
+             * type : 2
              * coin_type : {"gold":"gold"}
-             * img : http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift-static-icon/gift-7.png?20171010161652
-             * gift_url : http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/3/7.gif?20171010161652
-             * count_set : 1,2,3,4,5
-             * combo_num : 0
-             * super_num : 0
-             * count_map : {"1":"","2":"","3":"","4":"","5":""}
+             * img : http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-116.png?20180314161652
+             * gift_url : http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/116.gif?20180314161652
+             * count_set : 1,5,10,99,225
+             * combo_num : 5
+             * super_num : 225
+             * count_map : {"1":"","5":"","10":"","99":"","225":"高能"}
              */
 
             @SerializedName("id")
-            private long id;
+            private int id;
             @SerializedName("name")
             private String name;
             @SerializedName("price")
@@ -1057,11 +1109,11 @@ public class LiveRoomInfoEntity {
             @SerializedName("count_map")
             private Map<String, String> countMap;
 
-            public long getId() {
+            public int getId() {
                 return id;
             }
 
-            public void setId(long id) {
+            public void setId(int id) {
                 this.id = id;
             }
 
@@ -1170,24 +1222,140 @@ public class LiveRoomInfoEntity {
              */
 
             @SerializedName("id")
-            private long id;
+            private int id;
             @SerializedName("num")
-            private long num;
+            private int num;
 
-            public long getId() {
+            public int getId() {
                 return id;
             }
 
-            public void setId(long id) {
+            public void setId(int id) {
                 this.id = id;
             }
 
-            public long getNum() {
+            public int getNum() {
                 return num;
             }
 
-            public void setNum(long num) {
+            public void setNum(int num) {
                 this.num = num;
+            }
+        }
+
+        public static class ActivityGiftEntity {
+            /**
+             * id : 115
+             * bag_id : 67456406
+             * name : 桃花
+             * num : 1
+             * img : http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift-static-icon/gift-115.png?20180314161652
+             * gift_url : http://s1.hdslb.com/bfs/static/blive/live-assets/mobile/gift/mobilegift/2/115.gif?20180314161652
+             * combo_num : 0
+             * super_num : 0
+             * count_set : 1,1
+             * count_map : {"1":"全部"}
+             */
+
+            @SerializedName("id")
+            private int id;
+            @SerializedName("bag_id")
+            private int bagId;
+            @SerializedName("name")
+            private String name;
+            @SerializedName("num")
+            private int num;
+            @SerializedName("img")
+            private String img;
+            @SerializedName("gift_url")
+            private String giftUrl;
+            @SerializedName("combo_num")
+            private int comboNum;
+            @SerializedName("super_num")
+            private int superNum;
+            @SerializedName("count_set")
+            private String countSet;
+            @SerializedName("count_map")
+            private Map<String, String> countMap;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public int getBagId() {
+                return bagId;
+            }
+
+            public void setBagId(int bagId) {
+                this.bagId = bagId;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public int getNum() {
+                return num;
+            }
+
+            public void setNum(int num) {
+                this.num = num;
+            }
+
+            public String getImg() {
+                return img;
+            }
+
+            public void setImg(String img) {
+                this.img = img;
+            }
+
+            public String getGiftUrl() {
+                return giftUrl;
+            }
+
+            public void setGiftUrl(String giftUrl) {
+                this.giftUrl = giftUrl;
+            }
+
+            public int getComboNum() {
+                return comboNum;
+            }
+
+            public void setComboNum(int comboNum) {
+                this.comboNum = comboNum;
+            }
+
+            public int getSuperNum() {
+                return superNum;
+            }
+
+            public void setSuperNum(int superNum) {
+                this.superNum = superNum;
+            }
+
+            public String getCountSet() {
+                return countSet;
+            }
+
+            public void setCountSet(String countSet) {
+                this.countSet = countSet;
+            }
+
+            public Map<String, String> getCountMap() {
+                return countMap;
+            }
+
+            public void setCountMap(Map<String, String> countMap) {
+                this.countMap = countMap;
             }
         }
     }
