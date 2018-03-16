@@ -63,14 +63,14 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         this.bilibiliAccount = BilibiliAccount.emptyInstance();
     }
 
-    public BilibiliAPI(BilibiliAccount bilibiliAccount) {
+    public BilibiliAPI(BilibiliSecurityContext bilibiliSecurityContext) {
         this.bilibiliClientProperties = BilibiliClientProperties.defaultSetting();
-        this.bilibiliAccount = new BilibiliAccount(bilibiliAccount);
+        this.bilibiliAccount = new BilibiliAccount(bilibiliSecurityContext);
     }
 
-    public BilibiliAPI(BilibiliClientProperties bilibiliClientProperties, BilibiliAccount bilibiliAccount) {
+    public BilibiliAPI(BilibiliClientProperties bilibiliClientProperties, BilibiliSecurityContext bilibiliSecurityContext) {
         this.bilibiliClientProperties = bilibiliClientProperties;
-        this.bilibiliAccount = new BilibiliAccount(bilibiliAccount);
+        this.bilibiliAccount = new BilibiliAccount(bilibiliSecurityContext);
     }
 
     @Override
