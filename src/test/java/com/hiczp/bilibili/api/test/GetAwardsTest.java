@@ -13,7 +13,7 @@ public class GetAwardsTest {
     public void getAwards() throws Exception {
         BILIBILI_API
                 .getLiveService(Collections.emptyList(), HttpLoggingInterceptor.Level.BODY)
-                .getAwards()
+                .getAwardRecords()
                 .execute()
                 .body();
     }

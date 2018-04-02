@@ -552,10 +552,9 @@ public interface LiveService {
 
     //TODO 头衔工坊(没有可升级头衔, 暂不明确此 API)
 
-    //TODO 获奖记录(没有获奖记录, 暂不明确返回值)
     //侧拉抽屉 -> 直播中心 -> 获奖记录
     @GET("AppUser/awards")
-    Call<AwardsEntity> getAwards();
+    Call<AwardsEntity> getAwardRecords();
 
     /**
      * 瓜子商店
