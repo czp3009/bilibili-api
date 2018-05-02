@@ -1,12 +1,12 @@
 {
   "cmd": "SYS_MSG",
-  "msg": "\u3010\u5e7d\u5c0f\u591c\u5929\u5c0f\u52ab\u3011:?\u5728\u76f4\u64ad\u95f4:?\u3010392\u3011:?\u8d60\u9001 \u5c0f\u7535\u89c6\u4e00\u4e2a\uff0c\u8bf7\u524d\u5f80\u62bd\u5956",
-  "msg_text": "\u3010\u5e7d\u5c0f\u591c\u5929\u5c0f\u52ab\u3011:?\u5728\u76f4\u64ad\u95f4:?\u3010392\u3011:?\u8d60\u9001 \u5c0f\u7535\u89c6\u4e00\u4e2a\uff0c\u8bf7\u524d\u5f80\u62bd\u5956",
+  "msg": "【天南地狗-】:?在直播间:?【531】:?赠送 小电视一个，请前往抽奖",
+  "msg_text": "【天南地狗-】:?在直播间:?【531】:?赠送 小电视一个，请前往抽奖",
   "rep": 1,
   "styleType": 2,
-  "url": "http:\/\/live.bilibili.com\/392",
-  "roomid": 392,
-  "real_roomid": 71084,
-  "rnd": 44332151,
-  "tv_id": "29349"
+  "url": "http://live.bilibili.com/531",
+  "roomid": 531,
+  "real_roomid": 22237,
+  "rnd": 1520992662,
+  "tv_id": "40478"
 }

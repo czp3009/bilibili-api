@@ -2,19 +2,24 @@ package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class AppSmallTVEntity {
     /**
-     * code : -400
-     * message : no
-     * data : {"status":-1}
+     * code : 0
+     * msg : OK
+     * message : OK
+     * data : {"lastid":0,"join":[{"id":39674,"dtime":32}],"unjoin":[{"id":39674,"dtime":32}]}
      */
 
     @SerializedName("code")
     private int code;
+    @SerializedName("msg")
+    private String msg;
     @SerializedName("message")
     private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -22,6 +27,14 @@ public class AppSmallTVEntity {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getMessage() {
@@ -32,28 +45,106 @@ public class AppSmallTVEntity {
         this.message = message;
     }
 
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
-         * status : -1
+         * lastid : 0
+         * join : [{"id":39674,"dtime":32}]
+         * unjoin : [{"id":39674,"dtime":32}]
          */
 
-        @SerializedName("status")
-        private int status;
+        @SerializedName("lastid")
+        private long lastid;
+        @SerializedName("join")
+        private List<Join> join;
+        @SerializedName("unjoin")
+        private List<Unjoin> unjoin;
 
-        public int getStatus() {
-            return status;
+        public long getLastid() {
+            return lastid;
         }
 
-        public void setStatus(int status) {
-            this.status = status;
+        public void setLastid(long lastid) {
+            this.lastid = lastid;
+        }
+
+        public List<Join> getJoin() {
+            return join;
+        }
+
+        public void setJoin(List<Join> join) {
+            this.join = join;
+        }
+
+        public List<Unjoin> getUnjoin() {
+            return unjoin;
+        }
+
+        public void setUnjoin(List<Unjoin> unjoin) {
+            this.unjoin = unjoin;
+        }
+
+        public static class Join {
+            /**
+             * id : 39674
+             * dtime : 32
+             */
+
+            @SerializedName("id")
+            private long id;
+            @SerializedName("dtime")
+            private int dtime;
+
+            public long getId() {
+                return id;
+            }
+
+            public void setId(long id) {
+                this.id = id;
+            }
+
+            public int getDtime() {
+                return dtime;
+            }
+
+            public void setDtime(int dtime) {
+                this.dtime = dtime;
+            }
+        }
+
+        public static class Unjoin {
+            /**
+             * id : 39674
+             * dtime : 32
+             */
+
+            @SerializedName("id")
+            private long id;
+            @SerializedName("dtime")
+            private int dtime;
+
+            public long getId() {
+                return id;
+            }
+
+            public void setId(long id) {
+                this.id = id;
+            }
+
+            public int getDtime() {
+                return dtime;
+            }
+
+            public void setDtime(int dtime) {
+                this.dtime = dtime;
+            }
         }
     }
 }

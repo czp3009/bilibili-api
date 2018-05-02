@@ -4,6 +4,7 @@ import com.hiczp.bilibili.api.passport.entity.KeyEntity;
 import com.hiczp.bilibili.api.passport.entity.LoginResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.LogoutResponseEntity;
 import com.hiczp.bilibili.api.passport.entity.RefreshTokenResponseEntity;
+import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +23,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BilibiliSecurityHelper {
+    /**
+     * 加密一个明文密码
+     *
+     * @param bilibiliServiceProvider BilibiliServiceProvider 实例
+     * @param password                明文密码
+     * @return 密文密码
+     * @throws IOException 网络错误
+     */
     private static String cipherPassword(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
                                          @Nonnull String password) throws IOException {
         KeyEntity keyEntity = bilibiliServiceProvider.getPassportService().getKey().execute().body();
@@ -46,7 +55,7 @@ public class BilibiliSecurityHelper {
         //加密密码
         String cipheredPassword;
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             cipheredPassword = new String(
                     Base64.getEncoder().encode(
@@ -61,14 +70,24 @@ public class BilibiliSecurityHelper {
         return cipheredPassword;
     }
 
-    //计算 sign
-    //传入值为 name1=value1 形式
-    //传入值必须已经排序
-    //value 必须已经 URLEncode
+    /**
+     * 计算 sign
+     *
+     * @param nameAndValues 传入值为 name1=value1 形式, 传入值必须已经排序. value 必须已经经过 URLEncode
+     * @param appSecret     APP 密钥
+     * @return sign
+     */
     public static String calculateSign(@Nonnull List<String> nameAndValues, @Nonnull String appSecret) {
         return calculateSign(nameAndValues.stream().collect(Collectors.joining("&")), appSecret);
     }
 
+    /**
+     * 计算 sign
+     *
+     * @param encodedQuery 已经经过 URLEncode 处理的 Query 参数字符串
+     * @param appSecret    APP 密钥
+     * @return sign
+     */
     public static String calculateSign(@Nonnull String encodedQuery, @Nonnull String appSecret) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
@@ -81,24 +100,56 @@ public class BilibiliSecurityHelper {
         }
     }
 
-    //直接生成添加了 sign 的 query
-    //传入值为 name1=value1 形式
-    //传入值必须已经排序
-    //value 必须已经 URLEncode
+    /**
+     * 向一个 Query 参数字符串中添加 sign
+     *
+     * @param nameAndValues 传入值为 name1=value1 形式, 传入值必须已经排序. value 必须已经经过 URLEncode
+     * @param appSecret     APP 密钥
+     * @return 添加了 sign 的 Query 参数字符串
+     */
     public static String addSignToQuery(@Nonnull List<String> nameAndValues, @Nonnull String appSecret) {
         return addSignToQuery(nameAndValues.stream().collect(Collectors.joining("&")), appSecret);
     }
 
+    /**
+     * 向一个 Query 参数字符串中添加 sign
+     *
+     * @param encodedQuery 已经经过 URLEncode 处理的 Query 参数字符串
+     * @param appSecret    APP 密钥
+     * @return 添加了 sign 的 Query 参数字符串
+     */
     public static String addSignToQuery(@Nonnull String encodedQuery, @Nonnull String appSecret) {
         return encodedQuery + String.format("&%s=%s", "sign", calculateSign(encodedQuery, appSecret));
     }
 
+    /**
+     * 登录
+     *
+     * @param bilibiliServiceProvider BilibiliServiceProvider 实例
+     * @param username                用户名
+     * @param password                明文密码
+     * @return 返回值包含有 token 与 refreshToken
+     * @throws IOException 网络错误
+     */
     public static LoginResponseEntity login(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
                                             @Nonnull String username,
                                             @Nonnull String password) throws IOException {
         return login(bilibiliServiceProvider, username, password, null, null);
     }
 
+    /**
+     * 带验证码的登录
+     * 在一段时间内使用错误的密码尝试登录多次, 再次使用这个 IP 地址登录这个账号会被要求验证码
+     *
+     * @param bilibiliServiceProvider BilibiliServiceProvider 实例
+     * @param username                用户名
+     * @param password                明文密码
+     * @param captcha                 验证码
+     * @param cookie                  与验证码对应的 cookies
+     * @return 返回值包含有 token 与 refreshToken
+     * @throws IOException 网络错误
+     * @see com.hiczp.bilibili.api.passport.CaptchaService
+     */
     public static LoginResponseEntity login(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
                                             @Nonnull String username,
                                             @Nonnull String password,
@@ -114,6 +165,15 @@ public class BilibiliSecurityHelper {
                 .body();
     }
 
+    /**
+     * 刷新 Token
+     *
+     * @param bilibiliServiceProvider BilibiliServiceProvider 实例
+     * @param accessToken             token
+     * @param refreshToken            refreshToken
+     * @return 返回值包含一个新的 token 与 refreshToken
+     * @throws IOException 网络错误
+     */
     public static RefreshTokenResponseEntity refreshToken(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
                                                           @Nonnull String accessToken,
                                                           @Nonnull String refreshToken) throws IOException {
@@ -122,6 +182,14 @@ public class BilibiliSecurityHelper {
                 .body();
     }
 
+    /**
+     * 注销
+     *
+     * @param bilibiliServiceProvider BilibiliServiceProvider 实例
+     * @param accessToken             token
+     * @return 返回 0 表示成功
+     * @throws IOException 网络错误
+     */
     public static LogoutResponseEntity logout(@Nonnull BilibiliServiceProvider bilibiliServiceProvider,
                                               @Nonnull String accessToken) throws IOException {
         return bilibiliServiceProvider.getPassportService().logout(accessToken)

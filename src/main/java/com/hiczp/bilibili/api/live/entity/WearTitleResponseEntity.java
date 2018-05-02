@@ -7,12 +7,15 @@ import java.util.List;
 public class WearTitleResponseEntity {
     /**
      * code : 0
-     * message : 佩戴成功
+     * msg : success
+     * message : success
      * data : []
      */
 
     @SerializedName("code")
     private int code;
+    @SerializedName("msg")
+    private String msg;
     @SerializedName("message")
     private String message;
     @SerializedName("data")
@@ -24,6 +27,14 @@ public class WearTitleResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getMessage() {

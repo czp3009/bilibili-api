@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WelcomeEntity {
+public class WelcomeEntity implements DataEntity {
     /**
      * cmd : WELCOME
      * data : {"uid":516505,"uname":"圣蝎","is_admin":false,"vip":1}
@@ -13,6 +13,7 @@ public class WelcomeEntity {
     @SerializedName("data")
     private DataEntity data;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

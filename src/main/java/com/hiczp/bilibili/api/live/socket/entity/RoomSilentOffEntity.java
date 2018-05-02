@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RoomSilentOffEntity {
+public class RoomSilentOffEntity implements DataEntity {
     /**
      * cmd : ROOM_SILENT_OFF
      * data : []
@@ -18,6 +18,7 @@ public class RoomSilentOffEntity {
     @SerializedName("data")
     private List<?> data;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

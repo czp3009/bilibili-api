@@ -1,15 +1,14 @@
 package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SendGiftEntity {
+public class SendGiftEntity implements DataEntity {
     /**
      * cmd : SEND_GIFT
-     * data : {"giftName":"辣条","num":64,"uname":"明暗纠结星","rcost":66347035,"uid":12768615,"top_list":[{"uid":9256,"userName":"SSR丶尧","coin":2905900,"face":"http://i0.hdslb.com/bfs/face/eba52abb1daaf3aecd7b986b9731451872d66613.jpg","guard_level":"3","rank":1,"score":2905900},{"uid":4986301,"userName":"乄夏沫丶","coin":1386000,"face":"http://i2.hdslb.com/bfs/face/b3969027a263d2610711317addf437fe59a9b97e.jpg","guard_level":0,"rank":2,"score":1386000},{"uid":5211302,"userName":"朝雾怜","coin":805700,"face":"http://i1.hdslb.com/bfs/face/d366be69d716469514d355642aa324ceba3fa122.jpg","guard_level":0,"rank":3,"score":805700}],"timestamp":1510498496,"giftId":1,"giftType":0,"action":"喂食","super":0,"price":100,"rnd":"1510498460","newMedal":0,"newTitle":0,"medal":[],"title":"","beatId":"0","biz_source":"live","metadata":"","remain":0,"gold":0,"silver":0,"eventScore":0,"eventNum":0,"smalltv_msg":[],"notice_msg":[],"capsule":{"normal":{"coin":13,"change":1,"progress":{"now":4000,"max":10000}},"colorful":{"coin":0,"change":0,"progress":{"now":0,"max":5000}}},"addFollow":0}
+     * data : {"giftName":"节奏风暴","num":1,"uname":"爱上熹","rcost":569788,"uid":230845505,"top_list":[{"uid":288348879,"uname":"我爱我家一生","face":"http://i1.hdslb.com/bfs/face/dd52e4f2dfe881751816e45522f504f10458b514.jpg","rank":1,"score":1852300,"guard_level":0,"isSelf":0},{"uid":287551243,"uname":"熹上城的专属天使菲","face":"http://i1.hdslb.com/bfs/face/c3ef04ba6c267c41067cd7708b7abd60c0c5c49f.jpg","rank":2,"score":1245200,"guard_level":3,"isSelf":0},{"uid":32416351,"uname":"镜子。。","face":"http://i1.hdslb.com/bfs/face/08c54c2c97434811a99e9d070d621ccbb5d3f2c4.jpg","rank":3,"score":332862,"guard_level":3,"isSelf":0}],"timestamp":1520992553,"giftId":39,"giftType":0,"action":"赠送","super":1,"price":100000,"rnd":"1980508331","newMedal":0,"newTitle":0,"medal":{"medalId":"95723","medalName":"布丁诶","level":1},"title":"","beatId":"4","biz_source":"live","metadata":"","remain":0,"gold":88570,"silver":127492,"eventScore":0,"eventNum":0,"smalltv_msg":[],"specialGift":{"id":207945,"time":90,"hadJoin":0,"num":1,"content":"你们城里人真会玩","action":"start","storm_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901"},"notice_msg":[],"capsule":{"normal":{"coin":166,"change":10,"progress":{"now":3630,"max":10000}},"colorful":{"coin":2,"change":0,"progress":{"now":0,"max":5000}}},"addFollow":0,"effect_block":0,"coin_type":"gold","total_coin":100000}
      */
 
     @SerializedName("cmd")
@@ -35,35 +34,39 @@ public class SendGiftEntity {
 
     public static class DataEntity {
         /**
-         * giftName : 辣条
-         * num : 64
-         * uname : 明暗纠结星
-         * rcost : 66347035
-         * uid : 12768615
-         * top_list : [{"uid":9256,"uname":"SSR丶尧","coin":2905900,"face":"http://i0.hdslb.com/bfs/face/eba52abb1daaf3aecd7b986b9731451872d66613.jpg","guard_level":"3","rank":1,"score":2905900},{"uid":4986301,"userName":"乄夏沫丶","coin":1386000,"face":"http://i2.hdslb.com/bfs/face/b3969027a263d2610711317addf437fe59a9b97e.jpg","guard_level":0,"rank":2,"score":1386000},{"uid":5211302,"userName":"朝雾怜","coin":805700,"face":"http://i1.hdslb.com/bfs/face/d366be69d716469514d355642aa324ceba3fa122.jpg","guard_level":0,"rank":3,"score":805700}]
-         * timestamp : 1510498496
-         * giftId : 1
+         * giftName : 节奏风暴
+         * num : 1
+         * uname : 爱上熹
+         * rcost : 569788
+         * uid : 230845505
+         * top_list : [{"uid":288348879,"uname":"我爱我家一生","face":"http://i1.hdslb.com/bfs/face/dd52e4f2dfe881751816e45522f504f10458b514.jpg","rank":1,"score":1852300,"guard_level":0,"isSelf":0},{"uid":287551243,"uname":"熹上城的专属天使菲","face":"http://i1.hdslb.com/bfs/face/c3ef04ba6c267c41067cd7708b7abd60c0c5c49f.jpg","rank":2,"score":1245200,"guard_level":3,"isSelf":0},{"uid":32416351,"uname":"镜子。。","face":"http://i1.hdslb.com/bfs/face/08c54c2c97434811a99e9d070d621ccbb5d3f2c4.jpg","rank":3,"score":332862,"guard_level":3,"isSelf":0}]
+         * timestamp : 1520992553
+         * giftId : 39
          * giftType : 0
-         * action : 喂食
-         * super : 0
-         * price : 100
-         * rnd : 1510498460
+         * action : 赠送
+         * super : 1
+         * price : 100000
+         * rnd : 1980508331
          * newMedal : 0
          * newTitle : 0
-         * medal : []
+         * medal : {"medalId":"95723","medalName":"布丁诶","level":1}
          * title :
-         * beatId : 0
+         * beatId : 4
          * biz_source : live
          * metadata :
          * remain : 0
-         * gold : 0
-         * silver : 0
+         * gold : 88570
+         * silver : 127492
          * eventScore : 0
          * eventNum : 0
          * smalltv_msg : []
+         * specialGift : {"id":207945,"time":90,"hadJoin":0,"num":1,"content":"你们城里人真会玩","action":"start","storm_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901"}
          * notice_msg : []
-         * capsule : {"normal":{"coin":13,"change":1,"progress":{"now":4000,"max":10000}},"colorful":{"coin":0,"change":0,"progress":{"now":0,"max":5000}}}
+         * capsule : {"normal":{"coin":166,"change":10,"progress":{"now":3630,"max":10000}},"colorful":{"coin":2,"change":0,"progress":{"now":0,"max":5000}}}
          * addFollow : 0
+         * effect_block : 0
+         * coin_type : gold
+         * total_coin : 100000
          */
 
         @SerializedName("giftName")
@@ -71,9 +74,9 @@ public class SendGiftEntity {
         @SerializedName("num")
         private int num;
         @SerializedName("uname")
-        private String userName;
+        private String username;
         @SerializedName("rcost")
-        private int rCost;
+        private int rcost;
         @SerializedName("uid")
         private long uid;
         @SerializedName("timestamp")
@@ -94,6 +97,17 @@ public class SendGiftEntity {
         private int newMedal;
         @SerializedName("newTitle")
         private int newTitle;
+        /**
+         * medal 字段可能是一个空的 JsonArray, 也可能是 JsonObject
+         * 为 JsonObject 时, 内部字段如下
+         * {
+         * "medalId": "95723",
+         * "medalName": "布丁诶",
+         * "level": 1
+         * }
+         */
+        @SerializedName("medal")
+        private JsonElement medal;
         @SerializedName("title")
         private String title;
         @SerializedName("beatId")
@@ -112,18 +126,24 @@ public class SendGiftEntity {
         private int eventScore;
         @SerializedName("eventNum")
         private int eventNum;
+        @SerializedName("specialGift")
+        private SpecialGift specialGift;
         @SerializedName("capsule")
-        private CapsuleEntity capsule;
+        private Capsule capsule;
         @SerializedName("addFollow")
         private int addFollow;
+        @SerializedName("effect_block")
+        private int effectBlock;
+        @SerializedName("coin_type")
+        private String coinType;
+        @SerializedName("total_coin")
+        private int totalCoin;
         @SerializedName("top_list")
-        private List<TopListEntity> topList;
-        @SerializedName("medal")
-        private JsonElement medal;
+        private List<TopList> topList;
         @SerializedName("smalltv_msg")
-        private JsonElement smallTVMsg;
+        private JsonElement smalltvMsg;
         @SerializedName("notice_msg")
-        private List<?> noticeMsg;
+        private JsonElement noticeMsg;
 
         public String getGiftName() {
             return giftName;
@@ -141,20 +161,20 @@ public class SendGiftEntity {
             this.num = num;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUserName(String userName) {
-            this.userName = userName;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
-        public int getrCost() {
-            return rCost;
+        public int getRcost() {
+            return rcost;
         }
 
-        public void setrCost(int rCost) {
-            this.rCost = rCost;
+        public void setRcost(int rcost) {
+            this.rcost = rcost;
         }
 
         public long getUid() {
@@ -237,6 +257,14 @@ public class SendGiftEntity {
             this.newTitle = newTitle;
         }
 
+        public JsonElement getMedal() {
+            return medal;
+        }
+
+        public void setMedal(JsonElement medal) {
+            this.medal = medal;
+        }
+
         public String getTitle() {
             return title;
         }
@@ -309,11 +337,19 @@ public class SendGiftEntity {
             this.eventNum = eventNum;
         }
 
-        public CapsuleEntity getCapsule() {
+        public SpecialGift getSpecialGift() {
+            return specialGift;
+        }
+
+        public void setSpecialGift(SpecialGift specialGift) {
+            this.specialGift = specialGift;
+        }
+
+        public Capsule getCapsule() {
             return capsule;
         }
 
-        public void setCapsule(CapsuleEntity capsule) {
+        public void setCapsule(Capsule capsule) {
             this.capsule = capsule;
         }
 
@@ -325,70 +361,208 @@ public class SendGiftEntity {
             this.addFollow = addFollow;
         }
 
-        public List<TopListEntity> getTopList() {
+        public int getEffectBlock() {
+            return effectBlock;
+        }
+
+        public void setEffectBlock(int effectBlock) {
+            this.effectBlock = effectBlock;
+        }
+
+        public String getCoinType() {
+            return coinType;
+        }
+
+        public void setCoinType(String coinType) {
+            this.coinType = coinType;
+        }
+
+        public int getTotalCoin() {
+            return totalCoin;
+        }
+
+        public void setTotalCoin(int totalCoin) {
+            this.totalCoin = totalCoin;
+        }
+
+        public List<TopList> getTopList() {
             return topList;
         }
 
-        public void setTopList(List<TopListEntity> topList) {
+        public void setTopList(List<TopList> topList) {
             this.topList = topList;
         }
 
-        public JsonElement getMedal() {
-            return medal;
+        public JsonElement getSmalltvMsg() {
+            return smalltvMsg;
         }
 
-        public void setMedal(JsonElement medal) {
-            this.medal = medal;
+        public void setSmalltvMsg(JsonElement smalltvMsg) {
+            this.smalltvMsg = smalltvMsg;
         }
 
-        public JsonElement getSmallTVMsg() {
-            return smallTVMsg;
-        }
-
-        public void setSmallTVMsg(JsonObject smallTVMsg) {
-            this.smallTVMsg = smallTVMsg;
-        }
-
-        public List<?> getNoticeMsg() {
+        public JsonElement getNoticeMsg() {
             return noticeMsg;
         }
 
-        public void setNoticeMsg(List<?> noticeMsg) {
+        public void setNoticeMsg(JsonElement noticeMsg) {
             this.noticeMsg = noticeMsg;
         }
 
-        public static class CapsuleEntity {
+        public static class Medal {
             /**
-             * normal : {"coin":13,"change":1,"progress":{"now":4000,"max":10000}}
-             * colorful : {"coin":0,"change":0,"progress":{"now":0,"max":5000}}
+             * medalId : 95723
+             * medalName : 布丁诶
+             * level : 1
+             */
+
+            @SerializedName("medalId")
+            private String medalId;
+            @SerializedName("medalName")
+            private String medalName;
+            @SerializedName("level")
+            private int level;
+
+            public String getMedalId() {
+                return medalId;
+            }
+
+            public void setMedalId(String medalId) {
+                this.medalId = medalId;
+            }
+
+            public String getMedalName() {
+                return medalName;
+            }
+
+            public void setMedalName(String medalName) {
+                this.medalName = medalName;
+            }
+
+            public int getLevel() {
+                return level;
+            }
+
+            public void setLevel(int level) {
+                this.level = level;
+            }
+        }
+
+        public static class SpecialGift {
+            /**
+             * id : 207945
+             * time : 90
+             * hadJoin : 0
+             * num : 1
+             * content : 你们城里人真会玩
+             * action : start
+             * storm_gif : http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901
+             */
+
+            @SerializedName("id")
+            private int id;
+            @SerializedName("time")
+            private int time;
+            @SerializedName("hadJoin")
+            private int hadJoin;
+            @SerializedName("num")
+            private int num;
+            @SerializedName("content")
+            private String content;
+            @SerializedName("action")
+            private String action;
+            @SerializedName("storm_gif")
+            private String stormGif;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public int getTime() {
+                return time;
+            }
+
+            public void setTime(int time) {
+                this.time = time;
+            }
+
+            public int getHadJoin() {
+                return hadJoin;
+            }
+
+            public void setHadJoin(int hadJoin) {
+                this.hadJoin = hadJoin;
+            }
+
+            public int getNum() {
+                return num;
+            }
+
+            public void setNum(int num) {
+                this.num = num;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public String getAction() {
+                return action;
+            }
+
+            public void setAction(String action) {
+                this.action = action;
+            }
+
+            public String getStormGif() {
+                return stormGif;
+            }
+
+            public void setStormGif(String stormGif) {
+                this.stormGif = stormGif;
+            }
+        }
+
+        public static class Capsule {
+            /**
+             * normal : {"coin":166,"change":10,"progress":{"now":3630,"max":10000}}
+             * colorful : {"coin":2,"change":0,"progress":{"now":0,"max":5000}}
              */
 
             @SerializedName("normal")
-            private NormalEntity normal;
+            private Normal normal;
             @SerializedName("colorful")
-            private ColorfulEntity colorful;
+            private Colorful colorful;
 
-            public NormalEntity getNormal() {
+            public Normal getNormal() {
                 return normal;
             }
 
-            public void setNormal(NormalEntity normal) {
+            public void setNormal(Normal normal) {
                 this.normal = normal;
             }
 
-            public ColorfulEntity getColorful() {
+            public Colorful getColorful() {
                 return colorful;
             }
 
-            public void setColorful(ColorfulEntity colorful) {
+            public void setColorful(Colorful colorful) {
                 this.colorful = colorful;
             }
 
-            public static class NormalEntity {
+            public static class Normal {
                 /**
-                 * coin : 13
-                 * change : 1
-                 * progress : {"now":4000,"max":10000}
+                 * coin : 166
+                 * change : 10
+                 * progress : {"now":3630,"max":10000}
                  */
 
                 @SerializedName("coin")
@@ -396,7 +570,7 @@ public class SendGiftEntity {
                 @SerializedName("change")
                 private int change;
                 @SerializedName("progress")
-                private ProgressEntity progress;
+                private Progress progress;
 
                 public int getCoin() {
                     return coin;
@@ -414,17 +588,17 @@ public class SendGiftEntity {
                     this.change = change;
                 }
 
-                public ProgressEntity getProgress() {
+                public Progress getProgress() {
                     return progress;
                 }
 
-                public void setProgress(ProgressEntity progress) {
+                public void setProgress(Progress progress) {
                     this.progress = progress;
                 }
 
-                public static class ProgressEntity {
+                public static class Progress {
                     /**
-                     * now : 4000
+                     * now : 3630
                      * max : 10000
                      */
 
@@ -451,9 +625,9 @@ public class SendGiftEntity {
                 }
             }
 
-            public static class ColorfulEntity {
+            public static class Colorful {
                 /**
-                 * coin : 0
+                 * coin : 2
                  * change : 0
                  * progress : {"now":0,"max":5000}
                  */
@@ -463,7 +637,7 @@ public class SendGiftEntity {
                 @SerializedName("change")
                 private int change;
                 @SerializedName("progress")
-                private ProgressEntityX progress;
+                private ProgressX progress;
 
                 public int getCoin() {
                     return coin;
@@ -481,15 +655,15 @@ public class SendGiftEntity {
                     this.change = change;
                 }
 
-                public ProgressEntityX getProgress() {
+                public ProgressX getProgress() {
                     return progress;
                 }
 
-                public void setProgress(ProgressEntityX progress) {
+                public void setProgress(ProgressX progress) {
                     this.progress = progress;
                 }
 
-                public static class ProgressEntityX {
+                public static class ProgressX {
                     /**
                      * now : 0
                      * max : 5000
@@ -519,31 +693,31 @@ public class SendGiftEntity {
             }
         }
 
-        public static class TopListEntity {
+        public static class TopList {
             /**
-             * uid : 9256
-             * uname : SSR丶尧
-             * coin : 2905900
-             * face : http://i0.hdslb.com/bfs/face/eba52abb1daaf3aecd7b986b9731451872d66613.jpg
-             * guard_level : 3
+             * uid : 288348879
+             * uname : 我爱我家一生
+             * face : http://i1.hdslb.com/bfs/face/dd52e4f2dfe881751816e45522f504f10458b514.jpg
              * rank : 1
-             * score : 2905900
+             * score : 1852300
+             * guard_level : 0
+             * isSelf : 0
              */
 
             @SerializedName("uid")
             private int uid;
             @SerializedName("uname")
-            private String userName;
-            @SerializedName("coin")
-            private int coin;
+            private String uname;
             @SerializedName("face")
             private String face;
-            @SerializedName("guard_level")
-            private String guardLevel;
             @SerializedName("rank")
             private int rank;
             @SerializedName("score")
             private int score;
+            @SerializedName("guard_level")
+            private int guardLevel;
+            @SerializedName("isSelf")
+            private int isSelf;
 
             public int getUid() {
                 return uid;
@@ -553,20 +727,12 @@ public class SendGiftEntity {
                 this.uid = uid;
             }
 
-            public String getUserName() {
-                return userName;
+            public String getUname() {
+                return uname;
             }
 
-            public void setUserName(String userName) {
-                this.userName = userName;
-            }
-
-            public int getCoin() {
-                return coin;
-            }
-
-            public void setCoin(int coin) {
-                this.coin = coin;
+            public void setUname(String uname) {
+                this.uname = uname;
             }
 
             public String getFace() {
@@ -575,14 +741,6 @@ public class SendGiftEntity {
 
             public void setFace(String face) {
                 this.face = face;
-            }
-
-            public String getGuardLevel() {
-                return guardLevel;
-            }
-
-            public void setGuardLevel(String guardLevel) {
-                this.guardLevel = guardLevel;
             }
 
             public int getRank() {
@@ -599,6 +757,22 @@ public class SendGiftEntity {
 
             public void setScore(int score) {
                 this.score = score;
+            }
+
+            public int getGuardLevel() {
+                return guardLevel;
+            }
+
+            public void setGuardLevel(int guardLevel) {
+                this.guardLevel = guardLevel;
+            }
+
+            public int getIsSelf() {
+                return isSelf;
+            }
+
+            public void setIsSelf(int isSelf) {
+                this.isSelf = isSelf;
             }
         }
     }

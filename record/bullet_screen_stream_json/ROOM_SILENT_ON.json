@@ -1,0 +1,9 @@
+{
+  "cmd": "ROOM_SILENT_ON",
+  "data": {
+    "type": "level",
+    "level": 1,
+    "second": 1520424615
+  },
+  "roomid": 5279
+}

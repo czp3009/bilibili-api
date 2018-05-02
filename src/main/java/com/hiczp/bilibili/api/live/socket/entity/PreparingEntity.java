@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PreparingEntity {
+public class PreparingEntity implements RoomStatusEntity {
     /**
      * cmd : PREPARING
      * roomid : 1110317
@@ -13,6 +13,7 @@ public class PreparingEntity {
     @SerializedName("roomid")
     private String roomId;
 
+    @Override
     public String getCmd() {
         return cmd;
     }
@@ -21,6 +22,7 @@ public class PreparingEntity {
         this.cmd = cmd;
     }
 
+    @Override
     public String getRoomId() {
         return roomId;
     }

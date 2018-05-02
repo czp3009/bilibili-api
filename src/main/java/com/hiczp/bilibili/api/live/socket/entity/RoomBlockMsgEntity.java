@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RoomBlockMsgEntity {
+public class RoomBlockMsgEntity implements DataEntity {
     /**
      * cmd : ROOM_BLOCK_MSG
      * uid : 60244207
@@ -19,6 +19,7 @@ public class RoomBlockMsgEntity {
     @SerializedName("roomid")
     private long roomid;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

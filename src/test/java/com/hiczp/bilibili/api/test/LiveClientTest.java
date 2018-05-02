@@ -5,6 +5,8 @@ import com.hiczp.bilibili.api.BilibiliAPI;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.live.socket.entity.*;
 import com.hiczp.bilibili.api.live.socket.event.*;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,14 +20,15 @@ import java.util.List;
 public class LiveClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClientTest.class);
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
-    private static final long ROOM_ID = 3;
+    private static final long ROOM_ID = 102;
     private static final long TEST_TIME = 70 * 1000;
 
     @Ignore
     @Test
     public void _0_duplicateConnectAndCloseTest() throws Exception {
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         LiveClient liveClient = BILIBILI_API
-                .getLiveClient(ROOM_ID);
+                .getLiveClient(eventLoopGroup, ROOM_ID);
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(5000);
@@ -33,31 +36,34 @@ public class LiveClientTest {
         liveClient.connect();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(5000);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
         Thread.sleep(5000);
+        eventLoopGroup.shutdownGracefully();
     }
 
     @Ignore
     @Test
     public void _1_longTimeTest() throws Exception {
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         LiveClient liveClient = BILIBILI_API
-                .getLiveClient(ROOM_ID)
+                .getLiveClient(eventLoopGroup, ROOM_ID)
                 .registerListener(new Listener());
         LOGGER.debug("Start long-time test");
         LOGGER.debug("Connecting!");
         liveClient.connect();
         Thread.sleep(TEST_TIME);
         LOGGER.debug("Disconnecting!");
-        liveClient.close();
+        liveClient.closeChannel();
+        eventLoopGroup.shutdownGracefully();
         Thread.sleep(5000);
     }
 
@@ -122,14 +128,14 @@ public class LiveClientTest {
         public void sendGift(SendGiftPackageEvent sendGiftPackageEvent) {
             SendGiftEntity.DataEntity dataEntity = sendGiftPackageEvent.getEntity().getData();
             LOGGER.info("[SendGift] {} give {}*{}",
-                    dataEntity.getUserName(),
+                    dataEntity.getUsername(),
                     dataEntity.getGiftName(),
                     dataEntity.getNum()
             );
         }
 
         @Subscribe
-        public void SysGift(SysGiftPackageEvent sysGiftPackageEvent) {
+        public void sysGift(SysGiftPackageEvent sysGiftPackageEvent) {
             SysGiftEntity sysGiftEntity = sysGiftPackageEvent.getEntity();
             LOGGER.info("[SysGift] {}: {}",
                     sysGiftEntity.getMsg(),
@@ -138,7 +144,7 @@ public class LiveClientTest {
         }
 
         @Subscribe
-        public void SysMsg(SysMsgPackageEvent sysMsgPackageEvent) {
+        public void sysMsg(SysMsgPackageEvent sysMsgPackageEvent) {
             SysMsgEntity sysMsgEntity = sysMsgPackageEvent.getEntity();
             LOGGER.info("[SysMsg] {}: {}",
                     sysMsgEntity.getMsg(),
@@ -147,21 +153,16 @@ public class LiveClientTest {
         }
 
         @Subscribe
-        public void ViewerCount(ViewerCountPackageEvent viewerCountPackageEvent) {
-            LOGGER.info("[ViewerCount] {}", viewerCountPackageEvent.getViewerCount());
-        }
-
-        @Subscribe
-        public void WelcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
-            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
-            LOGGER.info("[WelcomeGuard] [GL {}] {}",
-                    dataEntity.getGuardLevel(),
-                    dataEntity.getUsername()
+        public void tvEnd(TVEndPackageEvent tvEndPackageEvent) {
+            TVEndEntity tvEndEntity = tvEndPackageEvent.getEntity();
+            LOGGER.info("[TVEnd] user {} win the {}",
+                    tvEndEntity.getData().getUname(),
+                    tvEndEntity.getData().getType()
             );
         }
 
         @Subscribe
-        public void Welcome(WelcomePackageEvent welcomePackageEvent) {
+        public void welcome(WelcomePackageEvent welcomePackageEvent) {
             WelcomeEntity.DataEntity dataEntity = welcomePackageEvent.getEntity().getData();
             StringBuilder stringBuilder = new StringBuilder("[Welcome] ");
             if (dataEntity.isAdmin()) {
@@ -170,6 +171,20 @@ public class LiveClientTest {
             stringBuilder.append(String.format("[VIP %d] ", dataEntity.getVip()))
                     .append(dataEntity.getUserName());
             LOGGER.info(stringBuilder.toString());
+        }
+
+        @Subscribe
+        public void welcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
+            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
+            LOGGER.info("[WelcomeGuard] [GL {}] {}",
+                    dataEntity.getGuardLevel(),
+                    dataEntity.getUsername()
+            );
+        }
+
+        @Subscribe
+        public void viewerCount(ViewerCountPackageEvent viewerCountPackageEvent) {
+            LOGGER.info("[ViewerCount] {}", viewerCountPackageEvent.getViewerCount());
         }
     }
 }

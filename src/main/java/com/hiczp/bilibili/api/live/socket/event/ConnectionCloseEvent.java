@@ -1,9 +1,9 @@
 package com.hiczp.bilibili.api.live.socket.event;
 
-import java.util.EventObject;
+import com.hiczp.bilibili.api.live.socket.LiveClient;
 
-public class ConnectionCloseEvent extends EventObject {
-    public ConnectionCloseEvent(Object source) {
+public class ConnectionCloseEvent extends Event {
+    public ConnectionCloseEvent(LiveClient source) {
         super(source);
     }
 }

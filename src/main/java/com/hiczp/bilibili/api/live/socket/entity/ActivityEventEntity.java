@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.socket.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ActivityEventEntity {
+public class ActivityEventEntity implements DataEntity {
     /**
      * cmd : ACTIVITY_EVENT
      * data : {"keyword":"newspring_2018","type":"cracker","limit":300000,"progress":158912}
@@ -13,6 +13,7 @@ public class ActivityEventEntity {
     @SerializedName("data")
     private Data data;
 
+    @Override
     public String getCmd() {
         return cmd;
     }

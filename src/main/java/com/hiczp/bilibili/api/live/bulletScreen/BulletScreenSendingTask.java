@@ -1,7 +1,7 @@
 package com.hiczp.bilibili.api.live.bulletScreen;
 
-import com.hiczp.bilibili.api.BilibiliServiceProvider;
 import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
+import com.hiczp.bilibili.api.provider.BilibiliServiceProvider;
 
 public class BulletScreenSendingTask {
     private BilibiliServiceProvider bilibiliServiceProvider;

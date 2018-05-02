@@ -5,7 +5,7 @@ import com.hiczp.bilibili.api.live.entity.BulletScreenEntity;
 import org.junit.Test;
 
 public class SendBulletScreenTest {
-    private static final long ROOM_ID = 29434;
+    private static final long ROOM_ID = 1110317;
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
 
     @Test

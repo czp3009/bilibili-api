@@ -1,0 +1,17 @@
+{
+  "cmd": "RAFFLE_END",
+  "roomid": 521429,
+  "data": {
+    "raffleId": 16897,
+    "type": "flower_rain",
+    "from": "鷺沢怜人",
+    "fromFace": "http://i1.hdslb.com/bfs/face/09eafe44f913012512014e91f25001edf6e072d0.jpg",
+    "win": {
+      "uname": "nbqgd",
+      "face": "http://i1.hdslb.com/bfs/face/09eafe44f913012512014e91f25001edf6e072d0.jpg",
+      "giftId": 115,
+      "giftName": "桃花",
+      "giftNum": 66
+    }
+  }
+}
