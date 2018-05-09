@@ -2,11 +2,11 @@
   "cmd": "SPECIAL_GIFT",
   "data": {
     "39": {
-      "id": 202090,
+      "id": 214692,
       "time": 90,
       "hadJoin": 0,
       "num": 1,
-      "content": "月轮来袭",
+      "content": "前方高能预警，注意这不是演习",
       "action": "start",
       "storm_gif": "http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901"
     }
