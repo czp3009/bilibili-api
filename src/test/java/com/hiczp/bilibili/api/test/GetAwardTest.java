@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-public class GetAwardsTest {
+public class GetAwardTest {
     private static final BilibiliAPI BILIBILI_API = Config.getBilibiliAPI();
 
     @Test

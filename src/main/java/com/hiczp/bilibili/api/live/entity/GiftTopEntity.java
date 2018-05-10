@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GiftTopEntity {
+public class GiftTopEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,10 +13,8 @@ public class GiftTopEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -26,23 +24,15 @@ public class GiftTopEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * unlogin : 0
          * uname : czp3009
@@ -52,30 +42,30 @@ public class GiftTopEntity {
          */
 
         @SerializedName("unlogin")
-        private int unlogin;
+        private int unLogin;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("rank")
         private int rank;
         @SerializedName("coin")
         private int coin;
         @SerializedName("list")
-        private List<ListEntity> list;
+        private List<GiftSender> giftSenders;
 
-        public int getUnlogin() {
-            return unlogin;
+        public int getUnLogin() {
+            return unLogin;
         }
 
-        public void setUnlogin(int unlogin) {
-            this.unlogin = unlogin;
+        public void setUnLogin(int unLogin) {
+            this.unLogin = unLogin;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public int getRank() {
@@ -94,15 +84,15 @@ public class GiftTopEntity {
             this.coin = coin;
         }
 
-        public List<ListEntity> getList() {
-            return list;
+        public List<GiftSender> getGiftSenders() {
+            return giftSenders;
         }
 
-        public void setList(List<ListEntity> list) {
-            this.list = list;
+        public void setGiftSenders(List<GiftSender> giftSenders) {
+            this.giftSenders = giftSenders;
         }
 
-        public static class ListEntity {
+        public static class GiftSender {
             /**
              * uid : 20293030
              * rank : 1
@@ -123,7 +113,7 @@ public class GiftTopEntity {
             @SerializedName("score")
             private int score;
             @SerializedName("uname")
-            private String uname;
+            private String username;
             @SerializedName("coin")
             private int coin;
             @SerializedName("face")
@@ -163,12 +153,12 @@ public class GiftTopEntity {
                 this.score = score;
             }
 
-            public String getUname() {
-                return uname;
+            public String getUsername() {
+                return username;
             }
 
-            public void setUname(String uname) {
-                this.uname = uname;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
             public int getCoin() {

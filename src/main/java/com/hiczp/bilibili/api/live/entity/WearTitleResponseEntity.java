@@ -1,10 +1,11 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class WearTitleResponseEntity {
+public class WearTitleResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -14,12 +15,8 @@ public class WearTitleResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private List<?> data;
+    private List<JsonElement> data;
 
     public int getCode() {
         return code;
@@ -29,27 +26,11 @@ public class WearTitleResponseEntity {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public List<?> getData() {
+    public List<JsonElement> getData() {
         return data;
     }
 
-    public void setData(List<?> data) {
+    public void setData(List<JsonElement> data) {
         this.data = data;
     }
 }

@@ -139,9 +139,9 @@ public class TVStartEntity implements DataEntity {
             @SerializedName("url")
             private String url;
             @SerializedName("roomid")
-            private int roomid;
+            private int roomId;
             @SerializedName("real_roomid")
-            private int realRoomid;
+            private int realRoomId;
             @SerializedName("rnd")
             private int rnd;
             @SerializedName("tv_id")
@@ -195,20 +195,20 @@ public class TVStartEntity implements DataEntity {
                 this.url = url;
             }
 
-            public int getRoomid() {
-                return roomid;
+            public int getRoomId() {
+                return roomId;
             }
 
-            public void setRoomid(int roomid) {
-                this.roomid = roomid;
+            public void setRoomId(int roomId) {
+                this.roomId = roomId;
             }
 
-            public int getRealRoomid() {
-                return realRoomid;
+            public int getRealRoomId() {
+                return realRoomId;
             }
 
-            public void setRealRoomid(int realRoomid) {
-                this.realRoomid = realRoomid;
+            public void setRealRoomId(int realRoomId) {
+                this.realRoomId = realRoomId;
             }
 
             public int getRnd() {

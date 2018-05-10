@@ -1,10 +1,11 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SendOnlineHeartResponseEntity {
+public class SendOnlineHeartResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * message : ok
@@ -13,10 +14,8 @@ public class SendOnlineHeartResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -26,32 +25,24 @@ public class SendOnlineHeartResponseEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         @SerializedName("giftlist")
-        private List<?> giftlist;
+        private List<JsonElement> giftList;
 
-        public List<?> getGiftlist() {
-            return giftlist;
+        public List<JsonElement> getGiftList() {
+            return giftList;
         }
 
-        public void setGiftlist(List<?> giftlist) {
-            this.giftlist = giftlist;
+        public void setGiftList(List<JsonElement> giftList) {
+            this.giftList = giftList;
         }
     }
 }

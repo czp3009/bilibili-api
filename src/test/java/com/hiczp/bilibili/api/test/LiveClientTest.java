@@ -126,11 +126,11 @@ public class LiveClientTest {
 
         @Subscribe
         public void sendGift(SendGiftPackageEvent sendGiftPackageEvent) {
-            SendGiftEntity.DataEntity dataEntity = sendGiftPackageEvent.getEntity().getData();
+            SendGiftEntity.Data data = sendGiftPackageEvent.getEntity().getData();
             LOGGER.info("[SendGift] {} give {}*{}",
-                    dataEntity.getUsername(),
-                    dataEntity.getGiftName(),
-                    dataEntity.getNum()
+                    data.getUsername(),
+                    data.getGiftName(),
+                    data.getNum()
             );
         }
 
@@ -156,29 +156,29 @@ public class LiveClientTest {
         public void tvEnd(TVEndPackageEvent tvEndPackageEvent) {
             TVEndEntity tvEndEntity = tvEndPackageEvent.getEntity();
             LOGGER.info("[TVEnd] user {} win the {}",
-                    tvEndEntity.getData().getUname(),
+                    tvEndEntity.getData().getUsername(),
                     tvEndEntity.getData().getType()
             );
         }
 
         @Subscribe
         public void welcome(WelcomePackageEvent welcomePackageEvent) {
-            WelcomeEntity.DataEntity dataEntity = welcomePackageEvent.getEntity().getData();
+            WelcomeEntity.Data data = welcomePackageEvent.getEntity().getData();
             StringBuilder stringBuilder = new StringBuilder("[Welcome] ");
-            if (dataEntity.isAdmin()) {
+            if (data.isAdmin()) {
                 stringBuilder.append("[ADMIN] ");
             }
-            stringBuilder.append(String.format("[VIP %d] ", dataEntity.getVip()))
-                    .append(dataEntity.getUserName());
+            stringBuilder.append(String.format("[VIP %d] ", data.getVip()))
+                    .append(data.getUserName());
             LOGGER.info(stringBuilder.toString());
         }
 
         @Subscribe
         public void welcomeGuard(WelcomeGuardPackageEvent welcomeGuardPackageEvent) {
-            WelcomeGuardEntity.DataEntity dataEntity = welcomeGuardPackageEvent.getEntity().getData();
+            WelcomeGuardEntity.Data data = welcomeGuardPackageEvent.getEntity().getData();
             LOGGER.info("[WelcomeGuard] [GL {}] {}",
-                    dataEntity.getGuardLevel(),
-                    dataEntity.getUsername()
+                    data.getGuardLevel(),
+                    data.getUsername()
             );
         }
 

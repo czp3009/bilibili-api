@@ -1,10 +1,11 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MyTitleListEntity {
+public class MyTitleListEntity extends ResponseEntity {
     /**
      * code : 0
      * message : 获取成功
@@ -13,8 +14,6 @@ public class MyTitleListEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -24,14 +23,6 @@ public class MyTitleListEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -82,7 +73,7 @@ public class MyTitleListEntity {
             @SerializedName("title_pic")
             private TitlePic titlePic;
             @SerializedName("level")
-            private List<?> level;
+            private List<JsonElement> level;
             @SerializedName("category")
             private List<Category> category;
 
@@ -142,11 +133,11 @@ public class MyTitleListEntity {
                 this.titlePic = titlePic;
             }
 
-            public List<?> getLevel() {
+            public List<JsonElement> getLevel() {
                 return level;
             }
 
-            public void setLevel(List<?> level) {
+            public void setLevel(List<JsonElement> level) {
                 this.level = level;
             }
 
@@ -182,13 +173,13 @@ public class MyTitleListEntity {
                 @SerializedName("height")
                 private int height;
                 @SerializedName("is_lihui")
-                private int isLihui;
+                private int isLiHui;
                 @SerializedName("lihui_img")
-                private String lihuiImg;
+                private String liHuiImg;
                 @SerializedName("lihui_width")
-                private int lihuiWidth;
+                private int liHuiWidth;
                 @SerializedName("lihui_height")
-                private int lihuiHeight;
+                private int liHuiHeight;
 
                 public String getId() {
                     return id;
@@ -230,36 +221,36 @@ public class MyTitleListEntity {
                     this.height = height;
                 }
 
-                public int getIsLihui() {
-                    return isLihui;
+                public int getIsLiHui() {
+                    return isLiHui;
                 }
 
-                public void setIsLihui(int isLihui) {
-                    this.isLihui = isLihui;
+                public void setIsLiHui(int isLiHui) {
+                    this.isLiHui = isLiHui;
                 }
 
-                public String getLihuiImg() {
-                    return lihuiImg;
+                public String getLiHuiImg() {
+                    return liHuiImg;
                 }
 
-                public void setLihuiImg(String lihuiImg) {
-                    this.lihuiImg = lihuiImg;
+                public void setLiHuiImg(String liHuiImg) {
+                    this.liHuiImg = liHuiImg;
                 }
 
-                public int getLihuiWidth() {
-                    return lihuiWidth;
+                public int getLiHuiWidth() {
+                    return liHuiWidth;
                 }
 
-                public void setLihuiWidth(int lihuiWidth) {
-                    this.lihuiWidth = lihuiWidth;
+                public void setLiHuiWidth(int liHuiWidth) {
+                    this.liHuiWidth = liHuiWidth;
                 }
 
-                public int getLihuiHeight() {
-                    return lihuiHeight;
+                public int getLiHuiHeight() {
+                    return liHuiHeight;
                 }
 
-                public void setLihuiHeight(int lihuiHeight) {
-                    this.lihuiHeight = lihuiHeight;
+                public void setLiHuiHeight(int liHuiHeight) {
+                    this.liHuiHeight = liHuiHeight;
                 }
             }
 

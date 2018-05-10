@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SignInfoEntity {
+public class SignInfoEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,10 +13,8 @@ public class SignInfoEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -26,23 +24,15 @@ public class SignInfoEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * sign_msg : 今天签到已获得<br />&nbsp;辣条<font color='#fea024'>2个</font>&nbsp;经验<font color='#fea024'>3000</font>&nbsp;
          * maxday_num : 30
@@ -53,11 +43,11 @@ public class SignInfoEntity {
         @SerializedName("sign_msg")
         private String signMsg;
         @SerializedName("maxday_num")
-        private int maxdayNum;
+        private int maxDayNumber;
         @SerializedName("sign_day")
         private int signDay;
         @SerializedName("days_award")
-        private List<DaysAwardEntity> daysAward;
+        private List<DaysAward> daysAwards;
 
         public String getSignMsg() {
             return signMsg;
@@ -67,12 +57,12 @@ public class SignInfoEntity {
             this.signMsg = signMsg;
         }
 
-        public int getMaxdayNum() {
-            return maxdayNum;
+        public int getMaxDayNumber() {
+            return maxDayNumber;
         }
 
-        public void setMaxdayNum(int maxdayNum) {
-            this.maxdayNum = maxdayNum;
+        public void setMaxDayNumber(int maxDayNumber) {
+            this.maxDayNumber = maxDayNumber;
         }
 
         public int getSignDay() {
@@ -83,15 +73,15 @@ public class SignInfoEntity {
             this.signDay = signDay;
         }
 
-        public List<DaysAwardEntity> getDaysAward() {
-            return daysAward;
+        public List<DaysAward> getDaysAwards() {
+            return daysAwards;
         }
 
-        public void setDaysAward(List<DaysAwardEntity> daysAward) {
-            this.daysAward = daysAward;
+        public void setDaysAwards(List<DaysAward> daysAwards) {
+            this.daysAwards = daysAwards;
         }
 
-        public static class DaysAwardEntity {
+        public static class DaysAward {
             /**
              * id : 1
              * award : silver
@@ -112,7 +102,7 @@ public class SignInfoEntity {
             @SerializedName("day")
             private int day;
             @SerializedName("img")
-            private ImgEntity img;
+            private Img img;
 
             public int getId() {
                 return id;
@@ -154,15 +144,15 @@ public class SignInfoEntity {
                 this.day = day;
             }
 
-            public ImgEntity getImg() {
+            public Img getImg() {
                 return img;
             }
 
-            public void setImg(ImgEntity img) {
+            public void setImg(Img img) {
                 this.img = img;
             }
 
-            public static class ImgEntity {
+            public static class Img {
                 /**
                  * src : http://static.hdslb.com/live-static/live-app/dayaward/1/5_1.png?20171102172700
                  * width : 56

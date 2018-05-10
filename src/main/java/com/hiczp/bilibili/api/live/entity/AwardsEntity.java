@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class AwardsEntity {
+public class AwardsEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,10 +13,8 @@ public class AwardsEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -26,23 +24,15 @@ public class AwardsEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * list : [{"id":100000,"uid":1000000,"gift_name":"小电视","gift_type":"2","gift_num":1,"user_name":"打码","user_phone":"打码","user_address":"打码","user_extra_field":"{\"user_area\":\"打码\",\"user_post_code\":\"打码\",\"user_city\":\"打码\",\"user_province\":\"打码\"}","source":"小电视抽奖","source_id":10000,"create_time":"2018-02-01 00:00:00","update_time":null,"expire_time":"2018-02-16 00:00:00","comment":null,"status":0,"expire":true,"finished":true},{"id":10000,"uid":1000000,"gift_name":"小米Max2手机","gift_type":"2","gift_num":1,"user_name":"打码","user_phone":"打码","user_address":"打码","user_extra_field":"{\"user_province\":\"\\u6253\\u7801\",\"user_city\":\"\\u6253\\u7801\",\"user_area\":\"\\u6253\\u7801\",\"user_post_code\":\"打码\"}","source":"小米Max2超耐久直播第二季","source_id":1,"create_time":"2017-06-01 00:00:00","update_time":"2017-06-01 00:00:00","expire_time":"2017-06-30 00:00:00","comment":null,"status":0,"expire":true,"finished":true}]
          * use_count : 0
@@ -54,7 +44,7 @@ public class AwardsEntity {
         @SerializedName("count")
         private int count;
         @SerializedName("list")
-        private List<AwardEntity> awardList;
+        private List<Award> awardList;
 
         public int getUseCount() {
             return useCount;
@@ -72,15 +62,15 @@ public class AwardsEntity {
             this.count = count;
         }
 
-        public List<AwardEntity> getAwardList() {
+        public List<Award> getAwardList() {
             return awardList;
         }
 
-        public void setAwardList(List<AwardEntity> awardList) {
+        public void setAwardList(List<Award> awardList) {
             this.awardList = awardList;
         }
 
-        public static class AwardEntity {
+        public static class Award {
             /**
              * id : 100000
              * uid : 1000000

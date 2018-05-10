@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-public class SpecialGiftEntity {
+public class SpecialGiftEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -14,12 +14,8 @@ public class SpecialGiftEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
-    @SerializedName("msg")
-    private String msg;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -29,31 +25,15 @@ public class SpecialGiftEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * gift39 : null
          */

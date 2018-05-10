@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SearchResponseEntity {
+public class SearchResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,8 +13,6 @@ public class SearchResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -24,14 +22,6 @@ public class SearchResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -54,7 +44,7 @@ public class SearchResponseEntity {
         @SerializedName("page")
         private long page;
         @SerializedName("pagesize")
-        private long pagesize;
+        private long pageSize;
         @SerializedName("type")
         private String type;
         @SerializedName("room")
@@ -70,12 +60,12 @@ public class SearchResponseEntity {
             this.page = page;
         }
 
-        public long getPagesize() {
-            return pagesize;
+        public long getPageSize() {
+            return pageSize;
         }
 
-        public void setPagesize(long pagesize) {
-            this.pagesize = pagesize;
+        public void setPageSize(long pageSize) {
+            this.pageSize = pageSize;
         }
 
         public String getType() {
@@ -114,7 +104,7 @@ public class SearchResponseEntity {
             @SerializedName("total_page")
             private long totalPage;
             @SerializedName("list")
-            private List<RoomEntity> list;
+            private List<RoomData> list;
 
             public long getTotalRoom() {
                 return totalRoom;
@@ -132,15 +122,15 @@ public class SearchResponseEntity {
                 this.totalPage = totalPage;
             }
 
-            public List<RoomEntity> getList() {
+            public List<RoomData> getList() {
                 return list;
             }
 
-            public void setList(List<RoomEntity> list) {
+            public void setList(List<RoomData> list) {
                 this.list = list;
             }
 
-            public static class RoomEntity {
+            public static class RoomData {
                 /**
                  * roomid : 23058
                  * cover : //i0.hdslb.com/bfs/live/6029764557e3cbe91475faae26e6e244de8c1d3c.jpg
@@ -151,7 +141,7 @@ public class SearchResponseEntity {
                  */
 
                 @SerializedName("roomid")
-                private long roomid;
+                private long roomId;
                 @SerializedName("cover")
                 private String cover;
                 @SerializedName("title")
@@ -163,12 +153,12 @@ public class SearchResponseEntity {
                 @SerializedName("online")
                 private int online;
 
-                public long getRoomid() {
-                    return roomid;
+                public long getRoomId() {
+                    return roomId;
                 }
 
-                public void setRoomid(long roomid) {
-                    this.roomid = roomid;
+                public void setRoomId(long roomId) {
+                    this.roomId = roomId;
                 }
 
                 public String getCover() {
@@ -225,7 +215,7 @@ public class SearchResponseEntity {
             @SerializedName("total_page")
             private long totalPage;
             @SerializedName("list")
-            private List<UserEntity> list;
+            private List<UserData> list;
 
             public long getTotalUser() {
                 return totalUser;
@@ -243,15 +233,15 @@ public class SearchResponseEntity {
                 this.totalPage = totalPage;
             }
 
-            public List<UserEntity> getList() {
+            public List<UserData> getList() {
                 return list;
             }
 
-            public void setList(List<UserEntity> list) {
+            public void setList(List<UserData> list) {
                 this.list = list;
             }
 
-            public static class UserEntity {
+            public static class UserData {
                 /**
                  * face : //i1.hdslb.com/bfs/face/a1b248975dcc42dec34c9b097c5ce3b1b4d6f7bb.jpg
                  * name : 聆听の音乐
@@ -273,7 +263,7 @@ public class SearchResponseEntity {
                 @SerializedName("fansNum")
                 private long fansNum;
                 @SerializedName("roomid")
-                private long roomid;
+                private long roomId;
                 @SerializedName("roomTags")
                 private List<String> roomTags;
 
@@ -317,12 +307,12 @@ public class SearchResponseEntity {
                     this.fansNum = fansNum;
                 }
 
-                public long getRoomid() {
-                    return roomid;
+                public long getRoomId() {
+                    return roomId;
                 }
 
-                public void setRoomid(long roomid) {
-                    this.roomid = roomid;
+                public void setRoomId(long roomId) {
+                    this.roomId = roomId;
                 }
 
                 public List<String> getRoomTags() {

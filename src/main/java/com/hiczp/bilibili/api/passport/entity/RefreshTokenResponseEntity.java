@@ -3,7 +3,7 @@ package com.hiczp.bilibili.api.passport.entity;
 import com.google.gson.annotations.SerializedName;
 import com.hiczp.bilibili.api.BilibiliAccount;
 
-public class RefreshTokenResponseEntity {
+public class RefreshTokenResponseEntity extends ResponseEntity {
     /**
      * ts : 1509734125
      * code : 0
@@ -14,10 +14,8 @@ public class RefreshTokenResponseEntity {
     private long ts;
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public long getTs() {
         return ts;
@@ -35,19 +33,11 @@ public class RefreshTokenResponseEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
@@ -61,7 +51,7 @@ public class RefreshTokenResponseEntity {
         );
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * mid : 20293030
          * refresh_token : 19d64022154e033574df4c753fc7926d

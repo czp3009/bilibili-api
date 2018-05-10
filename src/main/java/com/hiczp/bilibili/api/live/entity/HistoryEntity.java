@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class HistoryEntity {
+public class HistoryEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,8 +13,6 @@ public class HistoryEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -24,14 +22,6 @@ public class HistoryEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -53,7 +43,7 @@ public class HistoryEntity {
         @SerializedName("page")
         private int page;
         @SerializedName("pagesize")
-        private int pagesize;
+        private int pageSize;
         @SerializedName("total_page")
         private int totalPage;
         @SerializedName("list")
@@ -67,12 +57,12 @@ public class HistoryEntity {
             this.page = page;
         }
 
-        public int getPagesize() {
-            return pagesize;
+        public int getPageSize() {
+            return pageSize;
         }
 
-        public void setPagesize(int pagesize) {
-            this.pagesize = pagesize;
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
         }
 
         public int getTotalPage() {
@@ -112,7 +102,7 @@ public class HistoryEntity {
             @SerializedName("face")
             private String face;
             @SerializedName("roomid")
-            private long roomid;
+            private long roomId;
             @SerializedName("areaName")
             private String areaName;
             @SerializedName("live_status")
@@ -148,12 +138,12 @@ public class HistoryEntity {
                 this.face = face;
             }
 
-            public long getRoomid() {
-                return roomid;
+            public long getRoomId() {
+                return roomId;
             }
 
-            public void setRoomid(long roomid) {
-                this.roomid = roomid;
+            public void setRoomId(long roomId) {
+                this.roomId = roomId;
             }
 
             public String getAreaName() {

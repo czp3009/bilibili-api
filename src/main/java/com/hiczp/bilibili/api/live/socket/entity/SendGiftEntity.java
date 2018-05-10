@@ -14,7 +14,7 @@ public class SendGiftEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public String getCmd() {
         return cmd;
@@ -24,15 +24,15 @@ public class SendGiftEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * giftName : 节奏风暴
          * num : 1
@@ -141,7 +141,7 @@ public class SendGiftEntity implements DataEntity {
         @SerializedName("top_list")
         private List<TopList> topList;
         @SerializedName("smalltv_msg")
-        private JsonElement smalltvMsg;
+        private JsonElement smallTvMsg;
         @SerializedName("notice_msg")
         private JsonElement noticeMsg;
 
@@ -393,12 +393,12 @@ public class SendGiftEntity implements DataEntity {
             this.topList = topList;
         }
 
-        public JsonElement getSmalltvMsg() {
-            return smalltvMsg;
+        public JsonElement getSmallTvMsg() {
+            return smallTvMsg;
         }
 
-        public void setSmalltvMsg(JsonElement smalltvMsg) {
-            this.smalltvMsg = smalltvMsg;
+        public void setSmallTvMsg(JsonElement smallTvMsg) {
+            this.smallTvMsg = smallTvMsg;
         }
 
         public JsonElement getNoticeMsg() {
@@ -707,7 +707,7 @@ public class SendGiftEntity implements DataEntity {
             @SerializedName("uid")
             private int uid;
             @SerializedName("uname")
-            private String uname;
+            private String username;
             @SerializedName("face")
             private String face;
             @SerializedName("rank")
@@ -727,12 +727,12 @@ public class SendGiftEntity implements DataEntity {
                 this.uid = uid;
             }
 
-            public String getUname() {
-                return uname;
+            public String getUsername() {
+                return username;
             }
 
-            public void setUname(String uname) {
-                this.uname = uname;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
             public String getFace() {

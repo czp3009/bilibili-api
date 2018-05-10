@@ -15,9 +15,9 @@ public class RoomBlockMsgEntity implements DataEntity {
     @SerializedName("uid")
     private String uid;
     @SerializedName("uname")
-    private String uname;
+    private String username;
     @SerializedName("roomid")
-    private long roomid;
+    private long roomId;
 
     @Override
     public String getCmd() {
@@ -36,19 +36,19 @@ public class RoomBlockMsgEntity implements DataEntity {
         this.uid = uid;
     }
 
-    public String getUname() {
-        return uname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUname(String uname) {
-        this.uname = uname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public long getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(long roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 }

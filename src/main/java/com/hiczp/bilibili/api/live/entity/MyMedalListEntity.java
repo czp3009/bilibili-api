@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MyMedalListEntity {
+public class MyMedalListEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,8 +13,6 @@ public class MyMedalListEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private List<Medal> data;
 
@@ -24,14 +22,6 @@ public class MyMedalListEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public List<Medal> getData() {
@@ -63,7 +53,7 @@ public class MyMedalListEntity {
         @SerializedName("level")
         private int level;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("intimacy")
         private int intimacy;
         @SerializedName("next_intimacy")
@@ -101,12 +91,12 @@ public class MyMedalListEntity {
             this.level = level;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public int getIntimacy() {

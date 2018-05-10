@@ -16,7 +16,7 @@ public class RoomAdminsEntity implements DataEntity {
     @SerializedName("roomid")
     private long roomId;
     @SerializedName("uids")
-    private List<Long> uids;
+    private List<Long> userIds;
 
     @Override
     public String getCmd() {
@@ -35,11 +35,11 @@ public class RoomAdminsEntity implements DataEntity {
         this.roomId = roomId;
     }
 
-    public List<Long> getUids() {
-        return uids;
+    public List<Long> getUserIds() {
+        return userIds;
     }
 
-    public void setUids(List<Long> uids) {
-        this.uids = uids;
+    public void setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
     }
 }

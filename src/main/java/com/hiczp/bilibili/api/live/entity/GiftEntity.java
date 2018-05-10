@@ -27,6 +27,15 @@ public class GiftEntity {
     @SerializedName("rnd")
     private long random = (long) (Math.random() * 9999999999L);
 
+    /**
+     * 礼物的构造器, giftId 与 bagId 必须匹配, roomId 与 roomUserId 必须匹配
+     *
+     * @param giftId     礼物 ID
+     * @param bagId      礼物在背包中的 ID
+     * @param number     数量
+     * @param roomId     房间号
+     * @param roomUserId 房间主播的用户 ID
+     */
     public GiftEntity(long giftId, long bagId, long number, long roomId, long roomUserId) {
         this.giftId = giftId;
         this.bagId = bagId;
@@ -35,16 +44,16 @@ public class GiftEntity {
         this.roomUserId = roomUserId;
     }
 
-    public GiftEntity(long giftId, long bagId, long number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
-        this(giftId, bagId, number, liveRoomEntity.getRoomId(), liveRoomEntity.getMid());
+    public GiftEntity(long giftId, long bagId, long number, LiveRoomInfoEntity.LiveRoom liveRoom) {
+        this(giftId, bagId, number, liveRoom.getRoomId(), liveRoom.getMid());
     }
 
-    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, long number, long roomId, long roomUserId) {
-        this(bagGiftEntity.getGiftId(), bagGiftEntity.getId(), number, roomId, roomUserId);
+    public GiftEntity(PlayerBagEntity.BagGift bagGift, long number, long roomId, long roomUserId) {
+        this(bagGift.getGiftId(), bagGift.getId(), number, roomId, roomUserId);
     }
 
-    public GiftEntity(PlayerBagEntity.BagGiftEntity bagGiftEntity, long number, LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity) {
-        this(bagGiftEntity.getGiftId(), bagGiftEntity.getId(), number, liveRoomEntity.getRoomId(), liveRoomEntity.getMid());
+    public GiftEntity(PlayerBagEntity.BagGift bagGift, long number, LiveRoomInfoEntity.LiveRoom liveRoom) {
+        this(bagGift.getGiftId(), bagGift.getId(), number, liveRoom.getRoomId(), liveRoom.getMid());
     }
 
     public long getGiftId() {

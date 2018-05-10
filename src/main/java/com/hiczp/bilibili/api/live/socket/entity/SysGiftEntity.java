@@ -26,13 +26,13 @@ public class SysGiftEntity implements DataEntity {
     @SerializedName("url")
     private String url;
     @SerializedName("roomid")
-    private long roomId;
+    private Long roomId;
     @SerializedName("real_roomid")
-    private long realRoomId;
+    private Long realRoomId;
     @SerializedName("giftId")
-    private int giftId;
+    private Long giftId;
     @SerializedName("msgTips")
-    private int msgTips;
+    private Integer msgTips;
 
     @Override
     public String getCmd() {
@@ -75,35 +75,35 @@ public class SysGiftEntity implements DataEntity {
         this.url = url;
     }
 
-    public long getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(long roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
-    public long getRealRoomId() {
+    public Long getRealRoomId() {
         return realRoomId;
     }
 
-    public void setRealRoomId(long realRoomId) {
+    public void setRealRoomId(Long realRoomId) {
         this.realRoomId = realRoomId;
     }
 
-    public int getGiftId() {
+    public Long getGiftId() {
         return giftId;
     }
 
-    public void setGiftId(int giftId) {
+    public void setGiftId(Long giftId) {
         this.giftId = giftId;
     }
 
-    public int getMsgTips() {
+    public Integer getMsgTips() {
         return msgTips;
     }
 
-    public void setMsgTips(int msgTips) {
+    public void setMsgTips(Integer msgTips) {
         this.msgTips = msgTips;
     }
 }

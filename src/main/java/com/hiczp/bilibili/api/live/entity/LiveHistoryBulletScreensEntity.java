@@ -1,10 +1,11 @@
 package com.hiczp.bilibili.api.live.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class LiveHistoryBulletScreensEntity {
+public class LiveHistoryBulletScreensEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,10 +14,8 @@ public class LiveHistoryBulletScreensEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -26,34 +25,26 @@ public class LiveHistoryBulletScreensEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         @SerializedName("room")
-        private List<LiveHistoryBulletScreenEntity> room;
+        private List<LiveHistoryBulletScreen> liveHistoryBulletScreens;
         @SerializedName("admin")
         private List<?> admin;
 
-        public List<LiveHistoryBulletScreenEntity> getRoom() {
-            return room;
+        public List<LiveHistoryBulletScreen> getLiveHistoryBulletScreens() {
+            return liveHistoryBulletScreens;
         }
 
-        public void setRoom(List<LiveHistoryBulletScreenEntity> room) {
-            this.room = room;
+        public void setLiveHistoryBulletScreens(List<LiveHistoryBulletScreen> liveHistoryBulletScreens) {
+            this.liveHistoryBulletScreens = liveHistoryBulletScreens;
         }
 
         public List<?> getAdmin() {
@@ -64,7 +55,7 @@ public class LiveHistoryBulletScreensEntity {
             this.admin = admin;
         }
 
-        public static class LiveHistoryBulletScreenEntity {
+        public static class LiveHistoryBulletScreen {
             /**
              * text : 这是自动发送的弹幕
              * uid : 20293030
@@ -90,7 +81,7 @@ public class LiveHistoryBulletScreensEntity {
             @SerializedName("nickname")
             private String nickname;
             @SerializedName("timeline")
-            private String timeline;
+            private String timeLine;
             @SerializedName("isadmin")
             private int isAdmin;
             @SerializedName("vip")
@@ -108,7 +99,7 @@ public class LiveHistoryBulletScreensEntity {
             @SerializedName("guard_level")
             private int guardLevel;
             @SerializedName("medal")
-            private List<?> medal;
+            private List<JsonElement> medal;
             @SerializedName("title")
             private List<String> title;
             @SerializedName("user_level")
@@ -138,12 +129,12 @@ public class LiveHistoryBulletScreensEntity {
                 this.nickname = nickname;
             }
 
-            public String getTimeline() {
-                return timeline;
+            public String getTimeLine() {
+                return timeLine;
             }
 
-            public void setTimeline(String timeline) {
-                this.timeline = timeline;
+            public void setTimeLine(String timeLine) {
+                this.timeLine = timeLine;
             }
 
             public int getIsAdmin() {
@@ -210,11 +201,11 @@ public class LiveHistoryBulletScreensEntity {
                 this.guardLevel = guardLevel;
             }
 
-            public List<?> getMedal() {
+            public List<JsonElement> getMedal() {
                 return medal;
             }
 
-            public void setMedal(List<?> medal) {
+            public void setMedal(List<JsonElement> medal) {
                 this.medal = medal;
             }
 

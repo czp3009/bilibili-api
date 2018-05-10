@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.passport.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class KeyEntity {
+public class KeyEntity extends ResponseEntity {
     /**
      * ts : 1509555699
      * code : 0
@@ -10,20 +10,18 @@ public class KeyEntity {
      */
 
     @SerializedName("ts")
-    private long ts;
+    private long timestamp;
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
-    public long getTs() {
-        return ts;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTs(long ts) {
-        this.ts = ts;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getCode() {
@@ -34,23 +32,15 @@ public class KeyEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * hash : 8b9030ef5ff6d9f6
          * key : -----BEGIN PUBLIC KEY-----

@@ -3,7 +3,7 @@ package com.hiczp.bilibili.api.passport.entity;
 import com.google.gson.annotations.SerializedName;
 import com.hiczp.bilibili.api.BilibiliAccount;
 
-public class LoginResponseEntity {
+public class LoginResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * data : {"access_token":"8501735069b043dd62c3bb88810444fd","refresh_token":"d41affc888082ffa11d7d2c37ad0cf2c","mid":20293030,"expires_in":2592000}
@@ -12,12 +12,10 @@ public class LoginResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
     @SerializedName("ts")
-    private long ts;
+    private long timestamp;
 
     public int getCode() {
         return code;
@@ -27,28 +25,20 @@ public class LoginResponseEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public long getTs() {
-        return ts;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTs(long ts) {
-        this.ts = ts;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public BilibiliAccount toBilibiliAccount() {
@@ -57,11 +47,11 @@ public class LoginResponseEntity {
                 this.data.refreshToken,
                 this.data.mid,
                 this.data.expiresIn,
-                this.ts
+                this.timestamp
         );
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * access_token : 8501735069b043dd62c3bb88810444fd
          * refresh_token : d41affc888082ffa11d7d2c37ad0cf2c

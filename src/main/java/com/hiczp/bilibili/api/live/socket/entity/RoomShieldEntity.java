@@ -18,7 +18,7 @@ public class RoomShieldEntity implements DataEntity {
     @SerializedName("type")
     private int type;
     @SerializedName("roomid")
-    private long roomid;
+    private long roomId;
     @SerializedName("user")
     private List<String> user;
     @SerializedName("keyword")
@@ -41,12 +41,12 @@ public class RoomShieldEntity implements DataEntity {
         this.type = type;
     }
 
-    public long getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(long roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public List<String> getUser() {

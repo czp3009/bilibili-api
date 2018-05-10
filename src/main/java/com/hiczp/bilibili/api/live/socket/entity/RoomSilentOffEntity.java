@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.live.socket.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public class RoomSilentOffEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("roomid")
-    private String roomid;
+    private String roomId;
     @SerializedName("data")
-    private List<?> data;
+    private List<JsonElement> data;
 
     @Override
     public String getCmd() {
@@ -27,19 +28,19 @@ public class RoomSilentOffEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public String getRoomid() {
-        return roomid;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(String roomid) {
-        this.roomid = roomid;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
-    public List<?> getData() {
+    public List<JsonElement> getData() {
         return data;
     }
 
-    public void setData(List<?> data) {
+    public void setData(List<JsonElement> data) {
         this.data = data;
     }
 }

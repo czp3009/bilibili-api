@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class IsFollowedResponseEntity {
+public class IsFollowedResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -12,12 +12,8 @@ public class IsFollowedResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -27,31 +23,15 @@ public class IsFollowedResponseEntity {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * follow : 1
          */

@@ -12,7 +12,7 @@ public class WelcomeGuardEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
     @SerializedName("roomid")
     private long roomId;
 
@@ -25,11 +25,11 @@ public class WelcomeGuardEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
@@ -41,7 +41,7 @@ public class WelcomeGuardEntity implements DataEntity {
         this.roomId = roomId;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * uid : 23598108
          * username : lovevael
@@ -56,7 +56,7 @@ public class WelcomeGuardEntity implements DataEntity {
         @SerializedName("guard_level")
         private int guardLevel;
         @SerializedName("water_god")
-        private int waterGod;
+        private Integer waterGod;
 
         public int getUid() {
             return uid;
@@ -82,11 +82,11 @@ public class WelcomeGuardEntity implements DataEntity {
             this.guardLevel = guardLevel;
         }
 
-        public int getWaterGod() {
+        public Integer getWaterGod() {
             return waterGod;
         }
 
-        public void setWaterGod(int waterGod) {
+        public void setWaterGod(Integer waterGod) {
             this.waterGod = waterGod;
         }
     }

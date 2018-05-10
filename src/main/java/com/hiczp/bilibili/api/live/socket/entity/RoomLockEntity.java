@@ -14,7 +14,7 @@ public class RoomLockEntity implements DataEntity {
     @SerializedName("expire")
     private String expire;
     @SerializedName("roomid")
-    private int roomid;
+    private long roomId;
 
     @Override
     public String getCmd() {
@@ -33,11 +33,11 @@ public class RoomLockEntity implements DataEntity {
         this.expire = expire;
     }
 
-    public int getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(int roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 }

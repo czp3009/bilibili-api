@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.web.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SendHeartBeatResponseEntity {
+public class SendHeartBeatResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -12,10 +12,6 @@ public class SendHeartBeatResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -25,22 +21,6 @@ public class SendHeartBeatResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {

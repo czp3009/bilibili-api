@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class FollowedHostsEntity {
+public class FollowedHostsEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -14,10 +14,6 @@ public class FollowedHostsEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class FollowedHostsEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -67,7 +47,7 @@ public class FollowedHostsEntity {
         @SerializedName("page")
         private long page;
         @SerializedName("pagesize")
-        private long pagesize;
+        private long pageSize;
         @SerializedName("count")
         private long count;
         @SerializedName("total_page")
@@ -87,12 +67,12 @@ public class FollowedHostsEntity {
             this.page = page;
         }
 
-        public long getPagesize() {
-            return pagesize;
+        public long getPageSize() {
+            return pageSize;
         }
 
-        public void setPagesize(long pagesize) {
-            this.pagesize = pagesize;
+        public void setPageSize(long pageSize) {
+            this.pageSize = pageSize;
         }
 
         public long getCount() {
@@ -160,7 +140,7 @@ public class FollowedHostsEntity {
             @SerializedName("face")
             private String face;
             @SerializedName("roomid")
-            private int roomid;
+            private int roomId;
             @SerializedName("areaName")
             private String areaName;
             @SerializedName("area_v2_id")
@@ -206,12 +186,12 @@ public class FollowedHostsEntity {
                 this.face = face;
             }
 
-            public int getRoomid() {
-                return roomid;
+            public int getRoomId() {
+                return roomId;
             }
 
-            public void setRoomid(int roomid) {
-                this.roomid = roomid;
+            public void setRoomId(int roomId) {
+                this.roomId = roomId;
             }
 
             public String getAreaName() {

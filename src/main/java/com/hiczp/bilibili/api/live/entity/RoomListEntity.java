@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RoomListEntity {
+public class RoomListEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -14,10 +14,6 @@ public class RoomListEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private List<Data> data;
 
@@ -27,22 +23,6 @@ public class RoomListEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public List<Data> getData() {
@@ -83,13 +63,13 @@ public class RoomListEntity {
          */
 
         @SerializedName("roomid")
-        private int roomid;
+        private int roomId;
         @SerializedName("uid")
         private int uid;
         @SerializedName("title")
         private String title;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("online")
         private int online;
         @SerializedName("user_cover")
@@ -133,12 +113,12 @@ public class RoomListEntity {
         @SerializedName("accept_quality_v2")
         private List<Integer> acceptQualityV2;
 
-        public int getRoomid() {
-            return roomid;
+        public int getRoomId() {
+            return roomId;
         }
 
-        public void setRoomid(int roomid) {
-            this.roomid = roomid;
+        public void setRoomId(int roomId) {
+            this.roomId = roomId;
         }
 
         public int getUid() {
@@ -157,12 +137,12 @@ public class RoomListEntity {
             this.title = title;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public int getOnline() {

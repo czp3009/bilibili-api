@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AssistantRoomInfoEntity {
+public class AssistantRoomInfoEntity extends ResponseEntity {
     /**
      * code : 0
      * message : ok
@@ -12,10 +12,6 @@ public class AssistantRoomInfoEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
-    @SerializedName("msg")
-    private String msg;
     @SerializedName("data")
     private Data data;
 
@@ -25,22 +21,6 @@ public class AssistantRoomInfoEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public Data getData() {
@@ -87,7 +67,7 @@ public class AssistantRoomInfoEntity {
         @SerializedName("face")
         private String face;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("rcost")
         private int rcost;
         @SerializedName("online")
@@ -99,7 +79,7 @@ public class AssistantRoomInfoEntity {
         @SerializedName("title")
         private String title;
         @SerializedName("istry")
-        private int istry;
+        private int isTry;
         @SerializedName("try_time")
         private String tryTime;
         @SerializedName("is_medal")
@@ -153,12 +133,12 @@ public class AssistantRoomInfoEntity {
             this.face = face;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public int getRcost() {
@@ -201,12 +181,12 @@ public class AssistantRoomInfoEntity {
             this.title = title;
         }
 
-        public int getIstry() {
-            return istry;
+        public int getIsTry() {
+            return isTry;
         }
 
-        public void setIstry(int istry) {
-            this.istry = istry;
+        public void setIsTry(int isTry) {
+            this.isTry = isTry;
         }
 
         public String getTryTime() {

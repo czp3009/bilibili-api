@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FreeSilverCurrentTaskEntity {
+public class FreeSilverCurrentTaskEntity extends ResponseEntity {
     /**
      * code : 0
      * message :
@@ -11,10 +11,8 @@ public class FreeSilverCurrentTaskEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -24,23 +22,15 @@ public class FreeSilverCurrentTaskEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * minute : 3
          * silver : 30

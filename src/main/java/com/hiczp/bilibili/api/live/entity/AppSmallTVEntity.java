@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class AppSmallTVEntity {
+public class AppSmallTVEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : OK
@@ -14,10 +14,6 @@ public class AppSmallTVEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class AppSmallTVEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -61,18 +41,18 @@ public class AppSmallTVEntity {
          */
 
         @SerializedName("lastid")
-        private long lastid;
+        private long lastId;
         @SerializedName("join")
         private List<Join> join;
         @SerializedName("unjoin")
-        private List<Unjoin> unjoin;
+        private List<Unjoin> unJoin;
 
-        public long getLastid() {
-            return lastid;
+        public long getLastId() {
+            return lastId;
         }
 
-        public void setLastid(long lastid) {
-            this.lastid = lastid;
+        public void setLastId(long lastId) {
+            this.lastId = lastId;
         }
 
         public List<Join> getJoin() {
@@ -83,12 +63,12 @@ public class AppSmallTVEntity {
             this.join = join;
         }
 
-        public List<Unjoin> getUnjoin() {
-            return unjoin;
+        public List<Unjoin> getUnJoin() {
+            return unJoin;
         }
 
-        public void setUnjoin(List<Unjoin> unjoin) {
-            this.unjoin = unjoin;
+        public void setUnJoin(List<Unjoin> unJoin) {
+            this.unJoin = unJoin;
         }
 
         public static class Join {

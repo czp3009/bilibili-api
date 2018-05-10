@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.web.live.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserInfoEntity {
+public class UserInfoEntity extends ResponseEntity {
     /**
      * code : REPONSE_OK
      * msg : ok
@@ -11,8 +11,6 @@ public class UserInfoEntity {
 
     @SerializedName("code")
     private String code;
-    @SerializedName("msg")
-    private String msg;
     @SerializedName("data")
     private Data data;
 
@@ -22,14 +20,6 @@ public class UserInfoEntity {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public Data getData() {
@@ -58,7 +48,7 @@ public class UserInfoEntity {
          */
 
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("face")
         private String face;
         @SerializedName("silver")
@@ -84,12 +74,12 @@ public class UserInfoEntity {
         @SerializedName("billCoin")
         private int billCoin;
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public String getFace() {

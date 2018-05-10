@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RecommendRoomRefreshResponseEntity {
+public class RecommendRoomRefreshResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : ok
@@ -14,10 +14,6 @@ public class RecommendRoomRefreshResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class RecommendRoomRefreshResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -65,7 +45,7 @@ public class RecommendRoomRefreshResponseEntity {
         @SerializedName("banner_data")
         private List<BannerData> bannerData;
         @SerializedName("lives")
-        private List<Lives> lives;
+        private List<Live> lives;
 
         public Partition getPartition() {
             return partition;
@@ -83,11 +63,11 @@ public class RecommendRoomRefreshResponseEntity {
             this.bannerData = bannerData;
         }
 
-        public List<Lives> getLives() {
+        public List<Live> getLives() {
             return lives;
         }
 
-        public void setLives(List<Lives> lives) {
+        public void setLives(List<Live> lives) {
             this.lives = lives;
         }
 
@@ -341,7 +321,7 @@ public class RecommendRoomRefreshResponseEntity {
             }
         }
 
-        public static class Lives {
+        public static class Live {
             /**
              * owner : {"face":"https://i1.hdslb.com/bfs/face/8ed8e486437b5053628248dd3c031b109b4cefcd.jpg","mid":218972880,"name":"萌萌の糖酱"}
              * cover : {"src":"https://i0.hdslb.com/bfs/live/d5805bf0e4cb51b50ad4cbe209ae328aedaeeeda.jpg","height":180,"width":320}
@@ -384,7 +364,7 @@ public class RecommendRoomRefreshResponseEntity {
             @SerializedName("title")
             private String title;
             @SerializedName("playurl")
-            private String playurl;
+            private String playUrl;
             @SerializedName("current_quality")
             private int currentQuality;
             @SerializedName("accept_quality")
@@ -476,12 +456,12 @@ public class RecommendRoomRefreshResponseEntity {
                 this.title = title;
             }
 
-            public String getPlayurl() {
-                return playurl;
+            public String getPlayUrl() {
+                return playUrl;
             }
 
-            public void setPlayurl(String playurl) {
-                this.playurl = playurl;
+            public void setPlayUrl(String playUrl) {
+                this.playUrl = playUrl;
             }
 
             public int getCurrentQuality() {

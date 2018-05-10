@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class WearTitleEntity {
+public class WearTitleEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -14,10 +14,6 @@ public class WearTitleEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class WearTitleEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -236,13 +216,13 @@ public class WearTitleEntity {
             @SerializedName("height")
             private int height;
             @SerializedName("is_lihui")
-            private int isLihui;
+            private int isLiHui;
             @SerializedName("lihui_img")
-            private String lihuiImg;
+            private String liHuiImg;
             @SerializedName("lihui_width")
-            private int lihuiWidth;
+            private int liHuiWidth;
             @SerializedName("lihui_height")
-            private int lihuiHeight;
+            private int liHuiHeight;
 
             public String getId() {
                 return id;
@@ -284,36 +264,36 @@ public class WearTitleEntity {
                 this.height = height;
             }
 
-            public int getIsLihui() {
-                return isLihui;
+            public int getIsLiHui() {
+                return isLiHui;
             }
 
-            public void setIsLihui(int isLihui) {
-                this.isLihui = isLihui;
+            public void setIsLiHui(int isLiHui) {
+                this.isLiHui = isLiHui;
             }
 
-            public String getLihuiImg() {
-                return lihuiImg;
+            public String getLiHuiImg() {
+                return liHuiImg;
             }
 
-            public void setLihuiImg(String lihuiImg) {
-                this.lihuiImg = lihuiImg;
+            public void setLiHuiImg(String liHuiImg) {
+                this.liHuiImg = liHuiImg;
             }
 
-            public int getLihuiWidth() {
-                return lihuiWidth;
+            public int getLiHuiWidth() {
+                return liHuiWidth;
             }
 
-            public void setLihuiWidth(int lihuiWidth) {
-                this.lihuiWidth = lihuiWidth;
+            public void setLiHuiWidth(int liHuiWidth) {
+                this.liHuiWidth = liHuiWidth;
             }
 
-            public int getLihuiHeight() {
-                return lihuiHeight;
+            public int getLiHuiHeight() {
+                return liHuiHeight;
             }
 
-            public void setLihuiHeight(int lihuiHeight) {
-                this.lihuiHeight = lihuiHeight;
+            public void setLiHuiHeight(int liHuiHeight) {
+                this.liHuiHeight = liHuiHeight;
             }
         }
 
@@ -369,13 +349,13 @@ public class WearTitleEntity {
             @SerializedName("height")
             private int height;
             @SerializedName("is_lihui")
-            private int isLihui;
+            private int isLiHui;
             @SerializedName("lihui_img")
-            private String lihuiImg;
+            private String liHuiImg;
             @SerializedName("lihui_width")
-            private int lihuiWidth;
+            private int liHuiWidth;
             @SerializedName("lihui_height")
-            private int lihuiHeight;
+            private int liHuiHeight;
 
             public String getId() {
                 return id;
@@ -417,36 +397,36 @@ public class WearTitleEntity {
                 this.height = height;
             }
 
-            public int getIsLihui() {
-                return isLihui;
+            public int getIsLiHui() {
+                return isLiHui;
             }
 
-            public void setIsLihui(int isLihui) {
-                this.isLihui = isLihui;
+            public void setIsLiHui(int isLiHui) {
+                this.isLiHui = isLiHui;
             }
 
-            public String getLihuiImg() {
-                return lihuiImg;
+            public String getLiHuiImg() {
+                return liHuiImg;
             }
 
-            public void setLihuiImg(String lihuiImg) {
-                this.lihuiImg = lihuiImg;
+            public void setLiHuiImg(String liHuiImg) {
+                this.liHuiImg = liHuiImg;
             }
 
-            public int getLihuiWidth() {
-                return lihuiWidth;
+            public int getLiHuiWidth() {
+                return liHuiWidth;
             }
 
-            public void setLihuiWidth(int lihuiWidth) {
-                this.lihuiWidth = lihuiWidth;
+            public void setLiHuiWidth(int liHuiWidth) {
+                this.liHuiWidth = liHuiWidth;
             }
 
-            public int getLihuiHeight() {
-                return lihuiHeight;
+            public int getLiHuiHeight() {
+                return liHuiHeight;
             }
 
-            public void setLihuiHeight(int lihuiHeight) {
-                this.lihuiHeight = lihuiHeight;
+            public void setLiHuiHeight(int liHuiHeight) {
+                this.liHuiHeight = liHuiHeight;
             }
         }
     }

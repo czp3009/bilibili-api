@@ -35,7 +35,7 @@ public class LiveClient {
     private final long userId;
     private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
 
-    private LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity;
+    private LiveRoomInfoEntity.LiveRoom liveRoom;
 
     private Channel channel;
 
@@ -55,14 +55,14 @@ public class LiveClient {
                 .getRoomInfo(showRoomId);
     }
 
-    public LiveRoomInfoEntity.LiveRoomEntity fetchRoomInfo() throws IOException {
-        LiveRoomInfoEntity.LiveRoomEntity liveRoomEntity =
+    public LiveRoomInfoEntity.LiveRoom fetchRoomInfo() throws IOException {
+        LiveRoomInfoEntity.LiveRoom liveRoom =
                 fetchRoomInfoAsync()
                         .execute()
                         .body()
                         .getData();
-        if (liveRoomEntity != null) {
-            return liveRoomEntity;
+        if (liveRoom != null) {
+            return liveRoom;
         } else {
             throw new IllegalArgumentException("Target room " + showRoomId + " not exists");
         }
@@ -75,8 +75,8 @@ public class LiveClient {
         }
 
         LOGGER.info("Fetching info of live room {}", showRoomId);
-        liveRoomEntity = fetchRoomInfo();
-        long roomId = liveRoomEntity.getRoomId();
+        liveRoom = fetchRoomInfo();
+        long roomId = liveRoom.getRoomId();
         LOGGER.info("Get actual room id {}", roomId);
 
         LOGGER.debug("Init SocketChannel Bootstrap");
@@ -101,8 +101,8 @@ public class LiveClient {
                     }
                 });
 
-        String address = liveRoomEntity.getCmt();
-        int port = liveRoomEntity.getCmtPortGoim();
+        String address = liveRoom.getCmt();
+        int port = liveRoom.getCmtPortGoim();
         LOGGER.info("Connecting to Bullet Screen server {}:{}", address, port);
         try {
             channel = bootstrap.connect(address, port)
@@ -182,23 +182,23 @@ public class LiveClient {
         return userId;
     }
 
-    public Optional<LiveRoomInfoEntity.LiveRoomEntity> getRoomInfo() {
-        if (liveRoomEntity == null) {
+    public Optional<LiveRoomInfoEntity.LiveRoom> getRoomInfo() {
+        if (liveRoom == null) {
             try {
-                liveRoomEntity = fetchRoomInfo();
+                liveRoom = fetchRoomInfo();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return Optional.of(liveRoomEntity);
+        return Optional.of(liveRoom);
     }
 
     public long getRoomIdOrShowRoomId() {
-        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoomEntity::getRoomId).orElse(showRoomId);
+        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoom::getRoomId).orElse(showRoomId);
     }
 
     public int getBulletScreenLengthLimitOrDefaultLengthLimit() {
-        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoomEntity::getMsgLength).orElse(BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT);
+        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoom::getMsgLength).orElse(BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT);
     }
 
     public Channel getChannel() {

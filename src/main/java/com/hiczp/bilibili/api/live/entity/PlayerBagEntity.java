@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerBagEntity {
+public class PlayerBagEntity extends ResponseEntity {
     /**
      * code : 0
      * message : ok
@@ -14,10 +14,8 @@ public class PlayerBagEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private List<BagGiftEntity> data;
+    private List<BagGift> data;
 
     public int getCode() {
         return code;
@@ -27,23 +25,15 @@ public class PlayerBagEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public List<BagGiftEntity> getData() {
+    public List<BagGift> getData() {
         return data;
     }
 
-    public void setData(List<BagGiftEntity> data) {
+    public void setData(List<BagGift> data) {
         this.data = data;
     }
 
-    public static class BagGiftEntity {
+    public static class BagGift {
         /**
          * id : 49345439
          * uid : 20293030
@@ -69,7 +59,7 @@ public class PlayerBagEntity {
         @SerializedName("gift_num")
         private long giftNum;
         @SerializedName("expireat")
-        private long expireat;
+        private long expireAt;
         @SerializedName("gift_type")
         private long giftType;
         @SerializedName("gift_name")
@@ -81,9 +71,9 @@ public class PlayerBagEntity {
         @SerializedName("count_set")
         private String countSet;
         @SerializedName("combo_num")
-        private long comboNum;
+        private long comboNumber;
         @SerializedName("super_num")
-        private long superNum;
+        private long superNumber;
         @SerializedName("count_map")
         private Map<String, String> countMap;
 
@@ -119,12 +109,12 @@ public class PlayerBagEntity {
             this.giftNum = giftNum;
         }
 
-        public long getExpireat() {
-            return expireat;
+        public long getExpireAt() {
+            return expireAt;
         }
 
-        public void setExpireat(long expireat) {
-            this.expireat = expireat;
+        public void setExpireAt(long expireAt) {
+            this.expireAt = expireAt;
         }
 
         public long getGiftType() {
@@ -167,20 +157,20 @@ public class PlayerBagEntity {
             this.countSet = countSet;
         }
 
-        public long getComboNum() {
-            return comboNum;
+        public long getComboNumber() {
+            return comboNumber;
         }
 
-        public void setComboNum(long comboNum) {
-            this.comboNum = comboNum;
+        public void setComboNumber(long comboNumber) {
+            this.comboNumber = comboNumber;
         }
 
-        public long getSuperNum() {
-            return superNum;
+        public long getSuperNumber() {
+            return superNumber;
         }
 
-        public void setSuperNum(long superNum) {
-            this.superNum = superNum;
+        public void setSuperNumber(long superNumber) {
+            this.superNumber = superNumber;
         }
 
         public Map<String, String> getCountMap() {

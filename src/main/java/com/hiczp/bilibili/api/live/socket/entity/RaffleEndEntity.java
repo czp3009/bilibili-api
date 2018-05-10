@@ -12,7 +12,7 @@ public class RaffleEndEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("roomid")
-    private long roomid;
+    private long roomId;
     @SerializedName("data")
     private Data data;
 
@@ -25,12 +25,12 @@ public class RaffleEndEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public long getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(long roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public Data getData() {
@@ -111,7 +111,7 @@ public class RaffleEndEntity implements DataEntity {
              */
 
             @SerializedName("uname")
-            private String uname;
+            private String username;
             @SerializedName("face")
             private String face;
             @SerializedName("giftId")
@@ -121,12 +121,12 @@ public class RaffleEndEntity implements DataEntity {
             @SerializedName("giftNum")
             private int giftNum;
 
-            public String getUname() {
-                return uname;
+            public String getUsername() {
+                return username;
             }
 
-            public void setUname(String uname) {
-                this.uname = uname;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
             public String getFace() {

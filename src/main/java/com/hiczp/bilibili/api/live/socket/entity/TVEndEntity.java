@@ -47,7 +47,7 @@ public class TVEndEntity implements DataEntity {
         @SerializedName("id")
         private String id;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("sname")
         private String sname;
         @SerializedName("giftName")
@@ -73,12 +73,12 @@ public class TVEndEntity implements DataEntity {
             this.id = id;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public String getSname() {
@@ -155,7 +155,7 @@ public class TVEndEntity implements DataEntity {
              */
 
             @SerializedName("uname")
-            private String uname;
+            private String username;
             @SerializedName("face")
             private String face;
             @SerializedName("giftName")
@@ -165,12 +165,12 @@ public class TVEndEntity implements DataEntity {
             @SerializedName("giftNum")
             private int giftNum;
 
-            public String getUname() {
-                return uname;
+            public String getUsername() {
+                return username;
             }
 
-            public void setUname(String uname) {
-                this.uname = uname;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
             public String getFace() {

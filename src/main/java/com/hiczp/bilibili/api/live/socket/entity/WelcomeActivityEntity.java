@@ -41,7 +41,7 @@ public class WelcomeActivityEntity implements DataEntity {
         @SerializedName("uid")
         private long uid;
         @SerializedName("uname")
-        private String uname;
+        private String username;
         @SerializedName("type")
         private String type;
         @SerializedName("display_mode")
@@ -55,12 +55,12 @@ public class WelcomeActivityEntity implements DataEntity {
             this.uid = uid;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public String getType() {

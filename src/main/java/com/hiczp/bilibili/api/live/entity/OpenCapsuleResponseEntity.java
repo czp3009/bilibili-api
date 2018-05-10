@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class OpenCapsuleResponseEntity {
+public class OpenCapsuleResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,8 +13,6 @@ public class OpenCapsuleResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -24,14 +22,6 @@ public class OpenCapsuleResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {

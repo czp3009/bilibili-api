@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CancelMedalResponseEntity {
+public class CancelMedalResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -13,8 +13,6 @@ public class CancelMedalResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private List<?> data;
 
@@ -24,14 +22,6 @@ public class CancelMedalResponseEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public List<?> getData() {

@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.passport.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class InfoEntity {
+public class InfoEntity extends ResponseEntity {
     /**
      * ts : 1509555703
      * code : 0
@@ -10,20 +10,18 @@ public class InfoEntity {
      */
 
     @SerializedName("ts")
-    private long ts;
+    private long timestamp;
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
-    public long getTs() {
-        return ts;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTs(long ts) {
-        this.ts = ts;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getCode() {
@@ -34,23 +32,15 @@ public class InfoEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * mid : 20293030
          * appid : 878
@@ -63,15 +53,15 @@ public class InfoEntity {
         @SerializedName("mid")
         private long mid;
         @SerializedName("appid")
-        private int appid;
+        private int appId;
         @SerializedName("access_token")
         private String accessToken;
         @SerializedName("expires_in")
         private long expiresIn;
         @SerializedName("userid")
-        private String userid;
+        private String userId;
         @SerializedName("uname")
-        private String uname;
+        private String username;
 
         public long getMid() {
             return mid;
@@ -81,12 +71,12 @@ public class InfoEntity {
             this.mid = mid;
         }
 
-        public int getAppid() {
-            return appid;
+        public int getAppId() {
+            return appId;
         }
 
-        public void setAppid(int appid) {
-            this.appid = appid;
+        public void setAppId(int appId) {
+            this.appId = appId;
         }
 
         public String getAccessToken() {
@@ -105,20 +95,20 @@ public class InfoEntity {
             this.expiresIn = expiresIn;
         }
 
-        public String getUserid() {
-            return userid;
+        public String getUserId() {
+            return userId;
         }
 
-        public void setUserid(String userid) {
-            this.userid = userid;
+        public void setUserId(String userId) {
+            this.userId = userId;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUsername(String username) {
+            this.username = username;
         }
     }
 }

@@ -14,7 +14,7 @@ public class PlayUrlEntity {
     @SerializedName("current_quality")
     private int currentQuality;
     @SerializedName("durl")
-    private List<DurlEntity> durl;
+    private List<DUrl> dUrl;
     @SerializedName("accept_quality")
     private List<Integer> acceptQuality;
 
@@ -26,12 +26,12 @@ public class PlayUrlEntity {
         this.currentQuality = currentQuality;
     }
 
-    public List<DurlEntity> getDurl() {
-        return durl;
+    public List<DUrl> getdUrl() {
+        return dUrl;
     }
 
-    public void setDurl(List<DurlEntity> durl) {
-        this.durl = durl;
+    public void setdUrl(List<DUrl> dUrl) {
+        this.dUrl = dUrl;
     }
 
     public List<Integer> getAcceptQuality() {
@@ -42,7 +42,7 @@ public class PlayUrlEntity {
         this.acceptQuality = acceptQuality;
     }
 
-    public static class DurlEntity {
+    public static class DUrl {
         /**
          * order : 1
          * length : 0

@@ -14,7 +14,7 @@ public class GuardBuyEntity implements DataEntity {
     @SerializedName("data")
     private Data data;
     @SerializedName("roomid")
-    private String roomid;
+    private String roomId;
 
     @Override
     public String getCmd() {
@@ -33,12 +33,12 @@ public class GuardBuyEntity implements DataEntity {
         this.data = data;
     }
 
-    public String getRoomid() {
-        return roomid;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(String roomid) {
-        this.roomid = roomid;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     public static class Data {

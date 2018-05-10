@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CoverEntity {
+public class CoverEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -14,10 +14,6 @@ public class CoverEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
-    @SerializedName("msg")
-    private String msg;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class CoverEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public Data getData() {
@@ -69,9 +49,9 @@ public class CoverEntity {
         @SerializedName("reason")
         private String reason;
         @SerializedName("isup")
-        private int isup;
+        private int isUp;
         @SerializedName("cover_list")
-        private List<CoverList> coverList;
+        private List<CoverData> coverList;
 
         public String getCover() {
             return cover;
@@ -97,23 +77,23 @@ public class CoverEntity {
             this.reason = reason;
         }
 
-        public int getIsup() {
-            return isup;
+        public int getIsUp() {
+            return isUp;
         }
 
-        public void setIsup(int isup) {
-            this.isup = isup;
+        public void setIsUp(int isUp) {
+            this.isUp = isUp;
         }
 
-        public List<CoverList> getCoverList() {
+        public List<CoverData> getCoverList() {
             return coverList;
         }
 
-        public void setCoverList(List<CoverList> coverList) {
+        public void setCoverList(List<CoverData> coverList) {
             this.coverList = coverList;
         }
 
-        public static class CoverList {
+        public static class CoverData {
             /**
              * id : 381657
              * iscover : 1
@@ -127,7 +107,7 @@ public class CoverEntity {
             @SerializedName("id")
             private int id;
             @SerializedName("iscover")
-            private int iscover;
+            private int isCover;
             @SerializedName("cover")
             private String cover;
             @SerializedName("status")
@@ -135,7 +115,7 @@ public class CoverEntity {
             @SerializedName("reason")
             private String reason;
             @SerializedName("isup")
-            private int isup;
+            private int isUp;
             @SerializedName("lock")
             private int lock;
 
@@ -147,12 +127,12 @@ public class CoverEntity {
                 this.id = id;
             }
 
-            public int getIscover() {
-                return iscover;
+            public int getIsCover() {
+                return isCover;
             }
 
-            public void setIscover(int iscover) {
-                this.iscover = iscover;
+            public void setIsCover(int isCover) {
+                this.isCover = isCover;
             }
 
             public String getCover() {
@@ -179,12 +159,12 @@ public class CoverEntity {
                 this.reason = reason;
             }
 
-            public int getIsup() {
-                return isup;
+            public int getIsUp() {
+                return isUp;
             }
 
-            public void setIsup(int isup) {
-                this.isup = isup;
+            public void setIsUp(int isUp) {
+                this.isUp = isUp;
             }
 
             public int getLock() {

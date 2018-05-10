@@ -11,7 +11,7 @@ public class WelcomeEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("data")
-    private DataEntity data;
+    private Data data;
 
     @Override
     public String getCmd() {
@@ -22,15 +22,15 @@ public class WelcomeEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public DataEntity getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntity data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * uid : 516505
          * uname : 圣蝎

@@ -12,7 +12,7 @@ public class RaffleStartEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("roomid")
-    private int roomid;
+    private long roomId;
     @SerializedName("data")
     private Data data;
 
@@ -25,12 +25,12 @@ public class RaffleStartEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public int getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(int roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public Data getData() {

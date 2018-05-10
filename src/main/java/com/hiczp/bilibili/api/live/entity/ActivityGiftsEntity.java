@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-public class ActivityGiftsEntity {
+public class ActivityGiftsEntity extends ResponseEntity {
     /**
      * code : 0
      * message : OK
@@ -14,10 +14,8 @@ public class ActivityGiftsEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private List<DataEntity> data;
+    private List<Data> data;
 
     public int getCode() {
         return code;
@@ -27,23 +25,15 @@ public class ActivityGiftsEntity {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public List<DataEntity> getData() {
+    public List<Data> getData() {
         return data;
     }
 
-    public void setData(List<DataEntity> data) {
+    public void setData(List<Data> data) {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class Data {
         /**
          * id : 102
          * bag_id : 48843715

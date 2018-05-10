@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SendGiftResponseEntity {
+public class SendGiftResponseEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -16,12 +16,8 @@ public class SendGiftResponseEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
-    private DataEntityX data;
+    private Data data;
 
     public int getCode() {
         return code;
@@ -31,31 +27,15 @@ public class SendGiftResponseEntity {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public DataEntityX getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(DataEntityX data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
-    public static class DataEntityX {
+    public static class Data {
         /**
          * silver : 2696
          * gold : 0
@@ -68,7 +48,7 @@ public class SendGiftResponseEntity {
         @SerializedName("gold")
         private String gold;
         @SerializedName("data")
-        private DataEntity data;
+        private DataX dataX;
         @SerializedName("remain")
         private int remain;
 
@@ -88,12 +68,12 @@ public class SendGiftResponseEntity {
             this.gold = gold;
         }
 
-        public DataEntity getData() {
-            return data;
+        public DataX getDataX() {
+            return dataX;
         }
 
-        public void setData(DataEntity data) {
-            this.data = data;
+        public void setDataX(DataX dataX) {
+            this.dataX = dataX;
         }
 
         public int getRemain() {
@@ -104,7 +84,7 @@ public class SendGiftResponseEntity {
             this.remain = remain;
         }
 
-        public static class DataEntity {
+        public static class DataX {
             /**
              * giftName : 辣条
              * num : 1
@@ -143,7 +123,7 @@ public class SendGiftResponseEntity {
             @SerializedName("num")
             private int num;
             @SerializedName("uname")
-            private String uname;
+            private String username;
             @SerializedName("rcost")
             private int rcost;
             @SerializedName("uid")
@@ -187,18 +167,18 @@ public class SendGiftResponseEntity {
             @SerializedName("specialGift")
             private JsonElement specialGift;
             @SerializedName("capsule")
-            private CapsuleEntity capsule;
+            private Capsule capsule;
             @SerializedName("addFollow")
             private int addFollow;
             @SerializedName("top_list")
-            private List<TopListEntity> topList;
+            private List<TopListData> topList;
             /**
              * medal 可能是空的 JsonArray, 也可能是一个 JsonObject
              */
             @SerializedName("medal")
             private JsonElement medal;
             @SerializedName("smalltv_msg")
-            private JsonElement smalltvMsg;
+            private JsonElement smallTvMsg;
             @SerializedName("notice_msg")
             private JsonElement noticeMsg;
 
@@ -218,12 +198,12 @@ public class SendGiftResponseEntity {
                 this.num = num;
             }
 
-            public String getUname() {
-                return uname;
+            public String getUsername() {
+                return username;
             }
 
-            public void setUname(String uname) {
-                this.uname = uname;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
             public int getRcost() {
@@ -394,11 +374,11 @@ public class SendGiftResponseEntity {
                 this.specialGift = specialGift;
             }
 
-            public CapsuleEntity getCapsule() {
+            public Capsule getCapsule() {
                 return capsule;
             }
 
-            public void setCapsule(CapsuleEntity capsule) {
+            public void setCapsule(Capsule capsule) {
                 this.capsule = capsule;
             }
 
@@ -410,11 +390,11 @@ public class SendGiftResponseEntity {
                 this.addFollow = addFollow;
             }
 
-            public List<TopListEntity> getTopList() {
+            public List<TopListData> getTopList() {
                 return topList;
             }
 
-            public void setTopList(List<TopListEntity> topList) {
+            public void setTopList(List<TopListData> topList) {
                 this.topList = topList;
             }
 
@@ -426,12 +406,12 @@ public class SendGiftResponseEntity {
                 this.medal = medal;
             }
 
-            public JsonElement getSmalltvMsg() {
-                return smalltvMsg;
+            public JsonElement getSmallTvMsg() {
+                return smallTvMsg;
             }
 
-            public void setSmalltvMsg(JsonElement smalltvMsg) {
-                this.smalltvMsg = smalltvMsg;
+            public void setSmallTvMsg(JsonElement smallTvMsg) {
+                this.smallTvMsg = smallTvMsg;
             }
 
             public JsonElement getNoticeMsg() {
@@ -442,34 +422,34 @@ public class SendGiftResponseEntity {
                 this.noticeMsg = noticeMsg;
             }
 
-            public static class CapsuleEntity {
+            public static class Capsule {
                 /**
                  * normal : {"coin":10,"change":0,"progress":{"now":2900,"max":10000}}
                  * colorful : {"coin":0,"change":0,"progress":{"now":0,"max":5000}}
                  */
 
                 @SerializedName("normal")
-                private NormalEntity normal;
+                private Normal normal;
                 @SerializedName("colorful")
-                private ColorfulEntity colorful;
+                private Colorful colorful;
 
-                public NormalEntity getNormal() {
+                public Normal getNormal() {
                     return normal;
                 }
 
-                public void setNormal(NormalEntity normal) {
+                public void setNormal(Normal normal) {
                     this.normal = normal;
                 }
 
-                public ColorfulEntity getColorful() {
+                public Colorful getColorful() {
                     return colorful;
                 }
 
-                public void setColorful(ColorfulEntity colorful) {
+                public void setColorful(Colorful colorful) {
                     this.colorful = colorful;
                 }
 
-                public static class NormalEntity {
+                public static class Normal {
                     /**
                      * coin : 10
                      * change : 0
@@ -536,7 +516,7 @@ public class SendGiftResponseEntity {
                     }
                 }
 
-                public static class ColorfulEntity {
+                public static class Colorful {
                     /**
                      * coin : 0
                      * change : 0
@@ -548,7 +528,7 @@ public class SendGiftResponseEntity {
                     @SerializedName("change")
                     private int change;
                     @SerializedName("progress")
-                    private ProgressEntityX progress;
+                    private ProgressX progress;
 
                     public int getCoin() {
                         return coin;
@@ -566,15 +546,15 @@ public class SendGiftResponseEntity {
                         this.change = change;
                     }
 
-                    public ProgressEntityX getProgress() {
+                    public ProgressX getProgress() {
                         return progress;
                     }
 
-                    public void setProgress(ProgressEntityX progress) {
+                    public void setProgress(ProgressX progress) {
                         this.progress = progress;
                     }
 
-                    public static class ProgressEntityX {
+                    public static class ProgressX {
                         /**
                          * now : 0
                          * max : 5000
@@ -604,7 +584,7 @@ public class SendGiftResponseEntity {
                 }
             }
 
-            public static class TopListEntity {
+            public static class TopListData {
                 /**
                  * uid : 20293030
                  * uname : czp3009
@@ -618,7 +598,7 @@ public class SendGiftResponseEntity {
                 @SerializedName("uid")
                 private int uid;
                 @SerializedName("uname")
-                private String uname;
+                private String username;
                 @SerializedName("coin")
                 private int coin;
                 @SerializedName("face")
@@ -638,12 +618,12 @@ public class SendGiftResponseEntity {
                     this.uid = uid;
                 }
 
-                public String getUname() {
-                    return uname;
+                public String getUsername() {
+                    return username;
                 }
 
-                public void setUname(String uname) {
-                    this.uname = uname;
+                public void setUsername(String username) {
+                    this.username = username;
                 }
 
                 public int getCoin() {

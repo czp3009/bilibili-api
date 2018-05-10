@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class UserTasksEntity {
+public class UserTasksEntity extends ResponseEntity {
     /**
      * code : 0
      * msg : success
@@ -14,10 +14,6 @@ public class UserTasksEntity {
 
     @SerializedName("code")
     private int code;
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("message")
-    private String message;
     @SerializedName("data")
     private Data data;
 
@@ -27,22 +23,6 @@ public class UserTasksEntity {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Data getData() {
@@ -109,7 +89,7 @@ public class UserTasksEntity {
             @SerializedName("status")
             private int status;
             @SerializedName("awards")
-            private List<Awards> awards;
+            private List<Award> awards;
 
             public String getTaskId() {
                 return taskId;
@@ -143,11 +123,11 @@ public class UserTasksEntity {
                 this.status = status;
             }
 
-            public List<Awards> getAwards() {
+            public List<Award> getAwards() {
                 return awards;
             }
 
-            public void setAwards(List<Awards> awards) {
+            public void setAwards(List<Award> awards) {
                 this.awards = awards;
             }
 
@@ -179,7 +159,7 @@ public class UserTasksEntity {
                 }
             }
 
-            public static class Awards {
+            public static class Award {
                 /**
                  * name : 扭蛋币
                  * type : toycoin
@@ -234,7 +214,7 @@ public class UserTasksEntity {
             @SerializedName("progress")
             private ProgressX progress;
             @SerializedName("awards")
-            private List<AwardsX> awards;
+            private List<AwardX> awards;
 
             public String getTaskId() {
                 return taskId;
@@ -260,11 +240,11 @@ public class UserTasksEntity {
                 this.progress = progress;
             }
 
-            public List<AwardsX> getAwards() {
+            public List<AwardX> getAwards() {
                 return awards;
             }
 
-            public void setAwards(List<AwardsX> awards) {
+            public void setAwards(List<AwardX> awards) {
                 this.awards = awards;
             }
 
@@ -296,7 +276,7 @@ public class UserTasksEntity {
                 }
             }
 
-            public static class AwardsX {
+            public static class AwardX {
                 /**
                  * name : 银瓜子
                  * type : silver
@@ -357,7 +337,7 @@ public class UserTasksEntity {
             @SerializedName("progress")
             private ProgressXX progress;
             @SerializedName("awards")
-            private List<AwardsXX> awards;
+            private List<AwardXX> awards;
 
             public String getTaskId() {
                 return taskId;
@@ -399,11 +379,11 @@ public class UserTasksEntity {
                 this.progress = progress;
             }
 
-            public List<AwardsXX> getAwards() {
+            public List<AwardXX> getAwards() {
                 return awards;
             }
 
-            public void setAwards(List<AwardsXX> awards) {
+            public void setAwards(List<AwardXX> awards) {
                 this.awards = awards;
             }
 
@@ -435,7 +415,7 @@ public class UserTasksEntity {
                 }
             }
 
-            public static class AwardsXX {
+            public static class AwardXX {
                 /**
                  * name : 银瓜子
                  * type : silver

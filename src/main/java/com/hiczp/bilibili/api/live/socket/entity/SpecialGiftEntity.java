@@ -60,11 +60,11 @@ public class SpecialGiftEntity implements DataEntity {
             @SerializedName("id")
             private long id;
             @SerializedName("time")
-            private int time;
+            private Integer time;
             @SerializedName("hadJoin")
-            private int hadJoin;
+            private Integer hadJoin;
             @SerializedName("num")
-            private int num;
+            private Integer num;
             @SerializedName("content")
             private String content;
             @SerializedName("action")
@@ -80,27 +80,27 @@ public class SpecialGiftEntity implements DataEntity {
                 this.id = id;
             }
 
-            public int getTime() {
+            public Integer getTime() {
                 return time;
             }
 
-            public void setTime(int time) {
+            public void setTime(Integer time) {
                 this.time = time;
             }
 
-            public int getHadJoin() {
+            public Integer getHadJoin() {
                 return hadJoin;
             }
 
-            public void setHadJoin(int hadJoin) {
+            public void setHadJoin(Integer hadJoin) {
                 this.hadJoin = hadJoin;
             }
 
-            public int getNum() {
+            public Integer getNum() {
                 return num;
             }
 
-            public void setNum(int num) {
+            public void setNum(Integer num) {
                 this.num = num;
             }
 

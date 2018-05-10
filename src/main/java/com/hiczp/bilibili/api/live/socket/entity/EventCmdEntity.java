@@ -10,18 +10,18 @@ public class EventCmdEntity implements DataEntity {
      */
 
     @SerializedName("roomid")
-    private long roomid;
+    private long roomId;
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("data")
     private Data data;
 
-    public long getRoomid() {
-        return roomid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoomid(long roomid) {
-        this.roomid = roomid;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     @Override
