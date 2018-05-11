@@ -393,11 +393,19 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
         return infoEntity;
     }
 
+    /**
+     * 2018-05-11 现在用假的房间 Id 也能正常连接弹幕推送服务器
+     *
+     * @param eventLoopGroup
+     * @param roomId
+     * @param isRealRoomId
+     * @return
+     */
     @Override
-    public LiveClient getLiveClient(EventLoopGroup eventLoopGroup, long showRoomId) {
+    public LiveClient getLiveClient(EventLoopGroup eventLoopGroup, long roomId, boolean isRealRoomId) {
         return bilibiliAccount.getUserId() == null ?
-                new LiveClient(this, eventLoopGroup, showRoomId) :
-                new LiveClient(this, eventLoopGroup, showRoomId, bilibiliAccount.getUserId());
+                new LiveClient(this, eventLoopGroup, roomId, isRealRoomId) :
+                new LiveClient(this, eventLoopGroup, roomId, isRealRoomId, bilibiliAccount.getUserId());
     }
 
     private void markCurrentTokenAndRefreshTokenInvalid() {

@@ -24,35 +24,51 @@ import retrofit2.Call;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.concurrent.*;
 
 public class LiveClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClient.class);
 
+    private static final String DEFAULT_SERVER_ADDRESS = "livecmt-2.bilibili.com";
+    private static final int DEFAULT_SERVER_PORT = 2243;
+
     private final BilibiliServiceProvider bilibiliServiceProvider;
     private final EventLoopGroup eventLoopGroup;
-    private final long showRoomId;
     private final long userId;
     private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
+    private Long showRoomId;
+    private Long realRoomId;
 
     private LiveRoomInfoEntity.LiveRoom liveRoom;
 
     private Channel channel;
 
-    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, EventLoopGroup eventLoopGroup, long showRoomId, long userId) {
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long roomId, boolean isRealRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.eventLoopGroup = eventLoopGroup;
-        this.showRoomId = showRoomId;
+        if (isRealRoomId) {
+            realRoomId = roomId;
+        } else {
+            showRoomId = roomId;
+        }
         this.userId = userId;
     }
 
-    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, EventLoopGroup eventLoopGroup, long showRoomId) {
-        this(bilibiliServiceProvider, eventLoopGroup, showRoomId, 0);
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long showRoomId, long userId) {
+        this(bilibiliServiceProvider, eventLoopGroup, showRoomId, false, userId);
+    }
+
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long roomId, boolean isRealRoomId) {
+        this(bilibiliServiceProvider, eventLoopGroup, roomId, isRealRoomId, 0);
+    }
+
+    public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long showRoomId) {
+        this(bilibiliServiceProvider, eventLoopGroup, showRoomId, false, 0);
     }
 
     public Call<LiveRoomInfoEntity> fetchRoomInfoAsync() {
         return bilibiliServiceProvider.getLiveService()
-                .getRoomInfo(showRoomId);
+                .getRoomInfo(getShowRoomIdOrRoomId());
     }
 
     public LiveRoomInfoEntity.LiveRoom fetchRoomInfo() throws IOException {
@@ -61,60 +77,75 @@ public class LiveClient {
                         .execute()
                         .body()
                         .getData();
+        //此时 code 为 -404
         if (liveRoom != null) {
             return liveRoom;
         } else {
-            throw new IllegalArgumentException("Target room " + showRoomId + " not exists");
+            throw new IllegalArgumentException("Target room " + getShowRoomIdOrRoomId() + " not exists");
         }
     }
 
-    public synchronized LiveClient connect() throws IOException {
-        if (channel != null && channel.isActive()) {
-            LOGGER.warn("Already connected to server, connect method can not be invoked twice");
+    public Callable<LiveClient> connectAsync() {
+        return () -> {
+            if (channel != null && channel.isActive()) {
+                LOGGER.warn("Already connected to server, connect method can not be invoked twice");
+                return this;
+            }
+            if (realRoomId == null) {
+                if (liveRoom == null) {
+                    LOGGER.info("Fetching info of live room {}", showRoomId);
+                    liveRoom = fetchRoomInfo();
+                    LOGGER.info("Get actual room id {}", liveRoom.getRoomId());
+                }
+                realRoomId = liveRoom.getRoomId();
+            }
+
+            LOGGER.debug("Init SocketChannel Bootstrap");
+            Bootstrap bootstrap = new Bootstrap()
+                    .group(eventLoopGroup)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                            socketChannel.pipeline()
+                                    .addLast(new LengthFieldBasedFrameDecoder(
+                                            Integer.MAX_VALUE,
+                                            0,
+                                            Package.LENGTH_FIELD_LENGTH,
+                                            -Package.LENGTH_FIELD_LENGTH,
+                                            0
+                                    ))
+                                    .addLast(new IdleStateHandler(40, 0, 0))
+                                    .addLast(new PackageEncoder())
+                                    .addLast(new PackageDecoder())
+                                    .addLast(new LiveClientHandler(self(), realRoomId, userId));
+                        }
+                    });
+
+            String address = liveRoom != null ? liveRoom.getCmt() : DEFAULT_SERVER_ADDRESS;
+            int port = liveRoom != null ? liveRoom.getCmtPortGoim() : DEFAULT_SERVER_PORT;
+            LOGGER.info("Connecting to Bullet Screen server {}:{}", address, port);
+            try {
+                channel = bootstrap.connect(address, port)
+                        .sync()
+                        .channel();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (Exception e) { //有可能在此时出现网络错误
+                throw new IOException(e);
+            }
+
             return this;
-        }
+        };
+    }
 
-        LOGGER.info("Fetching info of live room {}", showRoomId);
-        liveRoom = fetchRoomInfo();
-        long roomId = liveRoom.getRoomId();
-        LOGGER.info("Get actual room id {}", roomId);
+    public LiveClient connect(ExecutorService executorService) throws InterruptedException, ExecutionException {
+        Future<LiveClient> future = executorService.submit(connectAsync());
+        return future.get();
+    }
 
-        LOGGER.debug("Init SocketChannel Bootstrap");
-        Bootstrap bootstrap = new Bootstrap()
-                .group(eventLoopGroup)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline()
-                                .addLast(new LengthFieldBasedFrameDecoder(
-                                        Integer.MAX_VALUE,
-                                        0,
-                                        Package.LENGTH_FIELD_LENGTH,
-                                        -Package.LENGTH_FIELD_LENGTH,
-                                        0
-                                ))
-                                .addLast(new IdleStateHandler(40, 0, 0))
-                                .addLast(new PackageEncoder())
-                                .addLast(new PackageDecoder())
-                                .addLast(new LiveClientHandler(self(), roomId, userId));
-                    }
-                });
-
-        String address = liveRoom.getCmt();
-        int port = liveRoom.getCmtPortGoim();
-        LOGGER.info("Connecting to Bullet Screen server {}:{}", address, port);
-        try {
-            channel = bootstrap.connect(address, port)
-                    .sync()
-                    .channel();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (Exception e) { //有可能在此时出现网络错误
-            throw new IOException(e);
-        }
-
-        return this;
+    public LiveClient connect() throws InterruptedException, ExecutionException {
+        return connect(Executors.newSingleThreadExecutor());
     }
 
     public synchronized ChannelFuture closeChannelAsync() {
@@ -149,6 +180,8 @@ public class LiveClient {
         return this;
     }
 
+    //TODO 弹幕发送队列
+
     public Call<SendBulletScreenResponseEntity> sendBulletScreenAsync(@Nonnull String message) {
         return bilibiliServiceProvider.getLiveService()
                 .sendBulletScreen(createBulletScreenEntity(message));
@@ -160,12 +193,6 @@ public class LiveClient {
                 .body();
     }
 
-    private LiveClient self() {
-        return this;
-    }
-
-    //TODO 弹幕发送队列
-
     private BulletScreenEntity createBulletScreenEntity(String message) {
         return new BulletScreenEntity(
                 getRoomIdOrShowRoomId(),
@@ -174,34 +201,27 @@ public class LiveClient {
         );
     }
 
-    public long getShowRoomId() {
-        return showRoomId;
-    }
-
     public long getUserId() {
         return userId;
     }
 
-    public Optional<LiveRoomInfoEntity.LiveRoom> getRoomInfo() {
-        if (liveRoom == null) {
-            try {
-                liveRoom = fetchRoomInfo();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return Optional.of(liveRoom);
+    public long getRoomIdOrShowRoomId() {
+        return realRoomId != null ? realRoomId : showRoomId;
     }
 
-    public long getRoomIdOrShowRoomId() {
-        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoom::getRoomId).orElse(showRoomId);
+    public long getShowRoomIdOrRoomId() {
+        return showRoomId != null ? showRoomId : realRoomId;
     }
 
     public int getBulletScreenLengthLimitOrDefaultLengthLimit() {
-        return getRoomInfo().map(LiveRoomInfoEntity.LiveRoom::getMsgLength).orElse(BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT);
+        return liveRoom != null ? liveRoom.getMsgLength() : BulletScreenConstDefinition.DEFAULT_MESSAGE_LENGTH_LIMIT;
     }
 
     public Channel getChannel() {
         return channel;
+    }
+
+    private LiveClient self() {
+        return this;
     }
 }

@@ -100,6 +100,11 @@ public class ServerErrorCode {
          */
         public static final int NO_LOGIN = -101;
         /**
+         * 访问的房间号不存在
+         * "message": "Document is not exists."
+         */
+        public static final int DOCUMENT_IS_NOT_EXISTS = -404;
+        /**
          * 搜索时, 关键字字数过少或过多
          * "关键字不能小于2个字节或大于50字节"
          */

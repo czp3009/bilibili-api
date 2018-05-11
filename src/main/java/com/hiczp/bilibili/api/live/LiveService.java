@@ -38,6 +38,8 @@ public interface LiveService {
      * 获取直播间信息
      * 登录后访问该 API 将在服务器新增一条直播间观看历史
      *
+     * 2018-05-11 现在用假的房间 ID 也能获得正确的信息
+     *
      * @param roomId 房间号
      */
     @GET("AppRoom/index")
