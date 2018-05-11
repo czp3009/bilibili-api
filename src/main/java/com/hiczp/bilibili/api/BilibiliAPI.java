@@ -396,10 +396,10 @@ public class BilibiliAPI implements BilibiliServiceProvider, BilibiliCaptchaProv
     /**
      * 2018-05-11 现在用假的房间 Id 也能正常连接弹幕推送服务器
      *
-     * @param eventLoopGroup
-     * @param roomId
-     * @param isRealRoomId
-     * @return
+     * @param eventLoopGroup 用于连接弹幕推送服务器的 EventLoop
+     * @param roomId         房间 ID, 可以是真 ID 也可以是假 ID
+     * @param isRealRoomId   使用的 roomId 是否是真 ID
+     * @return LiveClient 实例
      */
     @Override
     public LiveClient getLiveClient(EventLoopGroup eventLoopGroup, long roomId, boolean isRealRoomId) {
