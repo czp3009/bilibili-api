@@ -93,9 +93,9 @@ public class LiveClient {
             }
             if (realRoomId == null) {
                 if (liveRoom == null) {
-                    LOGGER.info("Fetching info of live room {}", showRoomId);
+                    LOGGER.debug("Fetching info of live room {}", showRoomId);
                     liveRoom = fetchRoomInfo();
-                    LOGGER.info("Get actual room id {}", liveRoom.getRoomId());
+                    LOGGER.debug("Get actual room id {}", liveRoom.getRoomId());
                 }
                 realRoomId = liveRoom.getRoomId();
             }
@@ -124,7 +124,7 @@ public class LiveClient {
 
             String address = liveRoom != null ? liveRoom.getCmt() : DEFAULT_SERVER_ADDRESS;
             int port = liveRoom != null ? liveRoom.getCmtPortGoim() : DEFAULT_SERVER_PORT;
-            LOGGER.info("Connecting to Bullet Screen server {}:{}", address, port);
+            LOGGER.debug("Connecting to Bullet Screen server {}:{}", address, port);
             try {
                 channel = bootstrap.connect(address, port)
                         .sync()
@@ -150,7 +150,7 @@ public class LiveClient {
 
     public synchronized ChannelFuture closeChannelAsync() {
         if (channel != null) {
-            LOGGER.info("Closing connection");
+            LOGGER.debug("Closing connection");
             ChannelFuture channelFuture = channel.close();
             channel = null;
             return channelFuture;
