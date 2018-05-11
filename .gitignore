@@ -6,3 +6,4 @@ out
 build
 src/test/resources/config.json
 .gradle
+gradlew.bat
