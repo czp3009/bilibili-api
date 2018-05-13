@@ -24,7 +24,10 @@ import retrofit2.Call;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class LiveClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClient.class);
@@ -38,6 +41,7 @@ public class LiveClient {
     private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
     private Long showRoomId;
     private Long realRoomId;
+    private boolean useRealRoomIdForConstructing;
 
     private LiveRoomInfoEntity.LiveRoom liveRoom;
 
@@ -46,6 +50,7 @@ public class LiveClient {
     public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long roomId, boolean isRealRoomId, long userId) {
         this.bilibiliServiceProvider = bilibiliServiceProvider;
         this.eventLoopGroup = eventLoopGroup;
+        this.useRealRoomIdForConstructing = isRealRoomId;
         if (isRealRoomId) {
             realRoomId = roomId;
         } else {
@@ -144,8 +149,8 @@ public class LiveClient {
         return future.get();
     }
 
-    public LiveClient connect() throws InterruptedException, ExecutionException {
-        return connect(Executors.newSingleThreadExecutor());
+    public synchronized LiveClient connect() throws Exception {
+        return connectAsync().call();
     }
 
     public synchronized ChannelFuture closeChannelAsync() {
@@ -219,6 +224,10 @@ public class LiveClient {
 
     public Channel getChannel() {
         return channel;
+    }
+
+    public boolean isUseRealRoomIdForConstructing() {
+        return useRealRoomIdForConstructing;
     }
 
     private LiveClient self() {
