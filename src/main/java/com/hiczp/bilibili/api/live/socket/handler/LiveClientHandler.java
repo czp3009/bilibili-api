@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -68,11 +69,12 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 JsonObject jsonObject;
                 String cmd;
                 try {
-                    jsonObject = JSON_PARSER.parse(new InputStreamReader(new ByteArrayInputStream(msg.getContent())))
+                    //强制使用 UTF-8, 避免在 NT 平台可能出现的乱码问题
+                    jsonObject = JSON_PARSER.parse(new InputStreamReader(new ByteArrayInputStream(msg.getContent()), StandardCharsets.UTF_8))
                             .getAsJsonObject();
                     cmd = jsonObject.get("cmd").getAsString();
                 } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {
-                    LOGGER.error("Receive invalid json: \n{}", new String(msg.getContent()));
+                    LOGGER.error("Receive invalid json: \n{}", new String(msg.getContent(), StandardCharsets.UTF_8));
                     e.printStackTrace();
                     break;
                 }
@@ -169,6 +171,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     //小电视抽奖结束(大奖的获得者信息)
                     case "TV_END": {
                         eventCreationExpression = () -> new TVEndPackageEvent(liveClient, GSON.fromJson(jsonObject, TVEndEntity.class));
+                    }
+                    break;
+                    case "ROOM_RANK": {
+                        eventCreationExpression = () -> new RoomRankPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomRankEntity.class));
                     }
                     break;
                     //欢迎(活动)

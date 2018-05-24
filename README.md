@@ -13,7 +13,7 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.13'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.14'
 
 # 名词解释
 B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
@@ -335,6 +335,7 @@ API 文档
 | RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 |
 | RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
 | RoomLockPackageEvent | 收到 ROOM_LOCK 数据包 |
+| RoomRankPackageEvent | 收到 ROOM_RANK 数据包 |
 | RoomShieldPackageEvent | 收到 ROOM_SHIELD 数据包 |
 | RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
 | RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 |
