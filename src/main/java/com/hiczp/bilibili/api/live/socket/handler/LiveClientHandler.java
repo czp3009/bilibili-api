@@ -111,7 +111,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new SysMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, SysMsgEntity.class));
                     }
                     break;
-                    //系统礼物(丰收庆典, 新春抽奖等)
+                    //系统礼物(节奏风暴, 活动抽奖等)
                     case "SYS_GIFT": {
                         eventCreationExpression = () -> new SysGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SysGiftEntity.class));
                     }
@@ -121,6 +121,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new ActivityEventPackageEvent(liveClient, GSON.fromJson(jsonObject, ActivityEventEntity.class));
                     }
                     break;
+                    //节奏风暴(20 倍以下的)
                     case "SPECIAL_GIFT": {
                         eventCreationExpression = () -> new SpecialGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SpecialGiftEntity.class));
                     }
@@ -130,16 +131,17 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new RaffleStartPackageEvent(liveClient, GSON.fromJson(jsonObject, RaffleStartEntity.class));
                     }
                     break;
-                    //抽奖
+                    //抽奖结束
                     case "RAFFLE_END": {
                         eventCreationExpression = () -> new RaffleEndPackageEvent(liveClient, GSON.fromJson(jsonObject, RaffleEndEntity.class));
                     }
                     break;
+                    //TODO 尚不明确 EVENT_CMD 的含义
                     case "EVENT_CMD": {
                         eventCreationExpression = () -> new EventCmdPackageEvent(liveClient, GSON.fromJson(jsonObject, EventCmdEntity.class));
                     }
                     break;
-                    //房间黑名单(添加了一个用户到黑名单)
+                    //房间黑名单(房间管理员添加了一个用户到黑名单)
                     case "ROOM_BLOCK_MSG": {
                         eventCreationExpression = () -> new RoomBlockMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomBlockMsgEntity.class));
                     }
@@ -164,6 +166,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new GuardMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, GuardMsgEntity.class));
                     }
                     break;
+                    //小电视抽奖开始
                     case "TV_START": {
                         eventCreationExpression = () -> new TVStartPackageEvent(liveClient, GSON.fromJson(jsonObject, TVStartEntity.class));
                     }
@@ -173,6 +176,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new TVEndPackageEvent(liveClient, GSON.fromJson(jsonObject, TVEndEntity.class));
                     }
                     break;
+                    //小时榜
                     case "ROOM_RANK": {
                         eventCreationExpression = () -> new RoomRankPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomRankEntity.class));
                     }
