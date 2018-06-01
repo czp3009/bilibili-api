@@ -24,6 +24,7 @@ import retrofit2.Call;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -180,8 +181,18 @@ public class LiveClient {
         return this;
     }
 
-    public LiveClient unregisterListeners(@Nonnull Object object) {
+    public LiveClient registerListeners(@Nonnull List<Object> objects) {
+        objects.forEach(eventBus::register);
+        return this;
+    }
+
+    public LiveClient unregisterListener(@Nonnull Object object) {
         eventBus.unregister(object);
+        return this;
+    }
+
+    public LiveClient unregisterListeners(@Nonnull List<Object> objects) {
+        objects.forEach(eventBus::unregister);
         return this;
     }
 
