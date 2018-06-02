@@ -91,6 +91,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new SendGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SendGiftEntity.class));
                     }
                     break;
+                    //TODO 尚不明确 COMBO_END 是什么意思
+                    case "COMBO_END": {
+                        eventCreationExpression = () -> new ComboEndPackageEvent(liveClient, GSON.fromJson(jsonObject, ComboEndEntity.class));
+                    }
+                    break;
                     //欢迎
                     case "WELCOME": {
                         eventCreationExpression = () -> new WelcomePackageEvent(liveClient, GSON.fromJson(jsonObject, WelcomeEntity.class));
