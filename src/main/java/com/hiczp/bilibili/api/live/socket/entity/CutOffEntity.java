@@ -14,7 +14,7 @@ public class CutOffEntity implements DataEntity {
     @SerializedName("msg")
     private String msg;
     @SerializedName("roomid")
-    private int roomId;
+    private long roomId;
 
     @Override
     public String getCmd() {
@@ -33,11 +33,11 @@ public class CutOffEntity implements DataEntity {
         this.msg = msg;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(long roomId) {
         this.roomId = roomId;
     }
 }
