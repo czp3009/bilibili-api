@@ -178,7 +178,7 @@ public class LiveRoomInfoEntity extends ResponseEntity {
         @SerializedName("special_gift_gif")
         private String specialGiftGif;
         @SerializedName("show_room_id")
-        private int showRoomId;
+        private long showRoomId;
         @SerializedName("recommend")
         private List<Recommend> recommend;
         @SerializedName("toplist")
@@ -546,11 +546,11 @@ public class LiveRoomInfoEntity extends ResponseEntity {
             this.specialGiftGif = specialGiftGif;
         }
 
-        public int getShowRoomId() {
+        public long getShowRoomId() {
             return showRoomId;
         }
 
-        public void setShowRoomId(int showRoomId) {
+        public void setShowRoomId(long showRoomId) {
             this.showRoomId = showRoomId;
         }
 

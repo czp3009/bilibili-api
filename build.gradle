@@ -1,5 +1,5 @@
 group = 'com.hiczp'
-version = '0.0.16'
+version = '0.0.17'
 description = 'Bilibili android client API library written in Java'
 
 apply plugin: 'idea'
