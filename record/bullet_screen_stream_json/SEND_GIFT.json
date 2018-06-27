@@ -40,6 +40,7 @@
     "giftType": 0,
     "action": "赠送",
     "super": 1,
+    "super_gift_num": 1,
     "price": 100000,
     "rnd": "1980508331",
     "newMedal": 0,
@@ -60,7 +61,7 @@
     "eventNum": 0,
     "smalltv_msg": [],
     "specialGift": {
-      "id": 207945,
+      "id": "316221038798",
       "time": 90,
       "hadJoin": 0,
       "num": 1,
@@ -85,7 +86,8 @@
           "now": 0,
           "max": 5000
         }
-      }
+      },
+      "move": 1
     },
     "addFollow": 0,
     "effect_block": 0,

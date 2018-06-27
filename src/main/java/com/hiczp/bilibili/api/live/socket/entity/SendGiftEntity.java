@@ -45,6 +45,7 @@ public class SendGiftEntity implements DataEntity {
          * giftType : 0
          * action : 赠送
          * super : 1
+         * super_gift_num : 1
          * price : 100000
          * rnd : 1980508331
          * newMedal : 0
@@ -60,9 +61,9 @@ public class SendGiftEntity implements DataEntity {
          * eventScore : 0
          * eventNum : 0
          * smalltv_msg : []
-         * specialGift : {"id":207945,"time":90,"hadJoin":0,"num":1,"content":"你们城里人真会玩","action":"start","storm_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901"}
+         * specialGift : {"id":"316221038798","time":90,"hadJoin":0,"num":1,"content":"你们城里人真会玩","action":"start","storm_gif":"http://static.hdslb.com/live-static/live-room/images/gift-section/mobilegift/2/jiezou.gif?2017011901"}
          * notice_msg : []
-         * capsule : {"normal":{"coin":166,"change":10,"progress":{"now":3630,"max":10000}},"colorful":{"coin":2,"change":0,"progress":{"now":0,"max":5000}}}
+         * capsule : {"normal":{"coin":166,"change":10,"progress":{"now":3630,"max":10000}},"colorful":{"coin":2,"change":0,"progress":{"now":0,"max":5000}},"move": 1}
          * addFollow : 0
          * effect_block : 0
          * coin_type : gold
@@ -89,6 +90,8 @@ public class SendGiftEntity implements DataEntity {
         private String action;
         @SerializedName("super")
         private int superX;
+        @SerializedName("super_gift_num")
+        private int superGiftNumber;
         @SerializedName("price")
         private int price;
         @SerializedName("rnd")
@@ -223,6 +226,14 @@ public class SendGiftEntity implements DataEntity {
 
         public void setSuperX(int superX) {
             this.superX = superX;
+        }
+
+        public int getSuperGiftNumber() {
+            return superGiftNumber;
+        }
+
+        public void setSuperGiftNumber(int superGiftNumber) {
+            this.superGiftNumber = superGiftNumber;
         }
 
         public int getPrice() {
@@ -450,7 +461,7 @@ public class SendGiftEntity implements DataEntity {
 
         public static class SpecialGift {
             /**
-             * id : 207945
+             * id : 316221038798
              * time : 90
              * hadJoin : 0
              * num : 1
@@ -460,7 +471,7 @@ public class SendGiftEntity implements DataEntity {
              */
 
             @SerializedName("id")
-            private int id;
+            private String id;
             @SerializedName("time")
             private int time;
             @SerializedName("hadJoin")
@@ -474,11 +485,11 @@ public class SendGiftEntity implements DataEntity {
             @SerializedName("storm_gif")
             private String stormGif;
 
-            public int getId() {
+            public String getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(String id) {
                 this.id = id;
             }
 
@@ -535,12 +546,15 @@ public class SendGiftEntity implements DataEntity {
             /**
              * normal : {"coin":166,"change":10,"progress":{"now":3630,"max":10000}}
              * colorful : {"coin":2,"change":0,"progress":{"now":0,"max":5000}}
+             * move : 1
              */
 
             @SerializedName("normal")
             private Normal normal;
             @SerializedName("colorful")
             private Colorful colorful;
+            @SerializedName("move")
+            private int move;
 
             public Normal getNormal() {
                 return normal;
@@ -556,6 +570,14 @@ public class SendGiftEntity implements DataEntity {
 
             public void setColorful(Colorful colorful) {
                 this.colorful = colorful;
+            }
+
+            public int getMove() {
+                return move;
+            }
+
+            public void setMove(int move) {
+                this.move = move;
             }
 
             public static class Normal {
