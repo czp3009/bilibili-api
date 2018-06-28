@@ -13,7 +13,7 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.16'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.17'
 
 # 名词解释
 B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
@@ -329,6 +329,10 @@ API 文档
 | GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |
 | GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |
+| PkMatchPackageEvent | 收到 PK_MATCH 数据包 |
+| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 |
+| PkPrePackageEvent | 收到 PK_PRE 数据包 |
+| PkStartPackageEvent | 收到 PK_START 数据包 |
 | PreparingPackageEvent | 收到 PREPARING 数据包 |
 | RaffleEndPackageEvent | 收到 RAFFLE_END 数据包 |
 | RaffleStartPackageEvent | 收到 RAFFLE_START 数据包 |

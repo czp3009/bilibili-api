@@ -111,6 +111,23 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventCreationExpression = () -> new WelcomeGuardPackageEvent(liveClient, GSON.fromJson(jsonObject, WelcomeGuardEntity.class));
                     }
                     break;
+                    //PK
+                    case "PK_MATCH": {
+                        eventCreationExpression = () -> new PkMatchPackageEvent(liveClient, GSON.fromJson(jsonObject, PkMatchEntity.class));
+                    }
+                    break;
+                    case "PK_PRE": {
+                        eventCreationExpression = () -> new PkPrePackageEvent(liveClient, GSON.fromJson(jsonObject, PkPreEntity.class));
+                    }
+                    break;
+                    case "PK_START": {
+                        eventCreationExpression = () -> new PkStartPackageEvent(liveClient, GSON.fromJson(jsonObject, PkStartEntity.class));
+                    }
+                    break;
+                    case "PK_MIC_END": {
+                        eventCreationExpression = () -> new PkMicEndPackageEvent(liveClient, GSON.fromJson(jsonObject, PkMicEndEntity.class));
+                    }
+                    break;
                     //系统消息(小电视等)
                     case "SYS_MSG": {
                         eventCreationExpression = () -> new SysMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, SysMsgEntity.class));

@@ -1,0 +1,15 @@
+{
+  "cmd": "PK_PRE",
+  "pk_id": 3597,
+  "pk_status": 200,
+  "data": {
+    "init_id": 9615419,
+    "match_id": 10185039,
+    "count_down": 5,
+    "pk_topic": "模仿游戏角色让对方猜",
+    "pk_pre_time": 1529476609,
+    "pk_start_time": 1529476614,
+    "pk_end_time": 1529476914,
+    "end_time": 1529477034
+  }
+}
