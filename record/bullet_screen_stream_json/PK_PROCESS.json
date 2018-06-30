@@ -1,0 +1,12 @@
+{
+  "cmd": "PK_PROCESS",
+  "pk_id": 8798,
+  "pk_status": 300,
+  "data": {
+    "uid": 0,
+    "init_votes": 30,
+    "match_votes": 20,
+    "user_votes": 0
+  },
+  "roomid": 346075
+}
