@@ -5,7 +5,7 @@ import com.google.gson.*;
 import com.hiczp.bilibili.api.live.socket.LiveClient;
 import com.hiczp.bilibili.api.live.socket.Package;
 import com.hiczp.bilibili.api.live.socket.PackageHelper;
-import com.hiczp.bilibili.api.live.socket.entity.*;
+import com.hiczp.bilibili.api.live.socket.entity.DataEntity;
 import com.hiczp.bilibili.api.live.socket.event.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,14 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LiveClientHandler.class);
     private static final Gson GSON = new Gson();
+    private static final Gson PRETTY_PRINTING_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser JSON_PARSER = new JsonParser();
 
     private final LiveClient liveClient;
@@ -79,194 +80,203 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     break;
                 }
                 eventBus.post(new ReceiveDataPackageDebugEvent(liveClient, jsonObject, cmd));
-                Supplier<Object> eventCreationExpression;   //try 不能写在 switch 外面, 用 lambda 来延迟执行
+                Class<? extends ReceiveDataPackageEvent> eventType = null;
                 switch (cmd) {
                     //弹幕消息
                     case "DANMU_MSG": {
-                        eventCreationExpression = () -> new DanMuMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, DanMuMsgEntity.class));
+                        eventType = DanMuMsgPackageEvent.class;
                     }
                     break;
                     //送礼
                     case "SEND_GIFT": {
-                        eventCreationExpression = () -> new SendGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SendGiftEntity.class));
+                        eventType = SendGiftPackageEvent.class;
                     }
                     break;
                     //TODO 尚不明确 COMBO_END 是什么意思
                     case "COMBO_END": {
-                        eventCreationExpression = () -> new ComboEndPackageEvent(liveClient, GSON.fromJson(jsonObject, ComboEndEntity.class));
+                        eventType = ComboEndPackageEvent.class;
                     }
                     break;
                     //欢迎
                     case "WELCOME": {
-                        eventCreationExpression = () -> new WelcomePackageEvent(liveClient, GSON.fromJson(jsonObject, WelcomeEntity.class));
+                        eventType = WelcomePackageEvent.class;
                     }
                     break;
                     //许愿瓶
                     case "WISH_BOTTLE": {
-                        eventCreationExpression = () -> new WishBottlePackageEvent(liveClient, GSON.fromJson(jsonObject, WishBottleEntity.class));
+                        eventType = WishBottlePackageEvent.class;
                     }
                     break;
                     //欢迎(舰队)
                     case "WELCOME_GUARD": {
-                        eventCreationExpression = () -> new WelcomeGuardPackageEvent(liveClient, GSON.fromJson(jsonObject, WelcomeGuardEntity.class));
+                        eventType = WelcomeGuardPackageEvent.class;
                     }
                     break;
                     //PK
                     case "PK_MATCH": {
-                        eventCreationExpression = () -> new PkMatchPackageEvent(liveClient, GSON.fromJson(jsonObject, PkMatchEntity.class));
+                        eventType = PkMatchPackageEvent.class;
                     }
                     break;
                     case "PK_PRE": {
-                        eventCreationExpression = () -> new PkPrePackageEvent(liveClient, GSON.fromJson(jsonObject, PkPreEntity.class));
+                        eventType = PkPrePackageEvent.class;
                     }
                     break;
                     case "PK_START": {
-                        eventCreationExpression = () -> new PkStartPackageEvent(liveClient, GSON.fromJson(jsonObject, PkStartEntity.class));
+                        eventType = PkStartPackageEvent.class;
                     }
                     break;
                     case "PK_PROCESS": {
-                        eventCreationExpression = () -> new PkProcessPackageEvent(liveClient, GSON.fromJson(jsonObject, PkProcessEntity.class));
+                        eventType = PkProcessPackageEvent.class;
                     }
                     break;
                     case "PK_END": {
-                        eventCreationExpression = () -> new PkEndPackageEvent(liveClient, GSON.fromJson(jsonObject, PkEndEntity.class));
+                        eventType = PkEndPackageEvent.class;
                     }
                     break;
                     case "PK_MIC_END": {
-                        eventCreationExpression = () -> new PkMicEndPackageEvent(liveClient, GSON.fromJson(jsonObject, PkMicEndEntity.class));
+                        eventType = PkMicEndPackageEvent.class;
                     }
                     break;
                     case "PK_SETTLE": {
-                        eventCreationExpression = () -> new PkSettlePackageEvent(liveClient, GSON.fromJson(jsonObject, PkSettleEntity.class));
+                        eventType = PkSettlePackageEvent.class;
                     }
                     break;
                     //系统消息(小电视等)
                     case "SYS_MSG": {
-                        eventCreationExpression = () -> new SysMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, SysMsgEntity.class));
+                        eventType = SysMsgPackageEvent.class;
                     }
                     break;
                     //系统礼物(节奏风暴, 活动抽奖等)
                     case "SYS_GIFT": {
-                        eventCreationExpression = () -> new SysGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SysGiftEntity.class));
+                        eventType = SysGiftPackageEvent.class;
                     }
                     break;
                     //活动事件
                     case "ACTIVITY_EVENT": {
-                        eventCreationExpression = () -> new ActivityEventPackageEvent(liveClient, GSON.fromJson(jsonObject, ActivityEventEntity.class));
+                        eventType = ActivityEventPackageEvent.class;
                     }
                     break;
                     //节奏风暴(20 倍以下的)
                     case "SPECIAL_GIFT": {
-                        eventCreationExpression = () -> new SpecialGiftPackageEvent(liveClient, GSON.fromJson(jsonObject, SpecialGiftEntity.class));
+                        eventType = SpecialGiftPackageEvent.class;
                     }
                     break;
                     //抽奖开始(小奖, 通常是不定期活动)
                     case "RAFFLE_START": {
-                        eventCreationExpression = () -> new RaffleStartPackageEvent(liveClient, GSON.fromJson(jsonObject, RaffleStartEntity.class));
+                        eventType = RaffleStartPackageEvent.class;
                     }
                     break;
                     //抽奖结束
                     case "RAFFLE_END": {
-                        eventCreationExpression = () -> new RaffleEndPackageEvent(liveClient, GSON.fromJson(jsonObject, RaffleEndEntity.class));
+                        eventType = RaffleEndPackageEvent.class;
                     }
                     break;
                     //TODO 尚不明确 EVENT_CMD 的含义
                     case "EVENT_CMD": {
-                        eventCreationExpression = () -> new EventCmdPackageEvent(liveClient, GSON.fromJson(jsonObject, EventCmdEntity.class));
+                        eventType = EventCmdPackageEvent.class;
                     }
                     break;
                     //房间黑名单(房间管理员添加了一个用户到黑名单)
                     case "ROOM_BLOCK_MSG": {
-                        eventCreationExpression = () -> new RoomBlockMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomBlockMsgEntity.class));
+                        eventType = RoomBlockMsgPackageEvent.class;
                     }
                     break;
                     //房间开启了禁言(禁止某一等级以下的用户发言)
                     case "ROOM_SILENT_ON": {
-                        eventCreationExpression = () -> new RoomSilentOnPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomSilentOnEntity.class));
+                        eventType = RoomSilentOnPackageEvent.class;
                     }
                     break;
                     //房间结束禁言
                     case "ROOM_SILENT_OFF": {
-                        eventCreationExpression = () -> new RoomSilentOffPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomSilentOffEntity.class));
+                        eventType = RoomSilentOffPackageEvent.class;
                     }
                     break;
                     //船票购买
                     case "GUARD_BUY": {
-                        eventCreationExpression = () -> new GuardBuyPackageEvent(liveClient, GSON.fromJson(jsonObject, GuardBuyEntity.class));
+                        eventType = GuardBuyPackageEvent.class;
                     }
                     break;
                     //舰队消息(登船)
                     case "GUARD_MSG": {
-                        eventCreationExpression = () -> new GuardMsgPackageEvent(liveClient, GSON.fromJson(jsonObject, GuardMsgEntity.class));
+                        eventType = GuardMsgPackageEvent.class;
                     }
                     break;
                     //小电视抽奖开始
                     case "TV_START": {
-                        eventCreationExpression = () -> new TVStartPackageEvent(liveClient, GSON.fromJson(jsonObject, TVStartEntity.class));
+                        eventType = TVStartPackageEvent.class;
                     }
                     break;
                     //小电视抽奖结束(大奖的获得者信息)
                     case "TV_END": {
-                        eventCreationExpression = () -> new TVEndPackageEvent(liveClient, GSON.fromJson(jsonObject, TVEndEntity.class));
+                        eventType = TVEndPackageEvent.class;
                     }
                     break;
                     //小时榜
                     case "ROOM_RANK": {
-                        eventCreationExpression = () -> new RoomRankPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomRankEntity.class));
+                        eventType = RoomRankPackageEvent.class;
                     }
                     break;
                     //欢迎(活动)
                     case "WELCOME_ACTIVITY": {
-                        eventCreationExpression = () -> new WelcomeActivityPackageEvent(liveClient, GSON.fromJson(jsonObject, WelcomeActivityEntity.class));
+                        eventType = WelcomeActivityPackageEvent.class;
                     }
                     break;
                     //房管变更
                     case "ROOM_ADMINS": {
-                        eventCreationExpression = () -> new RoomAdminsPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomAdminsEntity.class));
+                        eventType = RoomAdminsPackageEvent.class;
                     }
                     break;
                     //开始直播
                     case "LIVE": {
-                        eventCreationExpression = () -> new LivePackageEvent(liveClient, GSON.fromJson(jsonObject, LiveEntity.class));
+                        eventType = LivePackageEvent.class;
                     }
                     break;
                     //停止直播
                     case "PREPARING": {
-                        eventCreationExpression = () -> new PreparingPackageEvent(liveClient, GSON.fromJson(jsonObject, PreparingEntity.class));
+                        eventType = PreparingPackageEvent.class;
                     }
                     break;
                     //房间屏蔽
                     case "ROOM_SHIELD": {
-                        eventCreationExpression = () -> new RoomShieldPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomShieldEntity.class));
+                        eventType = RoomShieldPackageEvent.class;
                     }
                     break;
                     //更换房间背景图片
                     case "CHANGE_ROOM_INFO": {
-                        eventCreationExpression = () -> new ChangeRoomInfoPackageEvent(liveClient, GSON.fromJson(jsonObject, ChangeRoomInfoEntity.class));
+                        eventType = ChangeRoomInfoPackageEvent.class;
                     }
                     break;
                     //被 B站 管理员强制中断
                     case "CUT_OFF": {
-                        eventCreationExpression = () -> new CutOffPackageEvent(liveClient, GSON.fromJson(jsonObject, CutOffEntity.class));
+                        eventType = CutOffPackageEvent.class;
                     }
                     break;
                     //房间被封
                     case "ROOM_LOCK": {
-                        eventCreationExpression = () -> new RoomLockPackageEvent(liveClient, GSON.fromJson(jsonObject, RoomLockEntity.class));
-                    }
-                    break;
-                    default: {
-                        LOGGER.error("Received unknown json below: \n{}", formatJson(jsonObject));
-                        eventCreationExpression = () -> new UnknownPackageEvent(liveClient, jsonObject);
+                        eventType = RoomLockPackageEvent.class;
                     }
                     break;
                 }
 
-                try {
-                    eventBus.post(eventCreationExpression.get());
-                } catch (JsonParseException e) {
-                    LOGGER.error("Json parse error: {}, json below: \n{}", e.getMessage(), formatJson(jsonObject));
+                //UnknownPackage
+                if (eventType == null) {
+                    LOGGER.error("Received unknown json below: \n{}", PRETTY_PRINTING_GSON.toJson(jsonObject));
+                    eventBus.post(new UnknownPackageEvent(liveClient, jsonObject));
+                    break;
                 }
+
+                @SuppressWarnings("unchecked")
+                Class<? extends DataEntity> entityType = (Class<? extends DataEntity>) ((ParameterizedType) eventType.getGenericSuperclass()).getActualTypeArguments()[0];
+                DataEntity entityInstance;
+                try {
+                    entityInstance = GSON.fromJson(jsonObject, entityType);
+                } catch (JsonParseException e) {
+                    LOGGER.error("Json parse error: {}, json below: \n{}", e.getMessage(), PRETTY_PRINTING_GSON.toJson(jsonObject));
+                    break;
+                }
+
+                ReceiveDataPackageEvent eventInstance = eventType.getConstructor(LiveClient.class, entityType).newInstance(liveClient, entityInstance);
+                eventBus.post(eventInstance);
             }
             break;
             case VIEWER_COUNT: {
@@ -287,12 +297,5 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
             }
             break;
         }
-    }
-
-    private String formatJson(JsonElement jsonElement) {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .create()
-                .toJson(jsonElement);
     }
 }

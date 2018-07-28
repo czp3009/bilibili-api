@@ -13,7 +13,7 @@
 # 添加依赖
 ## Gradle
 
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.18'
+    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.19'
 
 # 名词解释
 B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
