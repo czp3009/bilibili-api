@@ -1,0 +1,17 @@
+{
+  "cmd": "PK_AGAIN",
+  "pk_id": 60672,
+  "pk_status": 400,
+  "data": {
+    "new_pk_id": 60678,
+    "init_id": 10817769,
+    "match_id": 1489926,
+    "escape_all_time": 10,
+    "escape_time": 10,
+    "is_portrait": false,
+    "uname": "穆阿是给你的mua",
+    "face": "http://i0.hdslb.com/bfs/face/07fa1057b60afe74cdd477f123c6ccf460ee8f2c.jpg",
+    "uid": 38105366
+  },
+  "roomid": 1489926
+}

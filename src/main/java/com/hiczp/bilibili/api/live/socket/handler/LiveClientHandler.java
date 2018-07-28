@@ -92,7 +92,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                         eventType = SendGiftPackageEvent.class;
                     }
                     break;
-                    //TODO 尚不明确 COMBO_END 是什么意思
+                    //combo
+                    case "COMBO_SEND": {
+                        eventType = ComboSendPackageEvent.class;
+                    }
+                    break;
                     case "COMBO_END": {
                         eventType = ComboEndPackageEvent.class;
                     }
@@ -110,6 +114,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     //欢迎(舰队)
                     case "WELCOME_GUARD": {
                         eventType = WelcomeGuardPackageEvent.class;
+                    }
+                    break;
+                    //TODO 尚不明确 EntryEffect 和普通 Welcome 的区别
+                    case "ENTRY_EFFECT": {
+                        eventType = EntryEffectPackageEvent.class;
                     }
                     break;
                     //PK
@@ -139,6 +148,14 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     break;
                     case "PK_SETTLE": {
                         eventType = PkSettlePackageEvent.class;
+                    }
+                    break;
+                    case "PK_AGAIN": {
+                        eventType = PkAgainPackageEvent.class;
+                    }
+                    break;
+                    case "PK_CLICK_AGAIN": {
+                        eventType = PkClickAgainPackageEvent.class;
                     }
                     break;
                     //系统消息(小电视等)

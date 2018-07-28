@@ -22,10 +22,11 @@ B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一�
 | :--- | :--- |
 | mid | 用户 ID(与 userId 含义一致, 经常被混用) |
 | userId | 用户 ID, 用户在B站的唯一标识, 数字 |
+| uid | 用户 ID, 与 userId 同义 |
 | userid | 注意这里是全小写, 它的值可能是 'bili_1178318619', 这个东西是没用的, B站并不用这个作为用户唯一标识 |
-| showRoomId | 直播间 URL (Web)上的房间号 |
+| showRoomId | 直播间 URL (Web)上的房间号(可能是一个很小的数字, 低于 1000) |
 | roomId | 直播间的真实 ID(直播房间号在 1000 以下的房间, 真实 ID 是另外一个数字) |
-| cid | 直播间 ID(URL 上的房间号以及真实房间号都叫 cid) |
+| cid | 直播间 ID(URL 上的短房间号以及真实房间号都叫 cid) |
 | ruid | 直播间房主的用户 ID |
 
 # 使用
@@ -321,14 +322,18 @@ API 文档
 | ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 |
 | ChangeRoomInfoPackageEvent | 收到 CHANGE_ROOM_INFO 数据包 |
 | ComboEndPackageEvent | 收到 COMBO_END 数据包 |
+| ComboSendPackageEvent | 收到 COMBO_SEND 数据包 |
 | ConnectionCloseEvent | 连接断开(主动或被动) |
 | ConnectSucceedEvent | 进房成功 |
 | CutOffPackageEvent | 收到 CUT_OFF 数据包 |
 | DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
+| EntryEffectPackageEvent | 收到 ENTRY_EFFECT 数据包 |
 | EventCmdPackageEvent | 收到 EVENT_CMD 数据包 |
 | GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |
 | GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
 | LivePackageEvent | 收到 LIVE 数据包 |
+| PkAgainPackageEvent | 收到 PK_AGAIN 数据包 |
+| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 |
 | PkEndPackageEvent | 收到 PK_END 数据包 |
 | PkMatchPackageEvent | 收到 PK_MATCH 数据包 |
 | PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 |
