@@ -72,7 +72,7 @@ public class PkProcessEntity implements DataEntity {
          */
 
         @SerializedName("uid")
-        private int userId;
+        private long userId;
         @SerializedName("init_votes")
         private int initVotes;
         @SerializedName("match_votes")
@@ -80,11 +80,11 @@ public class PkProcessEntity implements DataEntity {
         @SerializedName("user_votes")
         private int userVotes;
 
-        public int getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public void setUserId(int userId) {
+        public void setUserId(long userId) {
             this.userId = userId;
         }
 

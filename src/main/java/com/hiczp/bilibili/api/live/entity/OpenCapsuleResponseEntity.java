@@ -130,7 +130,7 @@ public class OpenCapsuleResponseEntity extends ResponseEntity {
             @SerializedName("name")
             private String name;
             @SerializedName("num")
-            private String num;
+            private String number;
             @SerializedName("img")
             private String img;
 
@@ -142,12 +142,12 @@ public class OpenCapsuleResponseEntity extends ResponseEntity {
                 this.name = name;
             }
 
-            public String getNum() {
-                return num;
+            public String getNumber() {
+                return number;
             }
 
-            public void setNum(String num) {
-                this.num = num;
+            public void setNumber(String number) {
+                this.number = number;
             }
 
             public String getImg() {

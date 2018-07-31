@@ -105,7 +105,7 @@ public class GiftTopEntity extends ResponseEntity {
              */
 
             @SerializedName("uid")
-            private int uid;
+            private long userId;
             @SerializedName("rank")
             private int rank;
             @SerializedName("isSelf")
@@ -121,12 +121,12 @@ public class GiftTopEntity extends ResponseEntity {
             @SerializedName("guard_level")
             private int guardLevel;
 
-            public int getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(int uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public int getRank() {

@@ -96,13 +96,13 @@ public class LiveRoomInfoEntity extends ResponseEntity {
         @SerializedName("cover")
         private String cover;
         @SerializedName("mid")
-        private long mid;
+        private long userId;
         @SerializedName("uname")
         private String username;
         @SerializedName("face")
         private String face;
         @SerializedName("m_face")
-        private String mFace;
+        private String mobileFace;
         @SerializedName("background_id")
         private int backgroundId;
         @SerializedName("attention")
@@ -116,7 +116,7 @@ public class LiveRoomInfoEntity extends ResponseEntity {
         @SerializedName("create_at")
         private String createAt;
         @SerializedName("sch_id")
-        private int schId;
+        private int scheduleId;
         @SerializedName("status")
         private String status;
         @SerializedName("area")
@@ -218,12 +218,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
             this.cover = cover;
         }
 
-        public long getMid() {
-            return mid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setMid(long mid) {
-            this.mid = mid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public String getUsername() {
@@ -242,12 +242,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
             this.face = face;
         }
 
-        public String getMFace() {
-            return mFace;
+        public String getMobileFace() {
+            return mobileFace;
         }
 
-        public void setMFace(String mFace) {
-            this.mFace = mFace;
+        public void setMobileFace(String mobileFace) {
+            this.mobileFace = mobileFace;
         }
 
         public int getBackgroundId() {
@@ -298,12 +298,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
             this.createAt = createAt;
         }
 
-        public int getSchId() {
-            return schId;
+        public int getScheduleId() {
+            return scheduleId;
         }
 
-        public void setSchId(int schId) {
-            this.schId = schId;
+        public void setScheduleId(int scheduleId) {
+            this.scheduleId = scheduleId;
         }
 
         public String getStatus() {
@@ -630,11 +630,11 @@ public class LiveRoomInfoEntity extends ResponseEntity {
             @SerializedName("cid")
             private long cid;
             @SerializedName("sch_id")
-            private int schId;
+            private int scheduleId;
             @SerializedName("title")
             private String title;
             @SerializedName("mid")
-            private long mid;
+            private long userId;
             @SerializedName("start")
             private long start;
             @SerializedName("start_at")
@@ -662,12 +662,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
                 this.cid = cid;
             }
 
-            public int getSchId() {
-                return schId;
+            public int getScheduleId() {
+                return scheduleId;
             }
 
-            public void setSchId(int schId) {
-                this.schId = schId;
+            public void setScheduleId(int scheduleId) {
+                this.scheduleId = scheduleId;
             }
 
             public String getTitle() {
@@ -678,12 +678,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
                 this.title = title;
             }
 
-            public long getMid() {
-                return mid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setMid(long mid) {
-                this.mid = mid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public long getStart() {
@@ -941,7 +941,7 @@ public class LiveRoomInfoEntity extends ResponseEntity {
                 @SerializedName("face")
                 private String face;
                 @SerializedName("mid")
-                private int mid;
+                private long userId;
                 @SerializedName("name")
                 private String name;
 
@@ -953,12 +953,12 @@ public class LiveRoomInfoEntity extends ResponseEntity {
                     this.face = face;
                 }
 
-                public int getMid() {
-                    return mid;
+                public long getUserId() {
+                    return userId;
                 }
 
-                public void setMid(int mid) {
-                    this.mid = mid;
+                public void setUserId(long userId) {
+                    this.userId = userId;
                 }
 
                 public String getName() {

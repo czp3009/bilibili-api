@@ -45,7 +45,7 @@ public class GiftEntity {
     }
 
     public GiftEntity(long giftId, long bagId, long number, LiveRoomInfoEntity.LiveRoom liveRoom) {
-        this(giftId, bagId, number, liveRoom.getRoomId(), liveRoom.getMid());
+        this(giftId, bagId, number, liveRoom.getRoomId(), liveRoom.getUserId());
     }
 
     public GiftEntity(PlayerBagEntity.BagGift bagGift, long number, long roomId, long roomUserId) {
@@ -53,7 +53,7 @@ public class GiftEntity {
     }
 
     public GiftEntity(PlayerBagEntity.BagGift bagGift, long number, LiveRoomInfoEntity.LiveRoom liveRoom) {
-        this(bagGift.getGiftId(), bagGift.getId(), number, liveRoom.getRoomId(), liveRoom.getMid());
+        this(bagGift.getGiftId(), bagGift.getId(), number, liveRoom.getRoomId(), liveRoom.getUserId());
     }
 
     public long getGiftId() {

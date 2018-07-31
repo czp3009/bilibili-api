@@ -69,7 +69,7 @@ public class AssistantRoomInfoEntity extends ResponseEntity {
         @SerializedName("uname")
         private String username;
         @SerializedName("rcost")
-        private int rcost;
+        private int roomCost;
         @SerializedName("online")
         private int online;
         @SerializedName("status")
@@ -141,12 +141,12 @@ public class AssistantRoomInfoEntity extends ResponseEntity {
             this.username = username;
         }
 
-        public int getRcost() {
-            return rcost;
+        public int getRoomCost() {
+            return roomCost;
         }
 
-        public void setRcost(int rcost) {
-            this.rcost = rcost;
+        public void setRoomCost(int roomCost) {
+            this.roomCost = roomCost;
         }
 
         public int getOnline() {

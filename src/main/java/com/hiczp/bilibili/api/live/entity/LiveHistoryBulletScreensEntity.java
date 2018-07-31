@@ -77,7 +77,7 @@ public class LiveHistoryBulletScreensEntity extends ResponseEntity {
             @SerializedName("text")
             private String text;
             @SerializedName("uid")
-            private int uid;
+            private long userId;
             @SerializedName("nickname")
             private String nickname;
             @SerializedName("timeline")
@@ -113,12 +113,12 @@ public class LiveHistoryBulletScreensEntity extends ResponseEntity {
                 this.text = text;
             }
 
-            public int getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(int uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public String getNickname() {

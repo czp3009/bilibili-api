@@ -45,7 +45,7 @@ public class LoginResponseEntity extends ResponseEntity {
         return new BilibiliAccount(
                 this.data.accessToken,
                 this.data.refreshToken,
-                this.data.mid,
+                this.data.userId,
                 this.data.expiresIn,
                 this.timestamp
         );
@@ -64,7 +64,7 @@ public class LoginResponseEntity extends ResponseEntity {
         @SerializedName("refresh_token")
         private String refreshToken;
         @SerializedName("mid")
-        private long mid;
+        private long userId;
         @SerializedName("expires_in")
         private long expiresIn;
 
@@ -84,12 +84,12 @@ public class LoginResponseEntity extends ResponseEntity {
             this.refreshToken = refreshToken;
         }
 
-        public long getMid() {
-            return mid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setMid(long mid) {
-            this.mid = mid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public long getExpiresIn() {

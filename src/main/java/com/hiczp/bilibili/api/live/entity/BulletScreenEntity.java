@@ -3,9 +3,11 @@ package com.hiczp.bilibili.api.live.entity;
 import com.google.gson.annotations.SerializedName;
 
 public class BulletScreenEntity {
-    private long cid;
+    @SerializedName("cid")
+    private long roomId;
 
-    private long mid;
+    @SerializedName("mid")
+    private long userId;
 
     /**
      * 弹幕长度限制为 LiveRoomInfoEntity.getData().getMsgLength(), 对于每个用户而言, 每个房间都一样
@@ -50,27 +52,27 @@ public class BulletScreenEntity {
     /**
      * 实际上并不需要包含 mid 就可以正常发送弹幕, 但是真实的 Android 客户端确实发送了 mid
      */
-    public BulletScreenEntity(long cid, long mid, String message) {
-        this.cid = cid;
-        this.mid = mid;
+    public BulletScreenEntity(long roomId, long userId, String message) {
+        this.roomId = roomId;
+        this.userId = userId;
         this.message = message;
     }
 
-    public long getCid() {
-        return cid;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public BulletScreenEntity setCid(long cid) {
-        this.cid = cid;
+    public BulletScreenEntity setRoomId(long roomId) {
+        this.roomId = roomId;
         return this;
     }
 
-    public long getMid() {
-        return mid;
+    public long getUserId() {
+        return userId;
     }
 
-    public BulletScreenEntity setMid(long mid) {
-        this.mid = mid;
+    public BulletScreenEntity setUserId(long userId) {
+        this.userId = userId;
         return this;
     }
 

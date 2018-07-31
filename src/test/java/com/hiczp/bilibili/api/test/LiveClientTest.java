@@ -130,7 +130,7 @@ public class LiveClientTest {
             LOGGER.info("[SendGift] {} give {}*{}",
                     data.getUsername(),
                     data.getGiftName(),
-                    data.getNum()
+                    data.getNumber()
             );
         }
 

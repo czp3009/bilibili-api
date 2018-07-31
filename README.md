@@ -28,6 +28,9 @@ B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一�
 | roomId | 直播间的真实 ID(直播房间号在 1000 以下的房间, 真实 ID 是另外一个数字) |
 | cid | 直播间 ID(URL 上的短房间号以及真实房间号都叫 cid) |
 | ruid | 直播间房主的用户 ID |
+| rcost | 该房间内消费的瓜子数量 |
+
+(上表仅供其他开发者参照, 本调用库中已经封装为 Java 标准全写小驼峰命名法, 例如 userId, roomId, roomUserId)
 
 # 使用
 ## RESTFul API
@@ -317,54 +320,54 @@ API 文档
 
 所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
 
-| 事件 | 抛出条件 |
-| :--- | :--- |
-| ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 |
-| ChangeRoomInfoPackageEvent | 收到 CHANGE_ROOM_INFO 数据包 |
-| ComboEndPackageEvent | 收到 COMBO_END 数据包 |
-| ComboSendPackageEvent | 收到 COMBO_SEND 数据包 |
-| ConnectionCloseEvent | 连接断开(主动或被动) |
-| ConnectSucceedEvent | 进房成功 |
-| CutOffPackageEvent | 收到 CUT_OFF 数据包 |
-| DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 |
-| EntryEffectPackageEvent | 收到 ENTRY_EFFECT 数据包 |
-| EventCmdPackageEvent | 收到 EVENT_CMD 数据包 |
-| GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 |
-| GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 |
-| LivePackageEvent | 收到 LIVE 数据包 |
-| PkAgainPackageEvent | 收到 PK_AGAIN 数据包 |
-| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 |
-| PkEndPackageEvent | 收到 PK_END 数据包 |
-| PkMatchPackageEvent | 收到 PK_MATCH 数据包 |
-| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 |
-| PkPrePackageEvent | 收到 PK_PRE 数据包 |
-| PkProcessPackageEvent | 收到 PK_PROCESS 数据包 |
-| PkSettlePackageEvent | 收到 PK_SETTLE 数据包 |
-| PkStartPackageEvent | 收到 PK_START 数据包 |
-| PreparingPackageEvent | 收到 PREPARING 数据包 |
-| RaffleEndPackageEvent | 收到 RAFFLE_END 数据包 |
-| RaffleStartPackageEvent | 收到 RAFFLE_START 数据包 |
-| ReceiveDataPackageDebugEvent | 该事件用于调试, 收到任何 Data 数据包时都会触发 |
-| RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 |
-| RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 |
-| RoomLockPackageEvent | 收到 ROOM_LOCK 数据包 |
-| RoomRankPackageEvent | 收到 ROOM_RANK 数据包 |
-| RoomShieldPackageEvent | 收到 ROOM_SHIELD 数据包 |
-| RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 |
-| RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 |
-| SendGiftPackageEvent | 收到 SEND_GIFT 数据包 |
-| SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 |
-| SpecialGiftPackageEvent | 收到 SPECIAL_GIFT 数据包 |
-| SysGiftPackageEvent | 收到 SYS_GIFT 数据包 |
-| SysMsgPackageEvent | 收到 SYS_MSG 数据包 |
-| TVEndPackageEvent | 收到 TV_END 数据包 |
-| TVStartPackageEvent | 收到 TV_START 数据包 |
-| UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue |
-| ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) |
-| WelcomeActivityPackageEvent | 收到 WELCOME_ACTIVITY 数据包 |
-| WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 |
-| WelcomePackageEvent | 收到 WELCOME 数据包 |
-| WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 |
+| 事件 | 抛出条件 | 含义 |
+| :--- | :--- | :--- |
+| ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 | 活动事件 |
+| ChangeRoomInfoPackageEvent | 收到 CHANGE_ROOM_INFO 数据包 | 更换房间背景图片 |
+| ComboEndPackageEvent | 收到 COMBO_END 数据包 | 礼物连发结束 |
+| ComboSendPackageEvent | 收到 COMBO_SEND 数据包 | 礼物连发开始 |
+| ConnectionCloseEvent | 连接断开(主动或被动) | |
+| ConnectSucceedEvent | 进房成功 | |
+| CutOffPackageEvent | 收到 CUT_OFF 数据包 | 被 B站 管理员强制中断 |
+| DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 | 弹幕消息 |
+| EntryEffectPackageEvent | 收到 ENTRY_EFFECT 数据包 | 尚不明确 |
+| EventCmdPackageEvent | 收到 EVENT_CMD 数据包 | 尚不明确 |
+| GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 | 船票购买 |
+| GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 | 舰队消息(登船) |
+| LivePackageEvent | 收到 LIVE 数据包 | 开始直播 |
+| PkAgainPackageEvent | 收到 PK_AGAIN 数据包 | 下面几个都是 PK 有关的事件 |
+| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 | |
+| PkEndPackageEvent | 收到 PK_END 数据包 | |
+| PkMatchPackageEvent | 收到 PK_MATCH 数据包 | |
+| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 | |
+| PkPrePackageEvent | 收到 PK_PRE 数据包 | |
+| PkProcessPackageEvent | 收到 PK_PROCESS 数据包 | |
+| PkSettlePackageEvent | 收到 PK_SETTLE 数据包 | |
+| PkStartPackageEvent | 收到 PK_START 数据包 | |
+| PreparingPackageEvent | 收到 PREPARING 数据包 | 停止直播 |
+| RaffleEndPackageEvent | 收到 RAFFLE_END 数据包 | 抽奖结束(小奖, 通常是不定期活动) |
+| RaffleStartPackageEvent | 收到 RAFFLE_START 数据包 | 抽奖开始(小奖) |
+| ReceiveDataPackageDebugEvent | 该事件用于调试, 收到任何 Data 数据包时都会触发 | |
+| RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 | 房管变更 |
+| RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 | 房间黑名单(房间管理员添加了一个用户到黑名单) |
+| RoomLockPackageEvent | 收到 ROOM_LOCK 数据包 | 房间被封 |
+| RoomRankPackageEvent | 收到 ROOM_RANK 数据包 | 小时榜 |
+| RoomShieldPackageEvent | 收到 ROOM_SHIELD 数据包 | 房间屏蔽 |
+| RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 | 房间结束禁言 |
+| RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 | 房间开启了禁言(禁止某一等级以下的用户发言) |
+| SendGiftPackageEvent | 收到 SEND_GIFT 数据包 | 送礼 |
+| SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 | |
+| SpecialGiftPackageEvent | 收到 SPECIAL_GIFT 数据包 | 节奏风暴(20 倍以下的)(只在对应房间内有, 不会全站广播) |
+| SysGiftPackageEvent | 收到 SYS_GIFT 数据包 | 系统礼物(20 倍以上节奏风暴, 活动抽奖等) |
+| SysMsgPackageEvent | 收到 SYS_MSG 数据包 | 系统消息(小电视等) |
+| TVEndPackageEvent | 收到 TV_END 数据包 | 小电视抽奖结束(大奖的获得者信息) |
+| TVStartPackageEvent | 收到 TV_START 数据包 | 小电视抽奖开始 |
+| UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue | |
+| ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) | |
+| WelcomePackageEvent | 收到 WELCOME 数据包 | 欢迎(通常是 VIP) |
+| WelcomeActivityPackageEvent | 收到 WELCOME_ACTIVITY 数据包 | 欢迎(活动) |
+| WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 | 欢迎(舰队) |
+| WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 | 许愿瓶 |
 
 事件里面可以取到解析好的 POJO, 然后可以从里面取数据, 见上面的监听器示例.
 

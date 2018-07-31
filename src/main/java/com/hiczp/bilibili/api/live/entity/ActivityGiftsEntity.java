@@ -54,7 +54,7 @@ public class ActivityGiftsEntity extends ResponseEntity {
         @SerializedName("name")
         private String name;
         @SerializedName("num")
-        private int num;
+        private int number;
         @SerializedName("img")
         private String img;
         @SerializedName("gift_url")
@@ -92,12 +92,12 @@ public class ActivityGiftsEntity extends ResponseEntity {
             this.name = name;
         }
 
-        public int getNum() {
-            return num;
+        public int getNumber() {
+            return number;
         }
 
-        public void setNum(int num) {
-            this.num = num;
+        public void setNumber(int number) {
+            this.number = number;
         }
 
         public String getImg() {

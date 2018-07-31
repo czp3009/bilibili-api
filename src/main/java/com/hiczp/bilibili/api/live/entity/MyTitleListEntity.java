@@ -59,7 +59,7 @@ public class MyTitleListEntity extends ResponseEntity {
              */
 
             @SerializedName("uid")
-            private int uid;
+            private long userId;
             @SerializedName("had")
             private boolean had;
             @SerializedName("title")
@@ -77,12 +77,12 @@ public class MyTitleListEntity extends ResponseEntity {
             @SerializedName("category")
             private List<Category> category;
 
-            public int getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(int uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public boolean isHad() {

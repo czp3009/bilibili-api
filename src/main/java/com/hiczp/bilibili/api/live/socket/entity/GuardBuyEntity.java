@@ -50,20 +50,20 @@ public class GuardBuyEntity implements DataEntity {
          */
 
         @SerializedName("uid")
-        private int uid;
+        private long userId;
         @SerializedName("username")
         private String username;
         @SerializedName("guard_level")
         private int guardLevel;
         @SerializedName("num")
-        private int num;
+        private int number;
 
-        public int getUid() {
-            return uid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setUid(int uid) {
-            this.uid = uid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public String getUsername() {
@@ -82,12 +82,12 @@ public class GuardBuyEntity implements DataEntity {
             this.guardLevel = guardLevel;
         }
 
-        public int getNum() {
-            return num;
+        public int getNumber() {
+            return number;
         }
 
-        public void setNum(int num) {
-            this.num = num;
+        public void setNumber(int number) {
+            this.number = number;
         }
     }
 }

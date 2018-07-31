@@ -8,7 +8,7 @@ public class Config {
 
     private String username;
     private String password;
-    private int roomId;
+    private long roomId;
 
     static Config getInstance() {
         return config;
@@ -34,11 +34,11 @@ public class Config {
         this.password = password;
     }
 
-    int getRoomId() {
+    long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(long roomId) {
         this.roomId = roomId;
     }
 

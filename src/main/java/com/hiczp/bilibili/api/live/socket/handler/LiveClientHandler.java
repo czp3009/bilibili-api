@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
@@ -26,6 +28,56 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
     private static final Gson GSON = new Gson();
     private static final Gson PRETTY_PRINTING_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser JSON_PARSER = new JsonParser();
+    private static final Object[] CMD_AND_EVENT_ARRAY = new Object[]{
+            "ACTIVITY_EVENT", ActivityEventPackageEvent.class,  //活动事件
+            "CHANGE_ROOM_INFO", ChangeRoomInfoPackageEvent.class,   //更换房间背景图片
+            "COMBO_END", ComboEndPackageEvent.class,    //COMBO
+            "COMBO_SEND", ComboSendPackageEvent.class,
+            "CUT_OFF", CutOffPackageEvent.class,    //被 B站 管理员强制中断
+            "DANMU_MSG", DanMuMsgPackageEvent.class,    //弹幕消息
+            "ENTRY_EFFECT", EntryEffectPackageEvent.class,  //TODO 尚不明确 EntryEffect 和普通 Welcome 的区别
+            "EVENT_CMD", EventCmdPackageEvent.class,    //TODO 尚不明确 EVENT_CMD 的含义
+            "GUARD_BUY", GuardBuyPackageEvent.class,    //船票购买
+            "GUARD_MSG", GuardMsgPackageEvent.class,    //舰队消息(登船)
+            "LIVE", LivePackageEvent.class,  //开始直播
+            "PK_AGAIN", PkAgainPackageEvent.class,  //PK
+            "PK_CLICK_AGAIN", PkClickAgainPackageEvent.class,
+            "PK_END", PkEndPackageEvent.class,
+            "PK_MATCH", PkMatchPackageEvent.class,
+            "PK_MIC_END", PkMicEndPackageEvent.class,
+            "PK_PRE", PkPrePackageEvent.class,
+            "PK_PROCESS", PkProcessPackageEvent.class,
+            "PK_SETTLE", PkSettlePackageEvent.class,
+            "PK_START", PkStartPackageEvent.class,
+            "PREPARING", PreparingPackageEvent.class,    //停止直播
+            "RAFFLE_END", RaffleEndPackageEvent.class,  //抽奖结束
+            "RAFFLE_START", RaffleStartPackageEvent.class,  //抽奖开始(小奖, 通常是不定期活动)
+            "ROOM_ADMINS", RoomAdminsPackageEvent.class,    //房管变更
+            "ROOM_BLOCK_MSG", RoomBlockMsgPackageEvent.class,   //房间黑名单(房间管理员添加了一个用户到黑名单)
+            "ROOM_LOCK", RoomLockPackageEvent.class,    //房间被封
+            "ROOM_RANK", RoomRankPackageEvent.class,    //小时榜
+            "ROOM_SHIELD", RoomShieldPackageEvent.class,    //房间屏蔽
+            "ROOM_SILENT_OFF", RoomSilentOffPackageEvent.class, //房间结束禁言
+            "ROOM_SILENT_ON", RoomSilentOnPackageEvent.class,   //房间开启了禁言(禁止某一等级以下的用户发言)
+            "SEND_GIFT", SendGiftPackageEvent.class,    //送礼
+            "SPECIAL_GIFT", SpecialGiftPackageEvent.class,  //节奏风暴(20 倍以下的)
+            "SYS_GIFT", SysGiftPackageEvent.class,  //系统礼物(节奏风暴, 活动抽奖等)
+            "SYS_MSG", SysMsgPackageEvent.class,    //系统消息(小电视等)
+            "TV_END", TVEndPackageEvent.class,  //小电视抽奖结束(大奖的获得者信息)
+            "TV_START", TVStartPackageEvent.class,  //小电视抽奖开始
+            "WELCOME", WelcomePackageEvent.class,  //欢迎(通常是 VIP)
+            "WELCOME_ACTIVITY", WelcomeActivityPackageEvent.class,  //欢迎(活动)
+            "WELCOME_GUARD", WelcomeGuardPackageEvent.class,    //欢迎(舰队)
+            "WISH_BOTTLE", WishBottlePackageEvent.class //许愿瓶
+    };
+    private static final Map<String, Class<? extends ReceiveDataPackageEvent>> EVENT_MAP = new HashMap<>();
+
+    static {
+        for (int i = 0; i < CMD_AND_EVENT_ARRAY.length; i += 2) {
+            //noinspection unchecked
+            EVENT_MAP.put((String) CMD_AND_EVENT_ARRAY[i], (Class<? extends ReceiveDataPackageEvent>) CMD_AND_EVENT_ARRAY[i + 1]);
+        }
+    }
 
     private final LiveClient liveClient;
     private final EventBus eventBus;
@@ -79,201 +131,9 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     e.printStackTrace();
                     break;
                 }
-                eventBus.post(new ReceiveDataPackageDebugEvent(liveClient, jsonObject, cmd));
-                Class<? extends ReceiveDataPackageEvent> eventType = null;
-                switch (cmd) {
-                    //弹幕消息
-                    case "DANMU_MSG": {
-                        eventType = DanMuMsgPackageEvent.class;
-                    }
-                    break;
-                    //送礼
-                    case "SEND_GIFT": {
-                        eventType = SendGiftPackageEvent.class;
-                    }
-                    break;
-                    //combo
-                    case "COMBO_SEND": {
-                        eventType = ComboSendPackageEvent.class;
-                    }
-                    break;
-                    case "COMBO_END": {
-                        eventType = ComboEndPackageEvent.class;
-                    }
-                    break;
-                    //欢迎
-                    case "WELCOME": {
-                        eventType = WelcomePackageEvent.class;
-                    }
-                    break;
-                    //许愿瓶
-                    case "WISH_BOTTLE": {
-                        eventType = WishBottlePackageEvent.class;
-                    }
-                    break;
-                    //欢迎(舰队)
-                    case "WELCOME_GUARD": {
-                        eventType = WelcomeGuardPackageEvent.class;
-                    }
-                    break;
-                    //TODO 尚不明确 EntryEffect 和普通 Welcome 的区别
-                    case "ENTRY_EFFECT": {
-                        eventType = EntryEffectPackageEvent.class;
-                    }
-                    break;
-                    //PK
-                    case "PK_MATCH": {
-                        eventType = PkMatchPackageEvent.class;
-                    }
-                    break;
-                    case "PK_PRE": {
-                        eventType = PkPrePackageEvent.class;
-                    }
-                    break;
-                    case "PK_START": {
-                        eventType = PkStartPackageEvent.class;
-                    }
-                    break;
-                    case "PK_PROCESS": {
-                        eventType = PkProcessPackageEvent.class;
-                    }
-                    break;
-                    case "PK_END": {
-                        eventType = PkEndPackageEvent.class;
-                    }
-                    break;
-                    case "PK_MIC_END": {
-                        eventType = PkMicEndPackageEvent.class;
-                    }
-                    break;
-                    case "PK_SETTLE": {
-                        eventType = PkSettlePackageEvent.class;
-                    }
-                    break;
-                    case "PK_AGAIN": {
-                        eventType = PkAgainPackageEvent.class;
-                    }
-                    break;
-                    case "PK_CLICK_AGAIN": {
-                        eventType = PkClickAgainPackageEvent.class;
-                    }
-                    break;
-                    //系统消息(小电视等)
-                    case "SYS_MSG": {
-                        eventType = SysMsgPackageEvent.class;
-                    }
-                    break;
-                    //系统礼物(节奏风暴, 活动抽奖等)
-                    case "SYS_GIFT": {
-                        eventType = SysGiftPackageEvent.class;
-                    }
-                    break;
-                    //活动事件
-                    case "ACTIVITY_EVENT": {
-                        eventType = ActivityEventPackageEvent.class;
-                    }
-                    break;
-                    //节奏风暴(20 倍以下的)
-                    case "SPECIAL_GIFT": {
-                        eventType = SpecialGiftPackageEvent.class;
-                    }
-                    break;
-                    //抽奖开始(小奖, 通常是不定期活动)
-                    case "RAFFLE_START": {
-                        eventType = RaffleStartPackageEvent.class;
-                    }
-                    break;
-                    //抽奖结束
-                    case "RAFFLE_END": {
-                        eventType = RaffleEndPackageEvent.class;
-                    }
-                    break;
-                    //TODO 尚不明确 EVENT_CMD 的含义
-                    case "EVENT_CMD": {
-                        eventType = EventCmdPackageEvent.class;
-                    }
-                    break;
-                    //房间黑名单(房间管理员添加了一个用户到黑名单)
-                    case "ROOM_BLOCK_MSG": {
-                        eventType = RoomBlockMsgPackageEvent.class;
-                    }
-                    break;
-                    //房间开启了禁言(禁止某一等级以下的用户发言)
-                    case "ROOM_SILENT_ON": {
-                        eventType = RoomSilentOnPackageEvent.class;
-                    }
-                    break;
-                    //房间结束禁言
-                    case "ROOM_SILENT_OFF": {
-                        eventType = RoomSilentOffPackageEvent.class;
-                    }
-                    break;
-                    //船票购买
-                    case "GUARD_BUY": {
-                        eventType = GuardBuyPackageEvent.class;
-                    }
-                    break;
-                    //舰队消息(登船)
-                    case "GUARD_MSG": {
-                        eventType = GuardMsgPackageEvent.class;
-                    }
-                    break;
-                    //小电视抽奖开始
-                    case "TV_START": {
-                        eventType = TVStartPackageEvent.class;
-                    }
-                    break;
-                    //小电视抽奖结束(大奖的获得者信息)
-                    case "TV_END": {
-                        eventType = TVEndPackageEvent.class;
-                    }
-                    break;
-                    //小时榜
-                    case "ROOM_RANK": {
-                        eventType = RoomRankPackageEvent.class;
-                    }
-                    break;
-                    //欢迎(活动)
-                    case "WELCOME_ACTIVITY": {
-                        eventType = WelcomeActivityPackageEvent.class;
-                    }
-                    break;
-                    //房管变更
-                    case "ROOM_ADMINS": {
-                        eventType = RoomAdminsPackageEvent.class;
-                    }
-                    break;
-                    //开始直播
-                    case "LIVE": {
-                        eventType = LivePackageEvent.class;
-                    }
-                    break;
-                    //停止直播
-                    case "PREPARING": {
-                        eventType = PreparingPackageEvent.class;
-                    }
-                    break;
-                    //房间屏蔽
-                    case "ROOM_SHIELD": {
-                        eventType = RoomShieldPackageEvent.class;
-                    }
-                    break;
-                    //更换房间背景图片
-                    case "CHANGE_ROOM_INFO": {
-                        eventType = ChangeRoomInfoPackageEvent.class;
-                    }
-                    break;
-                    //被 B站 管理员强制中断
-                    case "CUT_OFF": {
-                        eventType = CutOffPackageEvent.class;
-                    }
-                    break;
-                    //房间被封
-                    case "ROOM_LOCK": {
-                        eventType = RoomLockPackageEvent.class;
-                    }
-                    break;
-                }
+                eventBus.post(new ReceiveDataPackageDebugEvent(liveClient, jsonObject, cmd));   //debug 用
+
+                Class<? extends ReceiveDataPackageEvent> eventType = EVENT_MAP.get(cmd);
 
                 //UnknownPackage
                 if (eventType == null) {

@@ -95,7 +95,7 @@ public class AwardsEntity extends ResponseEntity {
             @SerializedName("id")
             private int id;
             @SerializedName("uid")
-            private int uid;
+            private long userId;
             @SerializedName("gift_name")
             private String giftName;
             @SerializedName("gift_type")
@@ -137,12 +137,12 @@ public class AwardsEntity extends ResponseEntity {
                 this.id = id;
             }
 
-            public int getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(int uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public String getGiftName() {

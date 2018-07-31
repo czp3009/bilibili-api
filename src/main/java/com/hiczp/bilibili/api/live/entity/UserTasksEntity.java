@@ -171,7 +171,7 @@ public class UserTasksEntity extends ResponseEntity {
                 @SerializedName("type")
                 private String type;
                 @SerializedName("num")
-                private int num;
+                private int number;
 
                 public String getName() {
                     return name;
@@ -189,12 +189,12 @@ public class UserTasksEntity extends ResponseEntity {
                     this.type = type;
                 }
 
-                public int getNum() {
-                    return num;
+                public int getNumber() {
+                    return number;
                 }
 
-                public void setNum(int num) {
-                    this.num = num;
+                public void setNumber(int number) {
+                    this.number = number;
                 }
             }
         }
@@ -288,7 +288,7 @@ public class UserTasksEntity extends ResponseEntity {
                 @SerializedName("type")
                 private String type;
                 @SerializedName("num")
-                private int num;
+                private int number;
 
                 public String getName() {
                     return name;
@@ -306,12 +306,12 @@ public class UserTasksEntity extends ResponseEntity {
                     this.type = type;
                 }
 
-                public int getNum() {
-                    return num;
+                public int getNumber() {
+                    return number;
                 }
 
-                public void setNum(int num) {
-                    this.num = num;
+                public void setNumber(int number) {
+                    this.number = number;
                 }
             }
         }
@@ -427,7 +427,7 @@ public class UserTasksEntity extends ResponseEntity {
                 @SerializedName("type")
                 private String type;
                 @SerializedName("num")
-                private int num;
+                private int number;
 
                 public String getName() {
                     return name;
@@ -445,12 +445,12 @@ public class UserTasksEntity extends ResponseEntity {
                     this.type = type;
                 }
 
-                public int getNum() {
-                    return num;
+                public int getNumber() {
+                    return number;
                 }
 
-                public void setNum(int num) {
-                    this.num = num;
+                public void setNumber(int number) {
+                    this.number = number;
                 }
             }
         }

@@ -51,7 +51,7 @@ public class InfoEntity extends ResponseEntity {
          */
 
         @SerializedName("mid")
-        private long mid;
+        private long userId;
         @SerializedName("appid")
         private int appId;
         @SerializedName("access_token")
@@ -59,16 +59,16 @@ public class InfoEntity extends ResponseEntity {
         @SerializedName("expires_in")
         private long expiresIn;
         @SerializedName("userid")
-        private String userId;
+        private String userIdString;
         @SerializedName("uname")
         private String username;
 
-        public long getMid() {
-            return mid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setMid(long mid) {
-            this.mid = mid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public int getAppId() {
@@ -95,12 +95,12 @@ public class InfoEntity extends ResponseEntity {
             this.expiresIn = expiresIn;
         }
 
-        public String getUserId() {
-            return userId;
+        public String getUserIdString() {
+            return userIdString;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setUserIdString(String userIdString) {
+            this.userIdString = userIdString;
         }
 
         public String getUsername() {

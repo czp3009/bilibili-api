@@ -58,7 +58,7 @@ public class WearTitleEntity extends ResponseEntity {
         @SerializedName("tid")
         private String tid;
         @SerializedName("num")
-        private String num;
+        private String number;
         @SerializedName("score")
         private String score;
         @SerializedName("create_time")
@@ -104,12 +104,12 @@ public class WearTitleEntity extends ResponseEntity {
             this.tid = tid;
         }
 
-        public String getNum() {
-            return num;
+        public String getNumber() {
+            return number;
         }
 
-        public void setNum(String num) {
-            this.num = num;
+        public void setNumber(String number) {
+            this.number = number;
         }
 
         public String getScore() {

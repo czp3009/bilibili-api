@@ -50,7 +50,7 @@ public class WelcomeGuardEntity implements DataEntity {
          */
 
         @SerializedName("uid")
-        private int uid;
+        private long userId;
         @SerializedName("username")
         private String username;
         @SerializedName("guard_level")
@@ -58,12 +58,12 @@ public class WelcomeGuardEntity implements DataEntity {
         @SerializedName("water_god")
         private Integer waterGod;
 
-        public int getUid() {
-            return uid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setUid(int uid) {
-            this.uid = uid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public String getUsername() {

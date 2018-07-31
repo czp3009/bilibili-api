@@ -204,8 +204,8 @@ public interface LiveService {
     /**
      * 发送一条弹幕
      *
-     * @param cid      房间号
-     * @param mid      自己的用户 ID
+     * @param roomId      房间号
+     * @param userId      自己的用户 ID
      * @param message  内容
      * @param random   随机数
      * @param mode     弹幕模式
@@ -218,8 +218,8 @@ public interface LiveService {
      */
     @POST("api/sendmsg")
     @FormUrlEncoded
-    Call<SendBulletScreenResponseEntity> sendBulletScreen(@Field("cid") long cid,
-                                                          @Field("mid") long mid,
+    Call<SendBulletScreenResponseEntity> sendBulletScreen(@Field("cid") long roomId,
+                                                          @Field("mid") long userId,
                                                           @Field("msg") String message,
                                                           @Field("rnd") long random,
                                                           @Field("mode") int mode,
@@ -236,8 +236,8 @@ public interface LiveService {
      */
     default Call<SendBulletScreenResponseEntity> sendBulletScreen(BulletScreenEntity bulletScreenEntity) {
         return sendBulletScreen(
-                bulletScreenEntity.getCid(),
-                bulletScreenEntity.getMid(),
+                bulletScreenEntity.getRoomId(),
+                bulletScreenEntity.getUserId(),
                 bulletScreenEntity.getMessage(),
                 bulletScreenEntity.getRandom(),
                 bulletScreenEntity.getMode(),

@@ -87,7 +87,7 @@ public class WishBottleEntity implements DataEntity {
             @SerializedName("id")
             private long id;
             @SerializedName("uid")
-            private long uid;
+            private long userId;
             @SerializedName("type")
             private int type;
             @SerializedName("type_id")
@@ -113,12 +113,12 @@ public class WishBottleEntity implements DataEntity {
                 this.id = id;
             }
 
-            public long getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(long uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public int getType() {

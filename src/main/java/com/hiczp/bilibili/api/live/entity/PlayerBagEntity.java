@@ -53,7 +53,7 @@ public class PlayerBagEntity extends ResponseEntity {
         @SerializedName("id")
         private long id;
         @SerializedName("uid")
-        private long uid;
+        private long userId;
         @SerializedName("gift_id")
         private long giftId;
         @SerializedName("gift_num")
@@ -85,12 +85,12 @@ public class PlayerBagEntity extends ResponseEntity {
             this.id = id;
         }
 
-        public long getUid() {
-            return uid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setUid(long uid) {
-            this.uid = uid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public long getGiftId() {

@@ -125,7 +125,7 @@ public class SendGiftResponseEntity extends ResponseEntity {
             @SerializedName("uname")
             private String username;
             @SerializedName("rcost")
-            private int rcost;
+            private int roomCost;
             @SerializedName("uid")
             private int uid;
             @SerializedName("timestamp")
@@ -206,12 +206,12 @@ public class SendGiftResponseEntity extends ResponseEntity {
                 this.username = username;
             }
 
-            public int getRcost() {
-                return rcost;
+            public int getRoomCost() {
+                return roomCost;
             }
 
-            public void setRcost(int rcost) {
-                this.rcost = rcost;
+            public void setRoomCost(int roomCost) {
+                this.roomCost = roomCost;
             }
 
             public int getUid() {

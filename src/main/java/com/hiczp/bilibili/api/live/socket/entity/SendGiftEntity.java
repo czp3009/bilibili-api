@@ -73,13 +73,13 @@ public class SendGiftEntity implements DataEntity {
         @SerializedName("giftName")
         private String giftName;
         @SerializedName("num")
-        private int num;
+        private int number;
         @SerializedName("uname")
         private String username;
         @SerializedName("rcost")
-        private int rcost;
+        private int roomCost;
         @SerializedName("uid")
-        private long uid;
+        private long userId;
         @SerializedName("timestamp")
         private long timestamp;
         @SerializedName("giftId")
@@ -156,12 +156,12 @@ public class SendGiftEntity implements DataEntity {
             this.giftName = giftName;
         }
 
-        public int getNum() {
-            return num;
+        public int getNumber() {
+            return number;
         }
 
-        public void setNum(int num) {
-            this.num = num;
+        public void setNumber(int number) {
+            this.number = number;
         }
 
         public String getUsername() {
@@ -172,20 +172,20 @@ public class SendGiftEntity implements DataEntity {
             this.username = username;
         }
 
-        public int getRcost() {
-            return rcost;
+        public int getRoomCost() {
+            return roomCost;
         }
 
-        public void setRcost(int rcost) {
-            this.rcost = rcost;
+        public void setRoomCost(int roomCost) {
+            this.roomCost = roomCost;
         }
 
-        public long getUid() {
-            return uid;
+        public long getUserId() {
+            return userId;
         }
 
-        public void setUid(long uid) {
-            this.uid = uid;
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public long getTimestamp() {
@@ -477,7 +477,7 @@ public class SendGiftEntity implements DataEntity {
             @SerializedName("hadJoin")
             private int hadJoin;
             @SerializedName("num")
-            private int num;
+            private int number;
             @SerializedName("content")
             private String content;
             @SerializedName("action")
@@ -509,12 +509,12 @@ public class SendGiftEntity implements DataEntity {
                 this.hadJoin = hadJoin;
             }
 
-            public int getNum() {
-                return num;
+            public int getNumber() {
+                return number;
             }
 
-            public void setNum(int num) {
-                this.num = num;
+            public void setNumber(int number) {
+                this.number = number;
             }
 
             public String getContent() {
@@ -727,7 +727,7 @@ public class SendGiftEntity implements DataEntity {
              */
 
             @SerializedName("uid")
-            private int uid;
+            private long userId;
             @SerializedName("uname")
             private String username;
             @SerializedName("face")
@@ -741,12 +741,12 @@ public class SendGiftEntity implements DataEntity {
             @SerializedName("isSelf")
             private int isSelf;
 
-            public int getUid() {
-                return uid;
+            public long getUserId() {
+                return userId;
             }
 
-            public void setUid(int uid) {
-                this.uid = uid;
+            public void setUserId(long userId) {
+                this.userId = userId;
             }
 
             public String getUsername() {

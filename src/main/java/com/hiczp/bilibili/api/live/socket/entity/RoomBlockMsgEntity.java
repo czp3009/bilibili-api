@@ -13,7 +13,7 @@ public class RoomBlockMsgEntity implements DataEntity {
     @SerializedName("cmd")
     private String cmd;
     @SerializedName("uid")
-    private String uid;
+    private String userId;
     @SerializedName("uname")
     private String username;
     @SerializedName("roomid")
@@ -28,12 +28,12 @@ public class RoomBlockMsgEntity implements DataEntity {
         this.cmd = cmd;
     }
 
-    public String getUid() {
-        return uid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

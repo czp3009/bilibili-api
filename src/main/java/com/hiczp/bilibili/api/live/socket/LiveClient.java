@@ -38,9 +38,9 @@ public class LiveClient {
     private final BilibiliServiceProvider bilibiliServiceProvider;
     private final EventLoopGroup eventLoopGroup;
     private final long userId;
-    private final EventBus eventBus = new EventBus("BilibiliLiveClientEventBus");
     private Long showRoomId;
     private Long realRoomId;
+    private final EventBus eventBus;
     private boolean useRealRoomIdForConstructing;
 
     private LiveRoomInfoEntity.LiveRoom liveRoom;
@@ -57,6 +57,7 @@ public class LiveClient {
             showRoomId = roomId;
         }
         this.userId = userId;
+        this.eventBus = new EventBus(String.format("BilibiliLiveClientEventBus-%s", getShowRoomIdOrRoomId()));
     }
 
     public LiveClient(@Nonnull BilibiliServiceProvider bilibiliServiceProvider, @Nonnull EventLoopGroup eventLoopGroup, long showRoomId, long userId) {

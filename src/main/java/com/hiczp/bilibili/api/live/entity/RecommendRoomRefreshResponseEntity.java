@@ -578,7 +578,7 @@ public class RecommendRoomRefreshResponseEntity extends ResponseEntity {
                 @SerializedName("face")
                 private String face;
                 @SerializedName("mid")
-                private int mid;
+                private long userId;
                 @SerializedName("name")
                 private String name;
 
@@ -590,12 +590,12 @@ public class RecommendRoomRefreshResponseEntity extends ResponseEntity {
                     this.face = face;
                 }
 
-                public int getMid() {
-                    return mid;
+                public long getUserId() {
+                    return userId;
                 }
 
-                public void setMid(int mid) {
-                    this.mid = mid;
+                public void setUserId(long userId) {
+                    this.userId = userId;
                 }
 
                 public String getName() {
