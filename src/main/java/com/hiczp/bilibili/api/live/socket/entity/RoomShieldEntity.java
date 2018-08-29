@@ -1,8 +1,7 @@
 package com.hiczp.bilibili.api.live.socket.entity;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class RoomShieldEntity implements DataEntity {
     /**
@@ -19,10 +18,12 @@ public class RoomShieldEntity implements DataEntity {
     private int type;
     @SerializedName("roomid")
     private long roomId;
+    //user 可能是 JsonArray 也可能是 String
     @SerializedName("user")
-    private List<String> user;
+    private JsonElement user;
+    //同上
     @SerializedName("keyword")
-    private List<String> keyword;
+    private JsonElement keyword;
 
     @Override
     public String getCmd() {
@@ -49,19 +50,19 @@ public class RoomShieldEntity implements DataEntity {
         this.roomId = roomId;
     }
 
-    public List<String> getUser() {
+    public JsonElement getUser() {
         return user;
     }
 
-    public void setUser(List<String> user) {
+    public void setUser(JsonElement user) {
         this.user = user;
     }
 
-    public List<String> getKeyword() {
+    public JsonElement getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(List<String> keyword) {
+    public void setKeyword(JsonElement keyword) {
         this.keyword = keyword;
     }
 }
