@@ -126,7 +126,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                     jsonObject = JSON_PARSER.parse(new InputStreamReader(new ByteArrayInputStream(msg.getContent()), StandardCharsets.UTF_8))
                             .getAsJsonObject();
                     cmd = jsonObject.get("cmd").getAsString();
-                } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {
+                } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {    //json 无法解析或者 cmd 字段不存在
                     LOGGER.error("Receive invalid json: \n{}", new String(msg.getContent(), StandardCharsets.UTF_8));
                     e.printStackTrace();
                     break;
@@ -138,7 +138,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 //UnknownPackage
                 if (eventType == null) {
                     LOGGER.error("Received unknown json below: \n{}", PRETTY_PRINTING_GSON.toJson(jsonObject));
-                    eventBus.post(new UnknownPackageEvent(liveClient, jsonObject));
+                    eventBus.post(new UnknownPackageEvent(liveClient, jsonObject, cmd));
                     break;
                 }
 
@@ -147,7 +147,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 DataEntity entityInstance;
                 try {
                     entityInstance = GSON.fromJson(jsonObject, entityType);
-                } catch (JsonParseException e) {
+                } catch (JsonParseException e) {    //json 无法解析
                     LOGGER.error("Json parse error: {}, json below: \n{}", e.getMessage(), PRETTY_PRINTING_GSON.toJson(jsonObject));
                     break;
                 }
