@@ -38,11 +38,16 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
             "ENTRY_EFFECT", EntryEffectPackageEvent.class,  //TODO 尚不明确 EntryEffect 和普通 Welcome 的区别
             "EVENT_CMD", EventCmdPackageEvent.class,    //TODO 尚不明确 EVENT_CMD 的含义
             "GUARD_BUY", GuardBuyPackageEvent.class,    //船票购买
+            "GUARD_LOTTERY_START", GuardLotteryStartPackageEvent.class,  //船票购买后的抽奖活动
             "GUARD_MSG", GuardMsgPackageEvent.class,    //舰队消息(登船)
             "LIVE", LivePackageEvent.class,  //开始直播
+            "NOTICE_MSG", NoticeMsgPackageEvent.class,   //获得大奖的通知消息
             "PK_AGAIN", PkAgainPackageEvent.class,  //PK
             "PK_CLICK_AGAIN", PkClickAgainPackageEvent.class,
             "PK_END", PkEndPackageEvent.class,
+            "PK_INVITE_FAIL", PkInviteFailPackageEvent.class,
+            "PK_INVITE_INIT", PkInviteInitPackageEvent.class,
+            "PK_INVITE_SWITCH_CLOSE", PkInviteSwitchClosePackageEvent.class,
             "PK_MATCH", PkMatchPackageEvent.class,
             "PK_MIC_END", PkMicEndPackageEvent.class,
             "PK_PRE", PkPrePackageEvent.class,
