@@ -338,17 +338,18 @@ API 文档
 | LivePackageEvent | 收到 LIVE 数据包 | 开始直播 |
 | NoticeMsgPackageEvent | 收到 NOTICE_MSG 数据包 | 获得大奖的通知消息 |
 | PkAgainPackageEvent | 收到 PK_AGAIN 数据包 | 下面几个都是 PK 有关的事件 |
-| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 | |
-| PkEndPackageEvent | 收到 PK_END 数据包 | |
+| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 |
+| PkEndPackageEvent | 收到 PK_END 数据包 |
 | PkInviteFailPackageEvent | 收到 PK_INVITE_FAIL 数据包 |
 | PkInviteInitPackageEvent | 收到 PK_INVITE_INIT 数据包 |
 | PkInviteSwitchClosePackageEvent | 收到 PK_INVITE_SWITCH_CLOSE 数据包 |
-| PkMatchPackageEvent | 收到 PK_MATCH 数据包 | |
-| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 | |
-| PkPrePackageEvent | 收到 PK_PRE 数据包 | |
-| PkProcessPackageEvent | 收到 PK_PROCESS 数据包 | |
-| PkSettlePackageEvent | 收到 PK_SETTLE 数据包 | |
-| PkStartPackageEvent | 收到 PK_START 数据包 | |
+| PkInviteSwitchOpenPackageEvent | 收到 PK_INVITE_SWITCH_OPEN 数据包 |
+| PkMatchPackageEvent | 收到 PK_MATCH 数据包 |
+| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 |
+| PkPrePackageEvent | 收到 PK_PRE 数据包 |
+| PkProcessPackageEvent | 收到 PK_PROCESS 数据包 |
+| PkSettlePackageEvent | 收到 PK_SETTLE 数据包 |
+| PkStartPackageEvent | 收到 PK_START 数据包 |
 | PreparingPackageEvent | 收到 PREPARING 数据包 | 停止直播 |
 | RaffleEndPackageEvent | 收到 RAFFLE_END 数据包 | 抽奖结束(小奖, 通常是不定期活动) |
 | RaffleStartPackageEvent | 收到 RAFFLE_START 数据包 | 抽奖开始(小奖) |

@@ -48,6 +48,7 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
             "PK_INVITE_FAIL", PkInviteFailPackageEvent.class,
             "PK_INVITE_INIT", PkInviteInitPackageEvent.class,
             "PK_INVITE_SWITCH_CLOSE", PkInviteSwitchClosePackageEvent.class,
+            "PK_INVITE_SWITCH_OPEN", PkInviteSwitchOpenPackageEvent.class,
             "PK_MATCH", PkMatchPackageEvent.class,
             "PK_MIC_END", PkMicEndPackageEvent.class,
             "PK_PRE", PkPrePackageEvent.class,
@@ -133,7 +134,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                             .getAsJsonObject();
                     cmd = jsonObject.get("cmd").getAsString();
                 } catch (JsonSyntaxException | IllegalStateException | NullPointerException e) {    //json 无法解析或者 cmd 字段不存在
-                    LOGGER.error("Receive invalid json: \n{}", new String(msg.getContent(), StandardCharsets.UTF_8));
+                    LOGGER.error("Receive invalid json in room {}: \n{}",
+                            liveClient.getRoomIdOrShowRoomId(),
+                            new String(msg.getContent(), StandardCharsets.UTF_8)
+                    );
                     e.printStackTrace();
                     break;
                 }
@@ -143,7 +147,10 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
 
                 //UnknownPackage
                 if (eventType == null) {
-                    LOGGER.error("Received unknown json below: \n{}", PRETTY_PRINTING_GSON.toJson(jsonObject));
+                    LOGGER.error("Received unknown json below in room {}: \n{}",
+                            liveClient.getRoomIdOrShowRoomId(),
+                            PRETTY_PRINTING_GSON.toJson(jsonObject)
+                    );
                     eventBus.post(new UnknownPackageEvent(liveClient, jsonObject, cmd));
                     break;
                 }
@@ -154,7 +161,11 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
                 try {
                     entityInstance = GSON.fromJson(jsonObject, entityType);
                 } catch (JsonParseException e) {    //json 无法解析
-                    LOGGER.error("Json parse error: {}, json below: \n{}", e.getMessage(), PRETTY_PRINTING_GSON.toJson(jsonObject));
+                    LOGGER.error("Json parse error in room {}: {}, json below: \n{}",
+                            liveClient.getRoomIdOrShowRoomId(),
+                            e.getMessage(),
+                            PRETTY_PRINTING_GSON.toJson(jsonObject)
+                    );
                     break;
                 }
 
