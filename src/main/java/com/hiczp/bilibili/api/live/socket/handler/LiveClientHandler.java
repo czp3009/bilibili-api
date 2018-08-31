@@ -70,8 +70,9 @@ public class LiveClientHandler extends SimpleChannelInboundHandler<Package> {
             "SYS_MSG", SysMsgPackageEvent.class,    //系统消息(小电视等)
             "TV_END", TVEndPackageEvent.class,  //小电视抽奖结束(大奖的获得者信息)
             "TV_START", TVStartPackageEvent.class,  //小电视抽奖开始
-            "WELCOME", WelcomePackageEvent.class,  //欢迎(通常是 VIP)
+            "WARNING", WarningPackageEvent.class,   //警告消息
             "WELCOME_ACTIVITY", WelcomeActivityPackageEvent.class,  //欢迎(活动)
+            "WELCOME", WelcomePackageEvent.class,  //欢迎(通常是 VIP)
             "WELCOME_GUARD", WelcomeGuardPackageEvent.class,    //欢迎(舰队)
             "WISH_BOTTLE", WishBottlePackageEvent.class //许愿瓶
     };

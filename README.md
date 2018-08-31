@@ -369,8 +369,9 @@ API 文档
 | TVStartPackageEvent | 收到 TV_START 数据包 | 小电视抽奖开始 |
 | UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue | |
 | ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) | |
-| WelcomePackageEvent | 收到 WELCOME 数据包 | 欢迎(通常是 VIP) |
+| WarningPackageEvent | 收到 WARNING 数据包 | 警告信息 |
 | WelcomeActivityPackageEvent | 收到 WELCOME_ACTIVITY 数据包 | 欢迎(活动) |
+| WelcomePackageEvent | 收到 WELCOME 数据包 | 欢迎(通常是 VIP) |
 | WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 | 欢迎(舰队) |
 | WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 | 许愿瓶 |
 
