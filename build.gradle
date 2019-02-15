@@ -1,109 +1,35 @@
+buildscript {
+    ext {
+        kotlin_version = '1.3.21'
+        jvm_target = JavaVersion.VERSION_1_10
+    }
+
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 group = 'com.hiczp'
-version = '0.0.22'
-description = 'Bilibili android client API library written in Java'
+version = '0.1.0'
+description = 'Bilibili Android client API library for Kotlin'
 
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-sourceCompatibility = 1.8
+apply plugin: 'kotlin'
 
 repositories {
     mavenCentral()
 }
 
+//kotlin
 dependencies {
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
-    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0'
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
-    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.4.0'
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    // https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor
-    compile group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '3.11.0'
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    // https://mvnrepository.com/artifact/io.netty/netty-all
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.29.Final'
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 }
-
-dependencies {
-    // https://mvnrepository.com/artifact/junit/junit
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
-    testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+compileKotlin {
+    kotlinOptions.jvmTarget = jvm_target
 }
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    description 'Package source code to jar,'
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    description 'Package javadoc to jar,'
-    classifier = 'javadoc'
-    from javadoc
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-signing {
-    required { gradle.taskGraph.hasTask(uploadArchives) }
-    sign configurations.archives
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment ->
-                signing.signPom(deployment)
-            }
-
-            if (!project.hasProperty('ossUsername')) {
-                ext.ossUsername = ''
-            }
-            if (!project.hasProperty('ossPassword')) {
-                ext.ossPassword = ''
-            }
-            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                authentication(userName: ossUsername, password: ossPassword)
-            }
-
-            pom.project {
-                name project.name
-                description project.description
-                url 'https://github.com/czp3009/bilibili-api'
-
-                scm {
-                    connection 'scm:git@github.com:czp3009/bilibili-api.git'
-                    developerConnection 'scm:git@github.com:czp3009/bilibili-api.git'
-                    url 'git@github.com:czp3009/bilibili-api.git'
-                }
-
-                licenses {
-                    license {
-                        name 'GNU GENERAL PUBLIC LICENSE Version 3'
-                        url 'https://www.gnu.org/licenses/gpl-3.0.txt'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'czp'
-                        //noinspection SpellCheckingInspection
-                        name 'ZhiPeng Chen'
-                        email 'czp3009@gmail.com'
-                        url 'https://www.hiczp.com/'
-                    }
-                }
-            }
-        }
-    }
+compileTestKotlin {
+    kotlinOptions.jvmTarget = jvm_target
 }
