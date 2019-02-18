@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.retrofit.interceptor
 
-import com.hiczp.bilibili.api.retrofit.HttpMethod
+import com.hiczp.bilibili.api.retrofit.Method
+import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.addAll
 import mu.KotlinLogging
 import okhttp3.FormBody
@@ -22,6 +23,7 @@ class CommonParamInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
+        //如果欲添加的参数类型为 Query 则直接添加
         if (paramType == ParamType.QUERY) {
             val httpUrl = request.url().newBuilder().apply {
                 additionParams.forEach { (paramName, paramValueExpression) ->
@@ -31,29 +33,34 @@ class CommonParamInterceptor(
             return chain.proceed(
                     request.newBuilder().url(httpUrl).build()
             )
-        } else if (paramType == ParamType.FORM_URL_ENCODED && request.body() is FormBody ||
-                paramType == ParamType.FORM_URL_ENCODED && request.method() == HttpMethod.POST.toString() && request.body()?.contentType() == null
-        ) {
-            //TODO 原有的 Body 为空的情况
-            val formBody = FormBody.Builder().apply {
-                //添加原有的参数
-                addAll(request.body() as FormBody)
-                //添加公共参数
-                additionParams.forEach { (paramName, paramValueExpression) ->
-                    add(paramName, paramValueExpression())
+        }
+
+        //如果请求方式为 POST(只要方式为 POST, body 就一定不为 null)
+        if (request.method() == Method.POST) {
+            val body = request.body()!!
+            val newFormBody = {
+                FormBody.Builder().apply {
+                    additionParams.forEach { (paramName, paramValueExpression) ->
+                        add(paramName, paramValueExpression())
+                    }
                 }
-            }.build()
-            return chain.proceed(
-                    request.newBuilder().post(formBody).build()
-            )
-        } else {
-            //如果 body 不为 FormBody 将无法添加 FormUrlEncoded 参数
-            logger.error {
-                "Impossible add FormUrlEncoded params to ${request.body()?.javaClass}. Request: " +
-                        "${request.method()} ${request.url()}"
+            }
+            if (body.contentType() == null) {   //如果 body 为空
+                return chain.proceed(
+                        request.newBuilder().post(newFormBody().build()).build()
+                )
+            } else if (body is FormBody) {  //如果 body 为 FormBody
+                return chain.proceed(
+                        request.newBuilder().post(newFormBody().addAll(body).build()).build()
+                )
             }
         }
 
+        //其他情况, 例如请求方式为 GET 或 Body 为 Json
+        logger.error {
+            "Impossible add FormUrlEncoded params to ${request.body()?.javaClass?.simpleName ?: "<NullBody>"}. " +
+                    "Request: ${request.method()} ${request.url()}"
+        }
         return chain.proceed(request)
     }
 }

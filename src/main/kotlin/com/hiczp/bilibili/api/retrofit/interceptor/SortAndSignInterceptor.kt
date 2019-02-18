@@ -1,5 +1,7 @@
 package com.hiczp.bilibili.api.retrofit.interceptor
 
+import com.hiczp.bilibili.api.retrofit.Method
+import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.addAll
 import com.hiczp.bilibili.api.retrofit.sortedRaw
 import mu.KotlinLogging
@@ -17,8 +19,9 @@ class SortAndSignInterceptor(private val paramType: ParamType, private val appSe
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
+        //如果欲签名的参数类型为 Query
         if (paramType == ParamType.QUERY) {
-            //这里认为 Query 一定不为 null
+            //如果代码是正确的, 那么传到这里的 Query 参数一定包含了公共参数
             val sortedEncodedQuery = request.url().encodedQuery()!!
                     .split('&')
                     .sorted()
@@ -32,35 +35,35 @@ class SortAndSignInterceptor(private val paramType: ParamType, private val appSe
                             )
                             .build()
             )
-        } else if (paramType == ParamType.FORM_URL_ENCODED && request.body() is FormBody) {
-            val sign = calculateSign((request.body() as FormBody).sortedRaw(), appSecret)
-            val formBody = FormBody.Builder().apply {
-                //添加原有的参数
-                addAll(request.body() as FormBody)
-                //添加 sign
-                addEncoded("sign", sign)
-            }.build()
-            return chain.proceed(
-                    request.newBuilder().post(formBody).build()
-            )
-        } else {
-            //如果 body 不为 FormBody 将无法添加签名
-            logger.error {
-                "Impossible add sign to ${request.body()?.javaClass}. Request: " +
-                        "${request.method()} ${request.url()}"
-            }
         }
 
+        val body = request.body()
+        if (request.method() == Method.POST && body is FormBody) {
+            val sign = calculateSign(body.sortedRaw(), appSecret)
+            val newFormBody = FormBody.Builder().apply {
+                addAll(body)
+                addEncoded("sign", sign)
+            }.build()
+            return chain.proceed(request.newBuilder().post(newFormBody).build())
+        }
+
+        //其他情况, 例如请求方式为 GET 或 Body 为 Json
+        logger.error {
+            "Impossible add sign to ${request.body()?.javaClass?.simpleName ?: "<NullBody>"}. " +
+                    "Request: ${request.method()} ${request.url()}"
+        }
         return chain.proceed(request)
     }
 
-    /**
-     * 签名算法为 "$排序后的参数字符串$appSecret".md5()
-     */
-    private fun calculateSign(string: String, appSecret: String) =
-            MessageDigest.getInstance("MD5")
-                    .digest((string + appSecret).toByteArray())
-                    .joinToString(separator = "") {
-                        String.format("%02x", it)
-                    }
+    companion object {
+        /**
+         * 签名算法为 "$排序后的参数字符串$appSecret".md5()
+         */
+        private fun calculateSign(string: String, appSecret: String) =
+                MessageDigest.getInstance("MD5")
+                        .digest((string + appSecret).toByteArray())
+                        .joinToString(separator = "") {
+                            String.format("%02x", it)
+                        }
+    }
 }

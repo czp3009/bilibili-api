@@ -1,9 +1,9 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.passport.PassportAPI
+import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
-import com.hiczp.bilibili.api.retrofit.interceptor.ParamType
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import mu.KotlinLogging
@@ -22,13 +22,13 @@ private val logger = KotlinLogging.logger {}
  *
  * @param billingClientProperties 客户端的固有属性, 是一种常量
  * @param autoRefreshToken 当 Token 过期时是否自动重新登录
- * @param debug 是否打印请求日志
+ * @param logLevel 日志打印等级
  */
 class BilibiliClient(
         @Suppress("MemberVisibilityCanBePrivate")
         val billingClientProperties: BilibiliClientProperties = BilibiliClientProperties(),
         private val autoRefreshToken: Boolean = true,
-        private val debug: Boolean = false
+        private val logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.NONE
 ) {
     /**
      * 客户端被打开的时间(BilibiliClient 被实例化的时间)
@@ -66,9 +66,9 @@ class BilibiliClient(
             ))
             addInterceptor(SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret))
 
-            //debug
-            if (debug) {
-                addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            //log
+            if (logLevel != HttpLoggingInterceptor.Level.NONE) {
+                addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
             }
         }.build()
 
@@ -84,8 +84,11 @@ class BilibiliClient(
     /**
      * 登陆
      */
-    fun login(username: String, password: String) {
-        TODO()
+    suspend fun login(username: String, password: String) {
+        val (hash, key) = passportAPI.getKey().await().data.let {
+            it.hash to it.key
+        }
+
     }
 
     /**

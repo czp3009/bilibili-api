@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api.retrofit.interceptor
+package com.hiczp.bilibili.api.retrofit
 
 enum class ParamType {
     QUERY,
