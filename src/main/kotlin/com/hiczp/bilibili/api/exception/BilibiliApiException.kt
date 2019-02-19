@@ -8,4 +8,4 @@ import java.io.IOException
  */
 class BilibiliApiException(
         commonResponse: CommonResponse
-) : IOException(commonResponse.msg ?: commonResponse.message)
+) : IOException(commonResponse.message?.takeIf { it.isNotEmpty() } ?: commonResponse.msg)

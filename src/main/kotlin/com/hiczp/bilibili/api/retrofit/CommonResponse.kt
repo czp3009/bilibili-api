@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.retrofit
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -11,10 +12,19 @@ import com.google.gson.annotations.SerializedName
 data class CommonResponse(
         @SerializedName("code")
         var code: Int, // 0
+
         @SerializedName("msg")
         var msg: String?,
+
         @SerializedName("message")
         var message: String?,
+
         @SerializedName("ts")
-        var timestamp: Long // 1550546539
+        var timestamp: Long, // 1550546539
+
+        /**
+         * data 可能是各种类型, 例如 array, object, string
+         */
+        @SerializedName("data")
+        var data: JsonElement?
 )
