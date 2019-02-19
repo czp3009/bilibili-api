@@ -22,10 +22,10 @@ interface PassportAPI {
     @FormUrlEncoded
     fun login(
             @Field("username") username: String, @Field("password") password: String,
-            //以下为验证码所需字段
-            @Field("challenge") challenge: String? = null,  //系统给出的滑动验证 ID
-            @Field("seccode") secCode: String? = null,  //用户给出的滑动验证答案, 生成算法不明
-            @Field("validate") validate: String? = null //滑动验证校验字段, 算法不明
+            //以下为极验所需字段
+            @Field("challenge") challenge: String? = null,
+            @Field("seccode") secCode: String? = null,
+            @Field("validate") validate: String? = null
     ): Deferred<LoginResponse>
 
     /**

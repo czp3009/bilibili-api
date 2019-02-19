@@ -34,7 +34,7 @@ private val logger = KotlinLogging.logger {}
 class BilibiliClient(
         @Suppress("MemberVisibilityCanBePrivate")
         val billingClientProperties: BilibiliClientProperties = BilibiliClientProperties(),
-        private val autoRefreshToken: Boolean = true,
+        private val autoRefreshToken: Boolean = true,   //TODO 自动 refreshToken
         private val logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.NONE
 ) {
     /**
@@ -45,6 +45,7 @@ class BilibiliClient(
     /**
      * 登陆操作得到的 Response
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     var loginResponse: LoginResponse? = null
 
     /**
@@ -58,13 +59,7 @@ class BilibiliClient(
     val passportAPI: PassportAPI by lazy {
         val okHttpClient = OkHttpClient.Builder().apply {
             addInterceptor(CommonHeaderInterceptor(
-                    "Display-ID" to {
-                        if (isLogin) {
-                            "${billingClientProperties.buildVersionId}-$initTime"
-                        } else {
-                            billingClientProperties.buildVersionId
-                        }
-                    },
+                    "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
                     "Buvid" to { billingClientProperties.buildVersionId },
                     "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
                     "Device-ID" to { billingClientProperties.hardwareId }
@@ -95,15 +90,20 @@ class BilibiliClient(
                 .create(PassportAPI::class.java)
     }
 
-    //TODO 验证码
     /**
      * 登陆
      * v3 登陆接口会同时返回 cookies 和 token
      *
-     * @throws BilibiliApiException 用户名与密码不匹配或者需要验证码
+     * @throws BilibiliApiException 用户名与密码不匹配(-629)或者需要验证码(极验)(-105)
      */
     @Throws(BilibiliApiException::class)
-    suspend fun login(username: String, password: String): LoginResponse {
+    suspend fun login(
+            username: String, password: String,
+            //如果登陆请求返回了 "验证码错误!"(-105) 的结果, 那么下一次发送登陆请求就需要带上验证码
+            challenge: String? = null,
+            secCode: String? = null,
+            validate: String? = null
+    ): LoginResponse {
         //取得 hash 和 RSA 公钥
         val (hash, key) = passportAPI.getKey().await().data.let { data ->
             data.hash to data.key.split('\n').filterNot { it.startsWith('-') }.joinToString(separator = "")
@@ -123,7 +123,7 @@ class BilibiliClient(
             String(it)
         }
 
-        return passportAPI.login(username, cipheredPassword).await().also {
+        return passportAPI.login(username, cipheredPassword, challenge, secCode, validate).await().also {
             this.loginResponse = it
         }
     }
