@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.passport.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class LoginResponse(
         @SerializedName("code")
@@ -11,7 +12,7 @@ data class LoginResponse(
         var `data`: Data,
         @SerializedName("ts")
         var ts: Long // 1550219689
-) {
+) : Serializable {
     data class Data(
             @SerializedName("cookie_info")
             var cookieInfo: CookieInfo,
@@ -21,13 +22,13 @@ data class LoginResponse(
             var status: Int, // 0
             @SerializedName("token_info")
             var tokenInfo: TokenInfo
-    ) {
+    ) : Serializable {
         data class CookieInfo(
                 @SerializedName("cookies")
                 var cookies: List<Cookie>,
                 @SerializedName("domains")
                 var domains: List<String>
-        ) {
+        ) : Serializable {
             data class Cookie(
                     @SerializedName("expires")
                     var expires: Int, // 1552811689
@@ -37,7 +38,7 @@ data class LoginResponse(
                     var name: String, // SESSDATA
                     @SerializedName("value")
                     var value: String // 5ff9ba24%2C1552811689%2C04ae9421
-            )
+            ) : Serializable
         }
 
         data class TokenInfo(
@@ -49,7 +50,7 @@ data class LoginResponse(
                 var mid: Int, // 20293030
                 @SerializedName("refresh_token")
                 var refreshToken: String // 6a333ebded3c3dbdde65d136b3190d21
-        )
+        ) : Serializable
     }
 
     //快捷方式

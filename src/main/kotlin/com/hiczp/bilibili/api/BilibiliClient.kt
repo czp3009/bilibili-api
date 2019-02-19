@@ -93,6 +93,9 @@ class BilibiliClient(
     /**
      * 登陆
      * v3 登陆接口会同时返回 cookies 和 token
+     * 如果要求验证码, 访问 data 中提供的 url 将打开一个弹窗, 里面会加载 js 并显示极验
+     * 极验会调用 https://api.geetest.com/ajax.php 上传滑动轨迹, 然后获得 validate 的值
+     * secCode 的值为 "$validate|jordan"
      *
      * @throws BilibiliApiException 用户名与密码不匹配(-629)或者需要验证码(极验)(-105)
      */
