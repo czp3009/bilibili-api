@@ -66,7 +66,7 @@ class SortAndSignInterceptor(private val paramType: ParamType, private val appSe
                 MessageDigest.getInstance("MD5")
                         .digest((string + appSecret).toByteArray())
                         .joinToString(separator = "") {
-                            String.format("%02x", it)
+                            "%02x".format(it)
                         }
     }
 }

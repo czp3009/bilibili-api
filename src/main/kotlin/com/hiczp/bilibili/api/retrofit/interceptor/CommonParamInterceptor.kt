@@ -2,7 +2,8 @@ package com.hiczp.bilibili.api.retrofit.interceptor
 
 import com.hiczp.bilibili.api.retrofit.Method
 import com.hiczp.bilibili.api.retrofit.ParamType
-import com.hiczp.bilibili.api.retrofit.addAll
+import com.hiczp.bilibili.api.retrofit.addAllEncoded
+import com.hiczp.bilibili.api.retrofit.forEachNonNull
 import mu.KotlinLogging
 import okhttp3.FormBody
 import okhttp3.Interceptor
@@ -18,7 +19,7 @@ private val logger = KotlinLogging.logger {}
  */
 class CommonParamInterceptor(
         private val paramType: ParamType,
-        private vararg val additionParams: Pair<String, () -> String>
+        private vararg val additionParams: Pair<String, () -> String?>
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -26,8 +27,8 @@ class CommonParamInterceptor(
         //如果欲添加的参数类型为 Query 则直接添加
         if (paramType == ParamType.QUERY) {
             val httpUrl = request.url().newBuilder().apply {
-                additionParams.forEach { (paramName, paramValueExpression) ->
-                    addQueryParameter(paramName, paramValueExpression())
+                additionParams.forEachNonNull { name, value ->
+                    addQueryParameter(name, value)
                 }
             }.build()
             return chain.proceed(
@@ -40,8 +41,8 @@ class CommonParamInterceptor(
             val body = request.body()!!
             val newFormBody = {
                 FormBody.Builder().apply {
-                    additionParams.forEach { (paramName, paramValueExpression) ->
-                        add(paramName, paramValueExpression())
+                    additionParams.forEachNonNull { name, value ->
+                        add(name, value)
                     }
                 }
             }
@@ -51,7 +52,7 @@ class CommonParamInterceptor(
                 )
             } else if (body is FormBody) {  //如果 body 为 FormBody
                 return chain.proceed(
-                        request.newBuilder().post(newFormBody().addAll(body).build()).build()
+                        request.newBuilder().post(newFormBody().addAllEncoded(body).build()).build()
                 )
             }
         }

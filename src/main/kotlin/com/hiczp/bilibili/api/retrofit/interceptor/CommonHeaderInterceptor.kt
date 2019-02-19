@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.retrofit.interceptor
 
+import com.hiczp.bilibili.api.retrofit.forEachNonNull
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -8,11 +9,11 @@ import okhttp3.Response
  *
  * @param additionHeaders HeaderName to HeaderValueExpression
  */
-class CommonHeaderInterceptor(private vararg val additionHeaders: Pair<String, () -> String>) : Interceptor {
+class CommonHeaderInterceptor(private vararg val additionHeaders: Pair<String, () -> String?>) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder().apply {
-            additionHeaders.forEach { (headerName, headerValueExpression) ->
-                addHeader(headerName, headerValueExpression())
+            additionHeaders.forEachNonNull { name, value ->
+                addHeader(name, value)
             }
         }.build()
         return chain.proceed(request)

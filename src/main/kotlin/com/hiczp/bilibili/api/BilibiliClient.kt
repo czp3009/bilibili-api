@@ -125,12 +125,12 @@ class BilibiliClient(
      * 这个方法不一定是线程安全的, 登出的同时如果进行登陆操作可能引发错误
      */
     suspend fun logout() {
-        val data = loginResponse?.data ?: return
-        val cookieMap = data.cookieInfo.cookies
+        val response = loginResponse ?: return
+        val cookieMap = response.data.cookieInfo.cookies
                 .associate {
                     it.name to it.value
                 }
-        passportAPI.revoke(cookieMap, data.tokenInfo.accessToken).await()
+        passportAPI.revoke(cookieMap, response.token).await()
         loginResponse = null
     }
 }

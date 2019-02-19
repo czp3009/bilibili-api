@@ -7,10 +7,10 @@ object BaseUrl {
     /**
      * passport 站, 用于登录
      */
-    val passport = "https://passport.bilibili.com"
+    const val passport = "https://passport.bilibili.com"
 
     /**
      * 直播站
      */
-    val live = "https://api.live.bilibili.com"
+    const val live = "https://api.live.bilibili.com"
 }

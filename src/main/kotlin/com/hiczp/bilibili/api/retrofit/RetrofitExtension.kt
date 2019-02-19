@@ -2,9 +2,9 @@ package com.hiczp.bilibili.api.retrofit
 
 import okhttp3.FormBody
 
-inline fun FormBody.forEach(block: (Pair<String, String>) -> Unit) {
+inline fun FormBody.forEach(block: (String, String) -> Unit) {
     repeat(size()) {
-        block(encodedName(it) to encodedValue(it))
+        block(encodedName(it), encodedValue(it))
     }
 }
 
@@ -26,11 +26,20 @@ fun FormBody.sortedRaw(): String {
     return nameAndValue.sorted().joinToString(separator = "&")
 }
 
-fun FormBody.Builder.addAll(formBody: FormBody): FormBody.Builder {
+fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {
     with(formBody) {
         repeat(size()) {
             addEncoded(encodedName(it), encodedValue(it))
         }
     }
     return this
+}
+
+internal inline fun Array<out Pair<String, () -> String?>>.forEachNonNull(action: (String, String) -> Unit) {
+    forEach { (name, valueExpression) ->
+        val value = valueExpression()
+        if (value != null) {
+            action(name, value)
+        }
+    }
 }

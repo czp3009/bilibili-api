@@ -1,8 +1,8 @@
 package com.hiczp.bilibili.api.passport
 
-import com.hiczp.bilibili.api.CommonResponse
 import com.hiczp.bilibili.api.passport.model.GetKeyResponse
 import com.hiczp.bilibili.api.passport.model.LoginResponse
+import com.hiczp.bilibili.api.retrofit.CommonResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Field
 import retrofit2.http.FieldMap

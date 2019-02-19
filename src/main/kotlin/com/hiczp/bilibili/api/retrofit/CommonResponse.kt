@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api
+package com.hiczp.bilibili.api.retrofit
 
 import com.google.gson.annotations.SerializedName
 

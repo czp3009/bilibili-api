@@ -51,4 +51,8 @@ data class LoginResponse(
                 var refreshToken: String // 6a333ebded3c3dbdde65d136b3190d21
         )
     }
+
+    //快捷方式
+    val userId get() = data.tokenInfo.mid
+    val token get() = data.tokenInfo.accessToken
 }
