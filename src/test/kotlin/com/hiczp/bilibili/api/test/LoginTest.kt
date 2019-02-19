@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test
 
 class LoginTest {
     @Test
-    fun login() {
+    fun loginAndLogout() {
         runBlocking {
             BilibiliClient(logLevel = HttpLoggingInterceptor.Level.BODY)
-                    .login(Config.username, Config.password)
+                    .run {
+                        login(Config.username, Config.password)
+                        logout()
+                    }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.passport.PassportAPI
+import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
@@ -11,7 +12,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.KeyFactory
+import java.security.spec.X509EncodedKeySpec
 import java.time.Instant
+import java.util.*
+import javax.crypto.Cipher
 
 private val logger = KotlinLogging.logger {}
 
@@ -36,10 +41,16 @@ class BilibiliClient(
     private val initTime = Instant.now().epochSecond
 
     /**
+     * 登陆操作得到的 Response
+     */
+    var loginResponse: LoginResponse? = null
+
+    /**
      * 是否已登录
      */
     @Suppress("MemberVisibilityCanBePrivate")
-    var isLogin = false
+    val isLogin
+        get() = loginResponse != null
 
     @Suppress("SpellCheckingInspection")
     val passportAPI: PassportAPI by lazy {
@@ -84,17 +95,42 @@ class BilibiliClient(
     /**
      * 登陆
      */
-    suspend fun login(username: String, password: String) {
-        val (hash, key) = passportAPI.getKey().await().data.let {
-            it.hash to it.key
+    suspend fun login(username: String, password: String): LoginResponse {
+        //取得 hash 和 RSA 公钥
+        val (hash, key) = passportAPI.getKey().await().data.let { data ->
+            data.hash to data.key.split('\n').filterNot { it.startsWith('-') }.joinToString(separator = "")
         }
 
+        //解析 RSA 公钥
+        val publicKey = X509EncodedKeySpec(Base64.getDecoder().decode(key)).let {
+            KeyFactory.getInstance("RSA").generatePublic(it)
+        }
+        //加密密码
+        //兼容 Android
+        val cipheredPassword = Cipher.getInstance("RSA/ECB/PKCS1Padding").apply {
+            init(Cipher.ENCRYPT_MODE, publicKey)
+        }.doFinal((hash + password).toByteArray()).let {
+            Base64.getEncoder().encode(it)
+        }.let {
+            String(it)
+        }
+
+        return passportAPI.login(username, cipheredPassword).await().also {
+            this.loginResponse = it
+        }
     }
 
     /**
      * 登出
+     * 这个方法不一定是线程安全的, 登出的同时如果进行登陆操作可能引发错误
      */
-    fun logout() {
-        TODO()
+    suspend fun logout() {
+        val data = loginResponse?.data ?: return
+        val cookieMap = data.cookieInfo.cookies
+                .associate {
+                    it.name to it.value
+                }
+        passportAPI.revoke(cookieMap, data.tokenInfo.accessToken).await()
+        loginResponse = null
     }
 }

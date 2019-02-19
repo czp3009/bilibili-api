@@ -2,7 +2,6 @@ package com.hiczp.bilibili.api.retrofit.interceptor
 
 import com.hiczp.bilibili.api.retrofit.Method
 import com.hiczp.bilibili.api.retrofit.ParamType
-import com.hiczp.bilibili.api.retrofit.addAll
 import com.hiczp.bilibili.api.retrofit.sortedRaw
 import mu.KotlinLogging
 import okhttp3.FormBody
@@ -39,9 +38,13 @@ class SortAndSignInterceptor(private val paramType: ParamType, private val appSe
 
         val body = request.body()
         if (request.method() == Method.POST && body is FormBody) {
-            val sign = calculateSign(body.sortedRaw(), appSecret)
+            val sortedRaw = body.sortedRaw()
+            val sign = calculateSign(sortedRaw, appSecret)
             val newFormBody = FormBody.Builder().apply {
-                addAll(body)
+                sortedRaw.split('&').forEach {
+                    val (name, value) = it.split('=')
+                    addEncoded(name, value)
+                }
                 addEncoded("sign", sign)
             }.build()
             return chain.proceed(request.newBuilder().post(newFormBody).build())

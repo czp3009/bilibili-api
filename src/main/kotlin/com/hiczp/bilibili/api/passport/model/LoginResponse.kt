@@ -32,7 +32,7 @@ data class LoginResponse(
                     @SerializedName("expires")
                     var expires: Int, // 1552811689
                     @SerializedName("http_only")
-                    var httpOnly: Boolean, // 1
+                    var httpOnly: Int, // 1
                     @SerializedName("name")
                     var name: String, // SESSDATA
                     @SerializedName("value")
