@@ -1,10 +1,12 @@
 package com.hiczp.bilibili.api
 
+import com.hiczp.bilibili.api.exception.BilibiliApiException
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
+import com.hiczp.bilibili.api.retrofit.interceptor.FailureResponseInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import mu.KotlinLogging
@@ -76,6 +78,7 @@ class BilibiliClient(
                     "ts" to { Instant.now().epochSecond.toString() }
             ))
             addInterceptor(SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret))
+            addInterceptor(FailureResponseInterceptor)
 
             //log
             if (logLevel != HttpLoggingInterceptor.Level.NONE) {
@@ -92,9 +95,14 @@ class BilibiliClient(
                 .create(PassportAPI::class.java)
     }
 
+    //TODO 验证码
     /**
      * 登陆
+     * v3 登陆接口会同时返回 cookies 和 token
+     *
+     * @throws BilibiliApiException 用户名与密码不匹配或者需要验证码
      */
+    @Throws(BilibiliApiException::class)
     suspend fun login(username: String, password: String): LoginResponse {
         //取得 hash 和 RSA 公钥
         val (hash, key) = passportAPI.getKey().await().data.let { data ->

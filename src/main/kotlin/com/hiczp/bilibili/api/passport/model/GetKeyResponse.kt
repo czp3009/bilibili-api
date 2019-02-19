@@ -10,7 +10,7 @@ data class GetKeyResponse(
         @SerializedName("data")
         var `data`: Data,
         @SerializedName("ts")
-        var ts: Int // 1550219688
+        var ts: Long // 1550219688
 ) {
     data class Data(
             @SerializedName("hash")

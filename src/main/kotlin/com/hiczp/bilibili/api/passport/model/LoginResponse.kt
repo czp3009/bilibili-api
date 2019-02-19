@@ -10,7 +10,7 @@ data class LoginResponse(
         @SerializedName("data")
         var `data`: Data,
         @SerializedName("ts")
-        var ts: Int // 1550219689
+        var ts: Long // 1550219689
 ) {
     data class Data(
             @SerializedName("cookie_info")
