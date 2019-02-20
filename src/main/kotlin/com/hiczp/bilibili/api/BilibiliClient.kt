@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.app.AppAPI
+import com.hiczp.bilibili.api.message.MessageAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.ParamType
@@ -9,8 +10,8 @@ import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.FailureResponseInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
+import com.hiczp.bilibili.api.vc.VcAPI
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import mu.KotlinLogging
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,11 +19,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 import javax.crypto.Cipher
-
-private val logger = KotlinLogging.logger {}
 
 /**
  * 此类表示一个模拟的 Bilibili 客户端(Android), 所有调用由此开始.
@@ -58,8 +58,34 @@ class BilibiliClient(
         get() = loginResponse != null
 
     //快捷方式
-    val userId get() = loginResponse?.userId
-    val token get() = loginResponse?.token
+    @Suppress("MemberVisibilityCanBePrivate")
+    val userId
+        get() = loginResponse?.userId
+    @Suppress("MemberVisibilityCanBePrivate")
+    val token
+        get() = loginResponse?.token
+
+    @Suppress("SpellCheckingInspection")
+    private val defaultCommonHeaderInterceptor = CommonHeaderInterceptor(
+            "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
+            "Buvid" to { billingClientProperties.buildVersionId },
+            "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
+            "Device-ID" to { billingClientProperties.hardwareId }
+    )
+
+    @Suppress("SpellCheckingInspection")
+    private val defaultCommonParamArray = arrayOf(
+            "access_key" to { token },
+            "appkey" to { billingClientProperties.appKey },
+            "build" to { billingClientProperties.build },
+            "channel" to { billingClientProperties.channel },
+            "mobi_app" to { billingClientProperties.platform },
+            "platform" to { billingClientProperties.platform },
+            "ts" to { Instant.now().epochSecond.toString() }
+    )
+
+    private val defaultQuerySignInterceptor = SortAndSignInterceptor(ParamType.QUERY, billingClientProperties.appSecret)
+    private val defaultFormSignInterceptor = SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
 
     /**
      * 用户鉴权相关的接口
@@ -67,12 +93,7 @@ class BilibiliClient(
     @Suppress("SpellCheckingInspection")
     val passportAPI by lazy {
         createAPI<PassportAPI>(BaseUrl.passport, logLevel,
-                CommonHeaderInterceptor(
-                        "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
-                        "Buvid" to { billingClientProperties.buildVersionId },
-                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
-                        "Device-ID" to { billingClientProperties.hardwareId }
-                ),
+                defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
                         "appkey" to { billingClientProperties.appKey },
                         "build" to { billingClientProperties.build },
@@ -81,7 +102,22 @@ class BilibiliClient(
                         "platform" to { billingClientProperties.platform },
                         "ts" to { Instant.now().epochSecond.toString() }
                 ),
-                SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
+                defaultFormSignInterceptor
+        )
+    }
+
+    /**
+     * 消息通知有关的接口
+     */
+    @Suppress("SpellCheckingInspection")
+    val messageAPI by lazy {
+        createAPI<MessageAPI>(BaseUrl.message, logLevel,
+                defaultCommonHeaderInterceptor,
+                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
+                        "actionKey" to { "appkey" },
+                        "has_up" to { "1" }
+                ),
+                defaultQuerySignInterceptor
         )
     }
 
@@ -91,22 +127,28 @@ class BilibiliClient(
     @Suppress("SpellCheckingInspection")
     val appAPI by lazy {
         createAPI<AppAPI>(BaseUrl.app, logLevel,
-                CommonHeaderInterceptor(
-                        "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
-                        "Buvid" to { billingClientProperties.buildVersionId },
-                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
-                        "Device-ID" to { billingClientProperties.hardwareId }
+                defaultCommonHeaderInterceptor,
+                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray),
+                defaultQuerySignInterceptor
+        )
+    }
+
+    /**
+     * 小视频相关接口
+     */
+    @Suppress("SpellCheckingInspection")
+    val vcAPI by lazy {
+        createAPI<VcAPI>(BaseUrl.vc, logLevel,
+                defaultCommonHeaderInterceptor,
+                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
+                        "_device" to { billingClientProperties.platform },
+                        "_hwid" to { billingClientProperties.hardwareId },
+                        "src" to { billingClientProperties.channel },
+                        "trace_id" to { generateTraceId() },
+                        "uid" to { userId?.toString() },
+                        "version" to { billingClientProperties.version }
                 ),
-                CommonParamInterceptor(ParamType.QUERY,
-                        "access_key" to { token },
-                        "appkey" to { billingClientProperties.appKey },
-                        "build" to { billingClientProperties.build },
-                        "channel" to { billingClientProperties.channel },
-                        "mobi_app" to { billingClientProperties.platform },
-                        "platform" to { billingClientProperties.platform },
-                        "ts" to { Instant.now().epochSecond.toString() }
-                ),
-                SortAndSignInterceptor(ParamType.QUERY, billingClientProperties.appSecret)
+                defaultQuerySignInterceptor
         )
     }
 
@@ -163,6 +205,11 @@ class BilibiliClient(
                 }
         passportAPI.revoke(cookieMap, response.token).await()
         loginResponse = null
+    }
+
+    companion object {
+        private val traceIdFormat = SimpleDateFormat("yyyyMMddHHmm000ss")
+        private fun generateTraceId() = traceIdFormat.format(Date())
     }
 }
 

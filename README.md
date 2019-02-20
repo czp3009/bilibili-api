@@ -43,10 +43,17 @@ https://passport.bilibili.com
 
 登陆后, 可以访问全部 API.
 
+# message
+https://message.bilibili.com
+
+    BilibiliClient().messageAPI
+
+消息通知有关的接口.
+
 # app
 https://app.bilibili.com
 
-    BilibiliClient().appAPI()
+    BilibiliClient().appAPI
 
 为 app 提供通用接口, 例如获取个人信息. 完整示例如下
 
@@ -54,15 +61,16 @@ https://app.bilibili.com
         val bilibiliClient = BilibiliClient().apply {
             login(username, password)
         }
-        val myInfo = bilibiliClient.appAPI().myInfo().await()
+        val myInfo = bilibiliClient.appAPI.myInfo().await()
         println(myInfo)
     }
 
-# 主站
-//TODO
+# av
+https://api.vc.bilibili.com
 
-# 直播站
-//TODO
+    BilibiliClient().vcAPI
+
+小视频有关的接口.
 
 # License
 GPL V3

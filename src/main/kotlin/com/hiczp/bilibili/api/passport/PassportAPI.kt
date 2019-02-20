@@ -9,6 +9,9 @@ import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
+/**
+ * 用户鉴权相关的接口
+ */
 @Suppress("DeferredIsResult")
 interface PassportAPI {
     @POST("/api/oauth2/getKey")

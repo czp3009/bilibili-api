@@ -5,9 +5,14 @@ package com.hiczp.bilibili.api
  */
 object BaseUrl {
     /**
-     * passport 站, 用于登录
+     * 用户鉴权
      */
     const val passport = "https://passport.bilibili.com"
+
+    /**
+     * 消息
+     */
+    const val message = "https://message.bilibili.com"
 
     /**
      * 提供通用功能, 例如获取用户信息
@@ -15,7 +20,12 @@ object BaseUrl {
     const val app = "https://app.bilibili.com"
 
     /**
-     * 直播站
+     * 小视频
+     */
+    const val vc = "https://api.vc.bilibili.com"
+
+    /**
+     * 直播
      */
     const val live = "https://api.live.bilibili.com"
 }
