@@ -25,6 +25,11 @@ object BaseUrl {
     const val vc = "https://api.vc.bilibili.com"
 
     /**
+     * 创作中心
+     */
+    const val member = "https://member.bilibili.com"
+
+    /**
      * 直播
      */
     const val live = "https://api.live.bilibili.com"

@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api.app.model
 
 import com.google.gson.annotations.SerializedName
 
-data class IndexPage(
+data class HomePage(
         @SerializedName("code")
         var code: Int, // 0
         @SerializedName("data")

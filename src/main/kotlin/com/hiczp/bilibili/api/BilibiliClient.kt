@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.app.AppAPI
+import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
@@ -84,15 +85,15 @@ class BilibiliClient(
             "ts" to { Instant.now().epochSecond.toString() }
     )
 
+    private val defaultCommonQueryParamInterceptor = CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray)
     private val defaultQuerySignInterceptor = SortAndSignInterceptor(ParamType.QUERY, billingClientProperties.appSecret)
-    private val defaultFormSignInterceptor = SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
 
     /**
      * 用户鉴权相关的接口
      */
     @Suppress("SpellCheckingInspection")
     val passportAPI by lazy {
-        createAPI<PassportAPI>(BaseUrl.passport, logLevel,
+        createAPI<PassportAPI>(BaseUrl.passport,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
                         "appkey" to { billingClientProperties.appKey },
@@ -102,7 +103,7 @@ class BilibiliClient(
                         "platform" to { billingClientProperties.platform },
                         "ts" to { Instant.now().epochSecond.toString() }
                 ),
-                defaultFormSignInterceptor
+                SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
         )
     }
 
@@ -111,7 +112,7 @@ class BilibiliClient(
      */
     @Suppress("SpellCheckingInspection")
     val messageAPI by lazy {
-        createAPI<MessageAPI>(BaseUrl.message, logLevel,
+        createAPI<MessageAPI>(BaseUrl.message,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
                         "actionKey" to { "appkey" },
@@ -122,13 +123,13 @@ class BilibiliClient(
     }
 
     /**
-     * 提供一些通用信息
+     * 总站 API
      */
     @Suppress("SpellCheckingInspection")
     val appAPI by lazy {
-        createAPI<AppAPI>(BaseUrl.app, logLevel,
+        createAPI<AppAPI>(BaseUrl.app,
                 defaultCommonHeaderInterceptor,
-                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray),
+                defaultCommonQueryParamInterceptor,
                 defaultQuerySignInterceptor
         )
     }
@@ -138,7 +139,7 @@ class BilibiliClient(
      */
     @Suppress("SpellCheckingInspection")
     val vcAPI by lazy {
-        createAPI<VcAPI>(BaseUrl.vc, logLevel,
+        createAPI<VcAPI>(BaseUrl.vc,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
                         "_device" to { billingClientProperties.platform },
@@ -148,6 +149,17 @@ class BilibiliClient(
                         "uid" to { userId?.toString() },
                         "version" to { billingClientProperties.version }
                 ),
+                defaultQuerySignInterceptor
+        )
+    }
+
+    /**
+     * 创作中心
+     */
+    val memberAPI by lazy {
+        createAPI<MemberAPI>(BaseUrl.member,
+                defaultCommonHeaderInterceptor,
+                defaultCommonQueryParamInterceptor,
                 defaultQuerySignInterceptor
         )
     }
@@ -207,32 +219,31 @@ class BilibiliClient(
         loginResponse = null
     }
 
+    private inline fun <reified T : Any> createAPI(
+            baseUrl: String,
+            vararg interceptors: Interceptor
+    ) = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(coroutineCallAdapterFactory)
+            .client(OkHttpClient.Builder().apply {
+                interceptors.forEach {
+                    addInterceptor(it)
+                }
+                addInterceptor(FailureResponseInterceptor)
+                //log
+                if (logLevel != HttpLoggingInterceptor.Level.NONE) {
+                    addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                }
+            }.build())
+            .build()
+            .create(T::class.java)
+
     companion object {
+        @Suppress("SpellCheckingInspection")
+        private val gsonConverterFactory = GsonConverterFactory.create()
+        private val coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
         private val traceIdFormat = SimpleDateFormat("yyyyMMddHHmm000ss")
         private fun generateTraceId() = traceIdFormat.format(Date())
     }
 }
-
-@Suppress("SpellCheckingInspection")
-private val gsonConverterFactory = GsonConverterFactory.create()
-private val coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
-private inline fun <reified T : Any> createAPI(
-        baseUrl: String,
-        logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.NONE,
-        vararg interceptors: Interceptor
-) = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(gsonConverterFactory)
-        .addCallAdapterFactory(coroutineCallAdapterFactory)
-        .client(OkHttpClient.Builder().apply {
-            interceptors.forEach {
-                addInterceptor(it)
-            }
-            addInterceptor(FailureResponseInterceptor)
-            //log
-            if (logLevel != HttpLoggingInterceptor.Level.NONE) {
-                addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-            }
-        }.build())
-        .build()
-        .create(T::class.java)

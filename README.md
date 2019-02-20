@@ -55,7 +55,7 @@ https://app.bilibili.com
 
     BilibiliClient().appAPI
 
-为 app 提供通用接口, 例如获取个人信息. 完整示例如下
+总站 API. 获取个人信息的完整示例如下:
 
     runBlocking {
         val bilibiliClient = BilibiliClient().apply {
@@ -70,7 +70,14 @@ https://api.vc.bilibili.com
 
     BilibiliClient().vcAPI
 
-小视频有关的接口.
+小视频.
+
+# member
+https://member.bilibili.com
+
+    BilibiliClient().memberAPI
+
+创作中心.
 
 # License
 GPL V3
