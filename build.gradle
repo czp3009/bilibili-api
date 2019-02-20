@@ -54,6 +54,8 @@ dependencies {
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.5.0'
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.5.0'
+    // https://mvnrepository.com/artifact/com.github.salomonbrys.kotson/kotson
+    compile group: 'com.github.salomonbrys.kotson', name: 'kotson', version: '2.5.0'
     // https://mvnrepository.com/artifact/com.jakewharton.retrofit/retrofit2-kotlin-coroutines-adapter
     compile group: 'com.jakewharton.retrofit', name: 'retrofit2-kotlin-coroutines-adapter', version: '0.9.2'
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor

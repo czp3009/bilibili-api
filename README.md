@@ -2,6 +2,8 @@
 该项目提供 Bilibili API 的 JVM 调用, 协议来自 Bilibili Android APP 的逆向工程以及截包分析.
 
 # 登录和登出
+https://passport.bilibili.com
+
 登陆和登出均为异步方法, 需要在协程上下文中执行.
 
     runBlocking {
@@ -27,7 +29,7 @@
 
     {"ts":1550569982,"code":-105,"data":{"url":"https://passport.bilibili.com/register/verification.html?success=1&gt=b6e5b7fad7ecd37f465838689732e788&challenge=9a67afa4d42ede71a93aeaaa54a4b6fe&ct=1&hash=105af2e7cc6ea829c4a95205f2371dc5"},"message":"验证码错误!"}
 
-自行访问 `data.url` 将打开一个极验弹窗, 通过验证码后再次调用登陆接口:
+自行访问 `commonResponse.data.obj.url.string` 将打开一个极验弹窗, 通过验证码后再次调用登陆接口:
 
     login(username, password, challenge, secCode, validate)
 
@@ -40,6 +42,21 @@
 注意, `BilibiliClient` 不能严格保证线程安全, 如果在登出的同时进行登录操作可能引发错误.
 
 登陆后, 可以访问全部 API.
+
+# app
+https://app.bilibili.com
+
+    BilibiliClient().appAPI()
+
+为 app 提供通用接口, 例如获取个人信息. 完整示例如下
+
+    runBlocking {
+        val bilibiliClient = BilibiliClient().apply {
+            login(username, password)
+        }
+        val myInfo = bilibiliClient.appAPI().myInfo().await()
+        println(myInfo)
+    }
 
 # 主站
 //TODO

@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api.exception
+package com.hiczp.bilibili.api.retrofit.exception
 
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import java.io.IOException

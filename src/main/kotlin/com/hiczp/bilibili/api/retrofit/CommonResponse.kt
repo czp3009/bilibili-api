@@ -26,5 +26,11 @@ data class CommonResponse(
          * data 可能是各种类型, 例如 array, object, string
          */
         @SerializedName("data")
-        var data: JsonElement?
+        var data: JsonElement?,
+
+        /**
+         * ttl, 不明确含义, 如果存在则值总为 1
+         */
+        @SerializedName("ttl")
+        var ttl: Int?
 )

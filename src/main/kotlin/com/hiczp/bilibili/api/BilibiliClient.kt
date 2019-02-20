@@ -1,15 +1,17 @@
 package com.hiczp.bilibili.api
 
-import com.hiczp.bilibili.api.exception.BilibiliApiException
+import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.retrofit.ParamType
+import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.FailureResponseInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import mu.KotlinLogging
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -55,39 +57,57 @@ class BilibiliClient(
     val isLogin
         get() = loginResponse != null
 
+    //快捷方式
+    val userId get() = loginResponse?.userId
+    val token get() = loginResponse?.token
+
+    /**
+     * 用户鉴权相关的接口
+     */
     @Suppress("SpellCheckingInspection")
-    val passportAPI: PassportAPI by lazy {
-        val okHttpClient = OkHttpClient.Builder().apply {
-            addInterceptor(CommonHeaderInterceptor(
-                    "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
-                    "Buvid" to { billingClientProperties.buildVersionId },
-                    "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
-                    "Device-ID" to { billingClientProperties.hardwareId }
-            ))
-            addInterceptor(CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
-                    "appkey" to { billingClientProperties.appKey },
-                    "build" to { billingClientProperties.build },
-                    "channel" to { billingClientProperties.channel },
-                    "mobi_app" to { billingClientProperties.platform },
-                    "platform" to { billingClientProperties.platform },
-                    "ts" to { Instant.now().epochSecond.toString() }
-            ))
-            addInterceptor(SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret))
-            addInterceptor(FailureResponseInterceptor)
+    val passportAPI by lazy {
+        createAPI<PassportAPI>(BaseUrl.passport, logLevel,
+                CommonHeaderInterceptor(
+                        "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
+                        "Buvid" to { billingClientProperties.buildVersionId },
+                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
+                        "Device-ID" to { billingClientProperties.hardwareId }
+                ),
+                CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
+                        "appkey" to { billingClientProperties.appKey },
+                        "build" to { billingClientProperties.build },
+                        "channel" to { billingClientProperties.channel },
+                        "mobi_app" to { billingClientProperties.platform },
+                        "platform" to { billingClientProperties.platform },
+                        "ts" to { Instant.now().epochSecond.toString() }
+                ),
+                SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
+        )
+    }
 
-            //log
-            if (logLevel != HttpLoggingInterceptor.Level.NONE) {
-                addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-            }
-        }.build()
-
-        Retrofit.Builder()
-                .baseUrl(BaseUrl.passport)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .client(okHttpClient)
-                .build()
-                .create(PassportAPI::class.java)
+    /**
+     * 提供一些通用信息
+     */
+    @Suppress("SpellCheckingInspection")
+    val appAPI by lazy {
+        createAPI<AppAPI>(BaseUrl.app, logLevel,
+                CommonHeaderInterceptor(
+                        "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
+                        "Buvid" to { billingClientProperties.buildVersionId },
+                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
+                        "Device-ID" to { billingClientProperties.hardwareId }
+                ),
+                CommonParamInterceptor(ParamType.QUERY,
+                        "access_key" to { token },
+                        "appkey" to { billingClientProperties.appKey },
+                        "build" to { billingClientProperties.build },
+                        "channel" to { billingClientProperties.channel },
+                        "mobi_app" to { billingClientProperties.platform },
+                        "platform" to { billingClientProperties.platform },
+                        "ts" to { Instant.now().epochSecond.toString() }
+                ),
+                SortAndSignInterceptor(ParamType.QUERY, billingClientProperties.appSecret)
+        )
     }
 
     /**
@@ -145,3 +165,27 @@ class BilibiliClient(
         loginResponse = null
     }
 }
+
+@Suppress("SpellCheckingInspection")
+private val gsonConverterFactory = GsonConverterFactory.create()
+private val coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
+private inline fun <reified T : Any> createAPI(
+        baseUrl: String,
+        logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.NONE,
+        vararg interceptors: Interceptor
+) = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(gsonConverterFactory)
+        .addCallAdapterFactory(coroutineCallAdapterFactory)
+        .client(OkHttpClient.Builder().apply {
+            interceptors.forEach {
+                addInterceptor(it)
+            }
+            addInterceptor(FailureResponseInterceptor)
+            //log
+            if (logLevel != HttpLoggingInterceptor.Level.NONE) {
+                addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+            }
+        }.build())
+        .build()
+        .create(T::class.java)

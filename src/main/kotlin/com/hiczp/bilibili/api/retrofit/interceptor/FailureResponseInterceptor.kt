@@ -1,9 +1,11 @@
 package com.hiczp.bilibili.api.retrofit.interceptor
 
+import com.github.salomonbrys.kotson.fromJson
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.obj
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import com.hiczp.bilibili.api.exception.BilibiliApiException
-import com.hiczp.bilibili.api.retrofit.CommonResponse
+import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -32,12 +34,12 @@ object FailureResponseInterceptor : Interceptor {
         val jsonObject = body.source().also {
             it.request(Long.MAX_VALUE)
         }.buffer.clone().inputStream().reader(charset).let {
-            jsonParser.parse(it).asJsonObject
+            jsonParser.parse(it).obj
         }
 
         //判断 code 是否为 0
-        if (jsonObject["code"].asInt != 0) {
-            throw BilibiliApiException(gson.fromJson(jsonObject, CommonResponse::class.java))
+        if (jsonObject["code"].int != 0) {
+            throw BilibiliApiException(gson.fromJson(jsonObject))
         }
 
         return response
