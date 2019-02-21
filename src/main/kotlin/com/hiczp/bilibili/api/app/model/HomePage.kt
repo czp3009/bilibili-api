@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.app.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class HomePage(
@@ -172,9 +173,9 @@ data class HomePage(
                         @SerializedName("card")
                         var card: Card,
                         @SerializedName("click_urls")
-                        var clickUrls: List<Any>,
+                        var clickUrls: List<JsonElement>,
                         @SerializedName("download_whitelist")
-                        var downloadWhitelist: List<Any>,
+                        var downloadWhitelist: List<JsonElement>,
                         @SerializedName("open_whitelist")
                         var openWhitelist: List<String>,
                         @SerializedName("preload_landingpage")
@@ -184,7 +185,7 @@ data class HomePage(
                         @SerializedName("sales_type")
                         var salesType: Int, // 12
                         @SerializedName("show_urls")
-                        var showUrls: List<Any>,
+                        var showUrls: List<JsonElement>,
                         @SerializedName("special_industry")
                         var specialIndustry: Boolean, // false
                         @SerializedName("special_industry_tips")
@@ -288,7 +289,7 @@ data class HomePage(
                         @SerializedName("sales_type")
                         var salesType: Int, // 31
                         @SerializedName("show_urls")
-                        var showUrls: List<Any>,
+                        var showUrls: List<JsonElement>,
                         @SerializedName("special_industry")
                         var specialIndustry: Boolean, // false
                         @SerializedName("special_industry_tips")
@@ -327,7 +328,7 @@ data class HomePage(
                                 @SerializedName("jump_url")
                                 var jumpUrl: String, // bilibili://game_center/detail?id=80&sourceFrom=782&sourceType=adPut
                                 @SerializedName("report_urls")
-                                var reportUrls: List<Any>,
+                                var reportUrls: List<JsonElement>,
                                 @SerializedName("text")
                                 var text: String,
                                 @SerializedName("type")

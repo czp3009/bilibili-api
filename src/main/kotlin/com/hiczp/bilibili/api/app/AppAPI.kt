@@ -5,13 +5,19 @@ import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.time.Instant
-import java.util.*
 
 /**
  * 总站 API
  */
 @Suppress("DeferredIsResult")
 interface AppAPI {
+    /**
+     * 打开 APP 时将访问此接口来获得 UI 排布顺序
+     * 包括下方 tab(首页, 频道, 动态, 会员购), 首页的上方 tab(直播, 推荐, 热门, 追番) 以及右上角的 游戏中心, 离线下载, 消息
+     */
+    @GET("/x/resource/show/tab")
+    fun tab(): Deferred<Tab>
+
     /**
      * 登陆完成后将请求一次此接口以获得个人资料
      */
@@ -73,8 +79,9 @@ interface AppAPI {
     ): Deferred<PopularPage>
 
     /**
-     * 视频页面
+     * 视频页面(普通视频, 非番剧)
      * 包含视频基本信息, 推荐和广告
+     * 从这个接口得到视频的 cid
      *
      * @param aid 视频的唯一标识
      */
@@ -93,29 +100,29 @@ interface AppAPI {
             @Query("trackid") trackId: String? = null //all_10.shylf-ai-recsys-120.1550674524909.237
     ): Deferred<View>
 
-    //TODO 这里的 appkey 变为 iVGUTjsxvpLeuDCf
-    /**
-     * 获得视频的播放地址
-     *
-     * @param expire 默认为下个月的这一天的时间戳
-     * @param mid 当前用户 ID
-     * @param cid 在 view() 接口的返回值里
-     * @param aid 视频的唯一标识
-     */
-    @Suppress("SpellCheckingInspection")
-    @GET("/x/playurl")
-    fun playUrl(
-            @Query("device") device: String = "android",
-            @Query("expire") expire: Long = Calendar.getInstance().apply { add(Calendar.MONTH, 1) }.toInstant().epochSecond,
-            @Query("force_host") forceHost: Int = 0,
-            @Query("mid") mid: Long? = null,
-            @Query("fnval") fnVal: Int = 16,
-            @Query("qn") qn: Int = 32,
-            @Query("npcybs") npcybs: Int = 0,
-            @Query("cid") cid: Long? = null,
-            @Query("otype") otype: String = "json",
-            @Query("fnver") fnVer: Int = 0,
-            @Query("buvid") buildVersionId: String? = null,
-            @Query("aid") aid: Long
-    ): Deferred<PlayUrl>
+//    //TODO 这里的 appkey 变为 iVGUTjsxvpLeuDCf
+//    /**
+//     * 获得视频的播放地址
+//     *
+//     * @param expire 默认为下个月的这一天的时间戳
+//     * @param mid 当前用户 ID
+//     * @param cid 在 view() 接口的返回值里
+//     * @param aid 视频的唯一标识
+//     */
+//    @Suppress("SpellCheckingInspection")
+//    @GET("/x/playurl")
+//    fun playUrl(
+//            @Query("device") device: String = "android",
+//            @Query("expire") expire: Long = Calendar.getInstance().apply { add(Calendar.MONTH, 1) }.toInstant().epochSecond,
+//            @Query("force_host") forceHost: Int = 0,
+//            @Query("mid") mid: Long? = null,
+//            @Query("fnval") fnVal: Int = 16,
+//            @Query("qn") qn: Int = 32,
+//            @Query("npcybs") npcybs: Int = 0,
+//            @Query("cid") cid: Long? = null,
+//            @Query("otype") otype: String = "json",
+//            @Query("fnver") fnVer: Int = 0,
+//            @Query("buvid") buildVersionId: String? = null,
+//            @Query("aid") aid: Long
+//    ): Deferred<PlayUrl>
 }

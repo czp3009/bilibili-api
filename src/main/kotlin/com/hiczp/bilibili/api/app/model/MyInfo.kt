@@ -55,7 +55,7 @@ data class MyInfo(
 
         data class Vip(
                 @SerializedName("due_date")
-                var dueDate: Int, // 0
+                var dueDate: Long, // 0
                 @SerializedName("status")
                 var status: Int, // 0
                 @SerializedName("type")

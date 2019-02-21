@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.app.AppAPI
+import com.hiczp.bilibili.api.main.MainAPI
 import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
@@ -31,13 +32,11 @@ import javax.crypto.Cipher
  * 不能严格保证线程安全.
  *
  * @param billingClientProperties 客户端的固有属性, 是一种常量
- * @param autoRefreshToken 当 Token 过期时是否自动重新登录
  * @param logLevel 日志打印等级
  */
 class BilibiliClient(
         @Suppress("MemberVisibilityCanBePrivate")
         val billingClientProperties: BilibiliClientProperties = BilibiliClientProperties(),
-        private val autoRefreshToken: Boolean = true,   //TODO 自动 refreshToken
         private val logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.NONE
 ) {
     /**
@@ -129,6 +128,24 @@ class BilibiliClient(
     val appAPI by lazy {
         createAPI<AppAPI>(BaseUrl.app,
                 defaultCommonHeaderInterceptor,
+                defaultCommonQueryParamInterceptor,
+                defaultQuerySignInterceptor
+        )
+    }
+
+    /**
+     * 这也是总站 API
+     */
+    @Suppress("SpellCheckingInspection")
+    val mainAPI by lazy {
+        createAPI<MainAPI>(BaseUrl.main,
+                CommonHeaderInterceptor(
+                        //如果未登陆则没有 Display-ID
+                        "Display-ID" to { userId?.let { "$it-$initTime" } },
+                        "Buvid" to { billingClientProperties.buildVersionId },
+                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
+                        "Device-ID" to { billingClientProperties.hardwareId }
+                ),
                 defaultCommonQueryParamInterceptor,
                 defaultQuerySignInterceptor
         )

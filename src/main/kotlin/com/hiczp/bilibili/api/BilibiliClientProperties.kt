@@ -6,7 +6,7 @@ package com.hiczp.bilibili.api
  */
 class BilibiliClientProperties {
     /**
-     * Android 平台的 appKey
+     * Android 平台的 appKey(该默认值为普通版客户端, 非概念版)
      */
     var appKey = "1d8b6e7d45233436"
 
@@ -15,6 +15,18 @@ class BilibiliClientProperties {
      */
     @Suppress("SpellCheckingInspection")
     var appSecret = "560c52ccd288fed045859ed18bffd973"
+
+    /**
+     * 获取视频播放地址使用的 appKey, 与访问其他 RestFulAPI 所用的 appKey 是不一样的
+     */
+    @Suppress("SpellCheckingInspection")
+    var videoAppKey = "iVGUTjsxvpLeuDCf"
+
+    /**
+     * 获取视频播放地址所用的 appSecret
+     */
+    @Suppress("SpellCheckingInspection")
+    var videoAppSecret = "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt"
 
     /**
      * 客户端平台

@@ -15,9 +15,14 @@ object BaseUrl {
     const val message = "https://message.bilibili.com"
 
     /**
-     * 提供通用功能, 例如获取用户信息
+     * 主站
      */
     const val app = "https://app.bilibili.com"
+
+    /**
+     * 这也是主站
+     */
+    const val main = "https://api.bilibili.com"
 
     /**
      * 小视频

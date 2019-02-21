@@ -105,7 +105,7 @@ data class View(
                 @SerializedName("elec_set")
                 var elecSet: ElecSet,
                 @SerializedName("list")
-                var list: List<Any>,
+                var list: List<JsonElement>,
                 @SerializedName("show")
                 var show: Boolean // true
         ) {
@@ -176,7 +176,7 @@ data class View(
 
         data class OwnerExt(
                 @SerializedName("assists")
-                var assists: Any?, // null
+                var assists: JsonElement?, // null
                 @SerializedName("fans")
                 var fans: Int, // 275
                 @SerializedName("official_verify")
@@ -197,7 +197,7 @@ data class View(
                     @SerializedName("dueRemark")
                     var dueRemark: String,
                     @SerializedName("vipDueDate")
-                    var vipDueDate: Int, // 0
+                    var vipDueDate: Long, // 0
                     @SerializedName("vipStatus")
                     var vipStatus: Int, // 0
                     @SerializedName("vipStatusWarn")
@@ -257,7 +257,7 @@ data class View(
                     @SerializedName("dueRemark")
                     var dueRemark: String,
                     @SerializedName("vipDueDate")
-                    var vipDueDate: Int, // 0
+                    var vipDueDate: Long, // 0
                     @SerializedName("vipStatus")
                     var vipStatus: Int, // 0
                     @SerializedName("vipStatusWarn")
@@ -379,7 +379,7 @@ data class View(
                     @SerializedName("real_name")
                     var realName: Boolean, // false
                     @SerializedName("subtitles")
-                    var subtitles: Any? // null
+                    var subtitles: JsonElement? // null
             )
 
             data class Dimension(
