@@ -1,6 +1,5 @@
 package com.hiczp.bilibili.api.retrofit.interceptor
 
-import com.hiczp.bilibili.api.retrofit.Method
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.addAllEncoded
 import com.hiczp.bilibili.api.retrofit.forEachNonNull
@@ -22,46 +21,49 @@ class CommonParamInterceptor(
         private vararg val additionParams: Pair<String, () -> String?>
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
+        var request = chain.request()
+        val body = request.body()
 
-        //如果欲添加的参数类型为 Query 则直接添加
-        if (paramType == ParamType.QUERY) {
-            val httpUrl = request.url().newBuilder().apply {
-                additionParams.forEachNonNull { name, value ->
-                    addQueryParameter(name, value)
-                }
-            }.build()
-            return chain.proceed(
-                    request.newBuilder().url(httpUrl).build()
-            )
-        }
+        request = when {
+            //如果欲添加参数的位置为 Query 则直接添加, paramType 为 FORM_URL_ENCODED 则继续下面的判断
+            paramType == ParamType.QUERY -> {
+                val httpUrl = request.url().newBuilder().apply {
+                    additionParams.forEachNonNull { name, value ->
+                        addQueryParameter(name, value)
+                    }
+                }.build()
+                request.newBuilder().url(httpUrl).build()
+            }
 
-        //如果请求方式为 POST(只要方式为 POST, body 就一定不为 null)
-        if (request.method() == Method.POST) {
-            val body = request.body()!!
-            val newFormBody = {
-                FormBody.Builder().apply {
+            //BODY 不存在或者是空的
+            body == null || body.contentLength() == 0L -> {
+                val formBody = FormBody.Builder().apply {
                     additionParams.forEachNonNull { name, value ->
                         add(name, value)
                     }
-                }
+                }.build()
+                request.newBuilder().method(request.method(), formBody).build()
             }
-            if (body.contentType() == null) {   //如果 body 为空
-                return chain.proceed(
-                        request.newBuilder().post(newFormBody().build()).build()
-                )
-            } else if (body is FormBody) {  //如果 body 为 FormBody
-                return chain.proceed(
-                        request.newBuilder().post(newFormBody().addAllEncoded(body).build()).build()
-                )
+
+            //只要 BODY 为 FormBody, 那么里面一定有内容
+            body is FormBody -> {
+                val formBody = FormBody.Builder().apply {
+                    addAllEncoded(body)
+                    additionParams.forEachNonNull { name, value ->
+                        add(name, value)
+                    }
+                }.build()
+                request.newBuilder().method(request.method(), formBody).build()
+            }
+
+            else -> {
+                logger.error {
+                    "Cannot add params to request: ${request.method()} ${request.url()} ${body.javaClass.simpleName}"
+                }
+                request
             }
         }
 
-        //其他情况, 例如请求方式为 GET 或 Body 为 Json
-        logger.error {
-            "Impossible add FormUrlEncoded params to ${request.body()?.javaClass?.simpleName ?: "<NullBody>"}. " +
-                    "Request: ${request.method()} ${request.url()}"
-        }
         return chain.proceed(request)
     }
 }

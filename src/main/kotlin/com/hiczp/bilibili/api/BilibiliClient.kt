@@ -6,6 +6,7 @@ import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
+import com.hiczp.bilibili.api.retrofit.Param
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
@@ -75,8 +76,8 @@ class BilibiliClient(
 
     @Suppress("SpellCheckingInspection")
     private val defaultCommonParamArray = arrayOf(
-            "access_key" to { token },
-            "appkey" to { billingClientProperties.appKey },
+            Param.ACCESS_KEY to { token },
+            Param.APP_KEY to { billingClientProperties.appKey },
             "build" to { billingClientProperties.build },
             "channel" to { billingClientProperties.channel },
             "mobi_app" to { billingClientProperties.platform },
@@ -85,7 +86,7 @@ class BilibiliClient(
     )
 
     private val defaultCommonQueryParamInterceptor = CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray)
-    private val defaultQuerySignInterceptor = SortAndSignInterceptor(ParamType.QUERY, billingClientProperties.appSecret)
+    private val defaultSortAndSignInterceptor = SortAndSignInterceptor(billingClientProperties.appSecret)
 
     /**
      * 用户鉴权相关的接口
@@ -95,14 +96,14 @@ class BilibiliClient(
         createAPI<PassportAPI>(BaseUrl.passport,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
-                        "appkey" to { billingClientProperties.appKey },
+                        Param.APP_KEY to { billingClientProperties.appKey },
                         "build" to { billingClientProperties.build },
                         "channel" to { billingClientProperties.channel },
                         "mobi_app" to { billingClientProperties.platform },
                         "platform" to { billingClientProperties.platform },
                         "ts" to { Instant.now().epochSecond.toString() }
                 ),
-                SortAndSignInterceptor(ParamType.FORM_URL_ENCODED, billingClientProperties.appSecret)
+                defaultSortAndSignInterceptor
         )
     }
 
@@ -117,7 +118,7 @@ class BilibiliClient(
                         "actionKey" to { "appkey" },
                         "has_up" to { "1" }
                 ),
-                defaultQuerySignInterceptor
+                defaultSortAndSignInterceptor
         )
     }
 
@@ -129,7 +130,7 @@ class BilibiliClient(
         createAPI<AppAPI>(BaseUrl.app,
                 defaultCommonHeaderInterceptor,
                 defaultCommonQueryParamInterceptor,
-                defaultQuerySignInterceptor
+                defaultSortAndSignInterceptor
         )
     }
 
@@ -147,7 +148,7 @@ class BilibiliClient(
                         "Device-ID" to { billingClientProperties.hardwareId }
                 ),
                 defaultCommonQueryParamInterceptor,
-                defaultQuerySignInterceptor
+                defaultSortAndSignInterceptor
         )
     }
 
@@ -166,7 +167,7 @@ class BilibiliClient(
                         "uid" to { userId?.toString() },
                         "version" to { billingClientProperties.version }
                 ),
-                defaultQuerySignInterceptor
+                defaultSortAndSignInterceptor
         )
     }
 
@@ -177,7 +178,7 @@ class BilibiliClient(
         createAPI<MemberAPI>(BaseUrl.member,
                 defaultCommonHeaderInterceptor,
                 defaultCommonQueryParamInterceptor,
-                defaultQuerySignInterceptor
+                defaultSortAndSignInterceptor
         )
     }
 

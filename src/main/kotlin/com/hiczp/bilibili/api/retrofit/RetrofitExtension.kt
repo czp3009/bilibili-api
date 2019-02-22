@@ -26,6 +26,13 @@ fun FormBody.sortedRaw(): String {
     return nameAndValue.sorted().joinToString(separator = "&")
 }
 
+fun FormBody.containsEncodedName(name: String): Boolean {
+    repeat(size()) {
+        if (encodedName(it) == name) return true
+    }
+    return false
+}
+
 fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {
     with(formBody) {
         repeat(size()) {
