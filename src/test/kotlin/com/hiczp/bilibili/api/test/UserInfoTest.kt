@@ -7,7 +7,7 @@ class UserInfoTest {
     @Test
     fun info() {
         runBlocking {
-            Config.presetBilibiliClient.appAPI.myInfo().await()
+            Config.bilibiliClient.appAPI.myInfo().await()
         }
     }
 }

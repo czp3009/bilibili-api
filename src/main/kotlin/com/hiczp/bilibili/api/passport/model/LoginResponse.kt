@@ -31,7 +31,7 @@ data class LoginResponse(
         ) : Serializable {
             data class Cookie(
                     @SerializedName("expires")
-                    var expires: Int, // 1552811689
+                    var expires: Long, // 1552811689
                     @SerializedName("http_only")
                     var httpOnly: Int, // 1
                     @SerializedName("name")
@@ -45,9 +45,9 @@ data class LoginResponse(
                 @SerializedName("access_token")
                 var accessToken: String, // fd0303ff75a6ec6b452c28f4d8621021
                 @SerializedName("expires_in")
-                var expiresIn: Int, // 2592000
+                var expiresIn: Long, // 2592000
                 @SerializedName("mid")
-                var mid: Int, // 20293030
+                var mid: Long, // 20293030
                 @SerializedName("refresh_token")
                 var refreshToken: String // 6a333ebded3c3dbdde65d136b3190d21
         ) : Serializable

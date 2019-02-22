@@ -6,6 +6,8 @@ import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
 import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
+import com.hiczp.bilibili.api.player.PlayerAPI
+import com.hiczp.bilibili.api.player.PlayerInterceptor
 import com.hiczp.bilibili.api.retrofit.Param
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
@@ -86,7 +88,6 @@ class BilibiliClient(
     )
 
     private val defaultCommonQueryParamInterceptor = CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray)
-    private val defaultSortAndSignInterceptor = SortAndSignInterceptor(billingClientProperties.appSecret)
 
     /**
      * 用户鉴权相关的接口
@@ -102,8 +103,7 @@ class BilibiliClient(
                         "mobi_app" to { billingClientProperties.platform },
                         "platform" to { billingClientProperties.platform },
                         "ts" to { Instant.now().epochSecond.toString() }
-                ),
-                defaultSortAndSignInterceptor
+                )
         )
     }
 
@@ -117,8 +117,7 @@ class BilibiliClient(
                 CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
                         "actionKey" to { "appkey" },
                         "has_up" to { "1" }
-                ),
-                defaultSortAndSignInterceptor
+                )
         )
     }
 
@@ -129,8 +128,7 @@ class BilibiliClient(
     val appAPI by lazy {
         createAPI<AppAPI>(BaseUrl.app,
                 defaultCommonHeaderInterceptor,
-                defaultCommonQueryParamInterceptor,
-                defaultSortAndSignInterceptor
+                defaultCommonQueryParamInterceptor
         )
     }
 
@@ -147,8 +145,7 @@ class BilibiliClient(
                         "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
                         "Device-ID" to { billingClientProperties.hardwareId }
                 ),
-                defaultCommonQueryParamInterceptor,
-                defaultSortAndSignInterceptor
+                defaultCommonQueryParamInterceptor
         )
     }
 
@@ -166,8 +163,7 @@ class BilibiliClient(
                         "trace_id" to { generateTraceId() },
                         "uid" to { userId?.toString() },
                         "version" to { billingClientProperties.version }
-                ),
-                defaultSortAndSignInterceptor
+                )
         )
     }
 
@@ -177,9 +173,29 @@ class BilibiliClient(
     val memberAPI by lazy {
         createAPI<MemberAPI>(BaseUrl.member,
                 defaultCommonHeaderInterceptor,
-                defaultCommonQueryParamInterceptor,
-                defaultSortAndSignInterceptor
+                defaultCommonQueryParamInterceptor
         )
+    }
+
+    /**
+     * 播放器所需的 API, 用于获取视频播放地址
+     */
+    val playerAPI: PlayerAPI by lazy {
+        Retrofit.Builder()
+                .baseUrl("https://bilibili.com")    //这里的 baseUrl 是没用的
+                .addConverterFactory(gsonConverterFactory)
+                .addCallAdapterFactory(coroutineCallAdapterFactory)
+                .client(OkHttpClient.Builder().apply {
+                    //TODO functional
+                    addInterceptor(PlayerInterceptor(billingClientProperties, loginResponse))
+                    addInterceptor(FailureResponseInterceptor)
+                    //log
+                    if (logLevel != HttpLoggingInterceptor.Level.NONE) {
+                        addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                    }
+                }.build())
+                .build()
+                .create(PlayerAPI::class.java)
     }
 
     /**
@@ -237,6 +253,7 @@ class BilibiliClient(
         loginResponse = null
     }
 
+    private val sortAndSignInterceptor = SortAndSignInterceptor(billingClientProperties.appSecret)
     private inline fun <reified T : Any> createAPI(
             baseUrl: String,
             vararg interceptors: Interceptor
@@ -248,6 +265,7 @@ class BilibiliClient(
                 interceptors.forEach {
                     addInterceptor(it)
                 }
+                addInterceptor(sortAndSignInterceptor)
                 addInterceptor(FailureResponseInterceptor)
                 //log
                 if (logLevel != HttpLoggingInterceptor.Level.NONE) {

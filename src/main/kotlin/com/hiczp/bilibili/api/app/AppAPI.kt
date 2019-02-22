@@ -99,30 +99,4 @@ interface AppAPI {
             @Query("qn") qn: Int = 32,
             @Query("trackid") trackId: String? = null //all_10.shylf-ai-recsys-120.1550674524909.237
     ): Deferred<View>
-
-//    //TODO 这里的 appkey 变为 iVGUTjsxvpLeuDCf
-//    /**
-//     * 获得视频的播放地址
-//     *
-//     * @param expire 默认为下个月的这一天的时间戳
-//     * @param mid 当前用户 ID
-//     * @param cid 在 view() 接口的返回值里
-//     * @param aid 视频的唯一标识
-//     */
-//    @Suppress("SpellCheckingInspection")
-//    @GET("/x/playurl")
-//    fun playUrl(
-//            @Query("device") device: String = "android",
-//            @Query("expire") expire: Long = Calendar.getInstance().apply { add(Calendar.MONTH, 1) }.toInstant().epochSecond,
-//            @Query("force_host") forceHost: Int = 0,
-//            @Query("mid") mid: Long? = null,
-//            @Query("fnval") fnVal: Int = 16,
-//            @Query("qn") qn: Int = 32,
-//            @Query("npcybs") npcybs: Int = 0,
-//            @Query("cid") cid: Long? = null,
-//            @Query("otype") otype: String = "json",
-//            @Query("fnver") fnVer: Int = 0,
-//            @Query("buvid") buildVersionId: String? = null,
-//            @Query("aid") aid: Long
-//    ): Deferred<PlayUrl>
 }

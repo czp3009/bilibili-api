@@ -19,9 +19,13 @@ object Config {
 
     val password by config.byString
 
-    val presetBilibiliClient by lazy {
+    //登陆过的实例
+    val bilibiliClient by lazy {
         BilibiliClient(logLevel = HttpLoggingInterceptor.Level.BODY).apply {
             loginResponse = config["loginResponse"]?.let { gson.fromJson(it) }
         }
     }
+
+    //未登录的实例
+    val noLoginBilibiliClient = BilibiliClient(logLevel = HttpLoggingInterceptor.Level.BODY)
 }

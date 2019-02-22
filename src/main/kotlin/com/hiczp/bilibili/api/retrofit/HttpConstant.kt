@@ -11,9 +11,10 @@ object Method {
     const val OPTION = "OPTION"
 }
 
-object ContentType {
+object Header {
     const val JSON = "application/json"
     const val FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8"
+    const val ZH_CN = "zh-CN,zh;q=0.8"
 }
 
 object Param {
