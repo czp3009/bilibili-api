@@ -3,11 +3,11 @@ package com.hiczp.bilibili.api.test
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
-class UserInfoTest {
+class SeasonTest {
     @Test
-    fun info() {
+    fun season() {
         runBlocking {
-            bilibiliClient.appAPI.myInfo().await()
+            noLoginBilibiliClient.mainAPI.season(episodeId = 250536).await()
         }
     }
 }

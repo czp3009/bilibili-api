@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.main.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class ChildReply(
@@ -156,7 +157,7 @@ data class ChildReply(
                     @SerializedName("rcount")
                     var rcount: Int, // 0
                     @SerializedName("replies")
-                    var replies: List<Any>,
+                    var replies: List<JsonElement>,
                     @SerializedName("root")
                     var root: Int, // 1405602348
                     @SerializedName("root_str")
@@ -176,7 +177,7 @@ data class ChildReply(
                         @SerializedName("device")
                         var device: String,
                         @SerializedName("members")
-                        var members: List<Any>,
+                        var members: List<JsonElement>,
                         @SerializedName("message")
                         var message: String, // 导演:你认为是否有人了解你？像你自己一样了解你？老佛爷:这个问题我很难回答，别人对我的想法已根深蒂固，所以我认为几乎是不可能，我想是如此，即使是我深爱的人。我不想在别人生活中显得真实，我想成为幽灵，现身，然后消失，我也不想面对任何人的真实，因为我不想面对真实的自己，那是我的秘密。别跟我说那些关于孤独的陈词滥调，之于我这种人，孤独是一种胜利，这是场人生战役。像我一样从事创意工作的人，必须独处，让自己重新充电，整日生活在聚光灯前是无法创作的。我还要做许多事，例如阅读，身边有人就无法去做。平时几乎已没时间，但我随时都会想阅读，所以我赞成每人都要该独立生活。将别人当成依靠，对于我这样的人来说很危险，我必须时时刻刻如履薄冰，并在它破裂之前跨出下一步。
                         @SerializedName("plat")
@@ -196,7 +197,7 @@ data class ChildReply(
                         @SerializedName("avatar")
                         var avatar: String, // http://i2.hdslb.com/bfs/face/63f5da7bda813e470cefd465767035efccff747d.jpg
                         @SerializedName("fans_detail")
-                        var fansDetail: Any?, // null
+                        var fansDetail: JsonElement?, // null
                         @SerializedName("following")
                         var following: Int, // 0
                         @SerializedName("level_info")
@@ -294,7 +295,7 @@ data class ChildReply(
                     @SerializedName("device")
                     var device: String,
                     @SerializedName("members")
-                    var members: List<Any>,
+                    var members: List<JsonElement>,
                     @SerializedName("message")
                     var message: String, // 唉有点不敢相信…R.I.P……走好走好
                     @SerializedName("plat")
@@ -314,7 +315,7 @@ data class ChildReply(
                     @SerializedName("avatar")
                     var avatar: String, // http://i2.hdslb.com/bfs/face/63f5da7bda813e470cefd465767035efccff747d.jpg
                     @SerializedName("fans_detail")
-                    var fansDetail: Any?, // null
+                    var fansDetail: JsonElement?, // null
                     @SerializedName("following")
                     var following: Int, // 0
                     @SerializedName("level_info")

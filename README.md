@@ -47,6 +47,10 @@ val code = bilibiliApiException.commonResponse.code
 
 登陆和登出均为异步方法, 需要在协程上下文中执行.
 
+如果所使用的语言无法正确调用 `suspend` 方法, 可以使用 `loginFuture` 方法来替代, 它会返回一个 Java8 `CompletableFuture`.
+
+`logoutFuture` 同理.
+
 ```kotlin
 runBlocking {
     BilibiliClient().run {

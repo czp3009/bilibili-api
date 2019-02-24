@@ -21,5 +21,11 @@ object Param {
     const val ACCESS_KEY = "access_key"
     @Suppress("SpellCheckingInspection")
     const val APP_KEY = "appkey"
+    const val EXPIRE = "expire"
+    const val MID = "mid"
     const val SIGN = "sign"
+}
+
+internal object Charsets {
+    const val UTF_8 = "UTF-8"
 }

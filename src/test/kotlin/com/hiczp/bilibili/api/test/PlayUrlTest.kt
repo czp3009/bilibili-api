@@ -7,7 +7,7 @@ class PlayUrlTest {
     @Test
     fun videoPlayUrl() {
         runBlocking {
-            Config.noLoginBilibiliClient.playerAPI.run {
+            bilibiliClient.playerAPI.run {
                 videoPlayUrl(aid = 41517911, cid = 72913641).await()
             }
         }
@@ -16,8 +16,8 @@ class PlayUrlTest {
     @Test
     fun bangumiPlayUrl() {
         runBlocking {
-            Config.noLoginBilibiliClient.playerAPI.run {
-                bangumiPlayUrl(aid = 42714241, cid = 74921228, seasonType = 1).await()
+            bilibiliClient.playerAPI.run {
+                bangumiPlayUrl(aid = 42714241, cid = 74921228).await()
             }
         }
     }

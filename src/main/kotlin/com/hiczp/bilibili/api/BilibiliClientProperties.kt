@@ -47,6 +47,7 @@ class BilibiliClientProperties {
 
     /**
      * 屏幕尺寸, 大屏手机(已经没有小屏手机了)统一为 xxhdpi
+     * 此参数在新版客户端已经较少使用
      */
     var scale = "xxhdpi"
 

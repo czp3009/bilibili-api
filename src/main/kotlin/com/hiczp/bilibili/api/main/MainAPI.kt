@@ -1,7 +1,9 @@
 package com.hiczp.bilibili.api.main
 
 import com.hiczp.bilibili.api.main.model.ChildReply
+import com.hiczp.bilibili.api.main.model.Recommend
 import com.hiczp.bilibili.api.main.model.Reply
+import com.hiczp.bilibili.api.main.model.Season
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -48,4 +50,28 @@ interface MainAPI {
             @Query("sort") sort: Int = 0,
             @Query("type") type: Int = 1
     ): Deferred<ChildReply>
+
+    /**
+     * 获得一个番剧的分季信息, 包含默认季(通常是最新的一季)的分集信息
+     * seasonId 或 episodeId 必须有一个, 返回的结果是一样的
+     * 返回值中, 每个 episode 都有 aid 和 cid
+     *
+     * @param seasonId 季的唯一标识
+     * @param episodeId 集的唯一标识
+     */
+    @GET("/pgc/view/app/season")
+    fun season(
+            @Query("season_id") seasonId: Long? = null,
+            @Query("ep_id") episodeId: Long? = null,
+            @Query("track_path") trackPath: Int? = null
+    ): Deferred<Season>
+
+    /**
+     * 番剧页面下方的推荐(对当前季进行推荐)
+     * 返回值中的 relates 是 "相关推荐"(广告), season 是 "更多推荐"(其他番, 目标为季)
+     *
+     * @param seasonId 季的唯一标识
+     */
+    @GET("/pgc/season/app/related/recommend")
+    fun recommend(@Query("season_id") seasonId: Long): Deferred<Recommend>
 }
