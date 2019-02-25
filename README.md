@@ -100,13 +100,178 @@ login(username, password, challenge, secCode, validate)
 登陆后, 可以访问全部 API.
 
 # 访问 API
-通常的 API 访问是这样的
+不要问文档, 用自动补全(心)来感受. 以下给出几个示例
+
+## 获取个人信息
+(首先要登陆)
 
 ```kotlin
 val myInfo = bilibiliClient.appAPI.myInfo().await()
 ```
 
-不要问文档, 用自动补全(心)来感受.
+返回用户 ID, vip 信息等.
+
+## 获取视频播放地址
+获取视频实际播放地址的 API 比较特殊, 被单独分了出来, 示例如下
+
+```kotlin
+val videoPlayUrl = bilibiliClient.playerAPI.videoPlayUrl(aid = 41517911, cid = 72913641).await()
+```
+
+`aid` 即 av 号, 只能表示视频播放的那个页面, 如果一个视频有多个 `p`, 那么每个 `p` 都有单独的 `cid`.
+
+在 Web 端, URL 通常是这样的
+
+    https://www.bilibili.com/video/av44541340/?p=2
+
+实际上就是选择了该 `aid` 下的第二个 `cid`.
+
+简单的来说, `aid` 和 `cid` 加在一起才能表示一个视频流(为什么 `cid` 不能直接表示一个视频我也不知道).
+
+因此无论是获取视频播放地址, 还是获取弹幕列表, 都要同时传入 `aid` 与 `cid`.
+
+而 `cid` 在哪里获得呢, 如下所示
+
+```kotlin
+val view = bilibiliClient.appAPI.view(aid = 41517911).await()
+```
+
+该接口返回对一个视频页面的描述信息(甚至包含广告和推荐), 客户端根据这些信息生成视频页面.
+
+其中 `data.cid` 为默认 `p` 的 `cid`. `data.pages[n].cid` 为每个 `p` 的 `cid`. 如果没有分 `p` 则使用外层那个 `cid` 来请求视频地址.
+
+请求视频地址将访问如下结构的内容
+
+```json
+{
+    "code": 0,
+    "data": {
+        "accept_description": [
+            "高清 1080P+",
+            "高清 1080P",
+            "高清 720P",
+            "清晰 480P",
+            "流畅 360P"
+        ],
+        "accept_format": "hdflv2,flv,flv720,flv480,flv360",
+        "accept_quality": [
+            112,
+            80,
+            64,
+            32,
+            16
+        ],
+        "dash": {
+            "audio": [
+                {
+                    "bandwidth": 319173,
+                    "base_url": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30280.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=ks3u&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=33273eaf403739d9f51304509f55589e",
+                    "codecid": 0,
+                    "id": 30280
+                },
+                {
+                    "bandwidth": 67326,
+                    "base_url": "http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30216.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=kodou&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=3d1f9b836430bb8033b2f318faf42f9b",
+                    "codecid": 0,
+                    "id": 30216
+                }
+            ],
+            "video": [
+                {
+                    "bandwidth": 376693,
+                    "base_url": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30015.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=ks3u&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=82bc845bce9f22b731b062bf83fa000f",
+                    "codecid": 7,
+                    "id": 16
+                },
+                ...
+                {
+                    "bandwidth": 2615324,
+                    "base_url": "http://upos-hz-mirrorcosu.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&dynamic=1&gen=playurl&oi=3670888782&os=cosu&platform=android&rate=0&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&uipv=5&um_deadline=1551113319&um_sign=22fef3c0efa0d23388429f6926fad298&upsig=c4768c036beb667ba4648369770f8de8",
+                    "codecid": 7,
+                    "id": 80
+                }
+            ]
+        },
+        "fnval": 16,
+        "fnver": 0,
+        "format": "flv480",
+        "from": "local",
+        "quality": 32,
+        "result": "suee",
+        "seek_param": "start",
+        "seek_type": "offset",
+        "timelength": 175332,
+        "video_codecid": 7,
+        "video_project": true
+    },
+    "message": "0",
+    "ttl": 1
+}
+```
+
+(由于内容太长, 去除了一部分内容)
+
+注意, 视频下载地址有好几个(以上返回内容中被折叠成了两个), 但是实际上他们都是一样的内容, 只是清晰度不同. `data.dash.video.id` 实际上代表 `data.accept_quality`.
+
+视频和音频是分开的, 视频和音频都返回 `m4s` 文件, 将其合并即可得到完整的 `mp4` 文件.
+
+`data.quality` 指默认选择的清晰度, 通常情况下移动网络会自动选择 `32`, 即 "清晰 480P"(在 `data.accept_description` 中对应).
+
+对于番剧来说, 也使用 `aid` 与 `cid` 来获得播放地址
+
+```kotlin
+val bangumiPlayUrl = bilibiliClient.playerAPI.bangumiPlayUrl(aid = 42714241, cid = 74921228).await()
+```
+
+返回内容差不多是一个原理, 这里就不赘述了.
+
+如何获得番剧的 `aid` 与 `cid` 呢. 我们都知道, 实际上番剧那个页面的唯一标识是 "季", 同一个番的不同 "季" 其实是不同的东西.
+
+我们在番剧搜索页面可以得到番剧的 `season`, 这代表了一个番剧的某一季的页面.
+
+然后我们用 `season` 来打开番剧页面.
+
+```kotlin
+val season = bilibiliClient.mainAPI.season(seasonId = 25617).await()
+```
+
+返回值中的 `result.seasons[n].season_id` 为该番所有季的 id(包含用来作为查询条件的 `seasonId`).
+
+该 API 还可以用 `episodeId` 作为查询条件, 即以集为条件打开一个番剧页面(会跳转到对应的季).
+
+返回值中的 `result.episodes` 包含了当前所选择的季的全部集的 `aid` 与 `cid`.
+
+搜索视频和番剧的功能绝赞咕咕咕中.
+
+## 查看视频下面的评论
+看完了视频当然要看一下傻吊网友都在说些什么. 使用以下 API 获取一个视频的评论.
+
+```kotlin
+val reply = bilibiliClient.mainAPI.reply(oid = 44154463).await()
+```
+
+这里的 `oid` 指 `aid`(其他一些 API 中 `oid` 也可能指 `cid` 详见方法上面的注释).
+
+评论是不分 `p` 的, 所有评论都是在一起的.
+
+看到了傻吊网友们的评论是不够的, 我们还想看到杠精与其隔着屏幕对喷的场景, 因此我们要获取评论的子评论, 即评论的评论
+
+```kotlin
+val childReply = bilibiliClient.mainAPI.childReply(oid = 16622855, root = 1405602348).await()
+```
+
+其中的 `root` 表示父评论的 id.
+
+(如果一个评论的父 id 为 0 表示它是顶层评论而非子评论)
+
+(子评论原理上可以再有子评论, 但是 B站 在逻辑上只有一层子评论)
+
+番剧下面的评论用一样的方式获取, 下同.
+
+## 获得一个视频的弹幕
+看评论自然不够刺激, 我们想看到弹幕!
+
+//TODO
 
 # License
 GPL V3
