@@ -12,15 +12,38 @@ object Method {
 }
 
 object Header {
-    const val JSON = "application/json"
-    const val FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8"
-    const val ZH_CN = "zh-CN,zh;q=0.8"
+    const val DISPLAY_ID = "Display-ID"
+    @Suppress("SpellCheckingInspection")
+    const val BUILD_VERSION_ID = "Buvid"
+    const val DEVICE_ID = "Device-ID"
+    const val USER_AGENT = "User-Agent"
+    const val ACCEPT = "Accept"
+    const val ACCEPT_LANGUAGE = "Accept-Language"
+    const val ACCEPT_ENCODING = "Accept-Encoding"
 }
 
 object Param {
     const val ACCESS_KEY = "access_key"
     @Suppress("SpellCheckingInspection")
     const val APP_KEY = "appkey"
+    const val ACTION_KEY = "actionKey"
+    const val BUILD = "build"
+    @Suppress("SpellCheckingInspection")
+    const val BUILD_VERSION_ID = "buvid"
+    const val CHANNEL = "channel"
+    @Suppress("ObjectPropertyName")
+    const val _DEVICE = "_device"
+    const val DEVICE = "device"
+    @Suppress("ObjectPropertyName", "SpellCheckingInspection")
+    const val _HARDWARE_ID = "_hwid"
+    const val SOURCE = "src"
+    const val TRACE_ID = "trace_id"
+    const val USER_ID = "uid"
+    const val VERSION = "version"
+    @Suppress("SpellCheckingInspection")
+    const val MOBILE_APP = "mobi_app"
+    const val PLATFORM = "platform"
+    const val TIMESTAMP = "ts"
     const val EXPIRE = "expire"
     const val MID = "mid"
     const val SIGN = "sign"

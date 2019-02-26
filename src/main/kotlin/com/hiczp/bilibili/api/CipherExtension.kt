@@ -5,7 +5,7 @@ import java.security.MessageDigest
 //MD5
 private val md5Instance = MessageDigest.getInstance("MD5")
 
-internal fun String.md5() =
+fun String.md5() =
         StringBuilder(32).apply {
             //优化过的 md5 字符串生成算法
             md5Instance.digest(toByteArray()).forEach {

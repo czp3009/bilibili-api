@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.test
 
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
@@ -17,7 +18,9 @@ class PlayUrlTest {
     fun bangumiPlayUrl() {
         runBlocking {
             bilibiliClient.playerAPI.run {
-                bangumiPlayUrl(aid = 42714241, cid = 74921228).await()
+                bangumiPlayUrl(aid = 42714241, cid = 74921228).await().let {
+                    GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(it)
+                }.let(::println)
             }
         }
     }

@@ -138,7 +138,7 @@ val view = bilibiliClient.appAPI.view(aid = 41517911).await()
 
 该接口返回对一个视频页面的描述信息(甚至包含广告和推荐), 客户端根据这些信息生成视频页面.
 
-其中 `data.cid` 为默认 `p` 的 `cid`. `data.pages[n].cid` 为每个 `p` 的 `cid`. 如果没有分 `p` 则使用外层那个 `cid` 来请求视频地址.
+其中 `data.cid` 为默认 `p` 的 `cid`. `data.pages[n].cid` 为每个 `p` 的 `cid`. 如果只有一个 `p` 那么说明视频没有分 `p`.
 
 请求视频地址将访问如下结构的内容
 
@@ -254,6 +254,10 @@ val reply = bilibiliClient.mainAPI.reply(oid = 44154463).await()
 
 评论是不分 `p` 的, 所有评论都是在一起的.
 
+可以额外使用一个 `next` 参数来指定返回的起始楼层(即翻页).
+
+楼层是越翻越小的, 所以 `next` 也要越来越小.
+
 看到了傻吊网友们的评论是不够的, 我们还想看到杠精与其隔着屏幕对喷的场景, 因此我们要获取评论的子评论, 即评论的评论
 
 ```kotlin
@@ -266,12 +270,52 @@ val childReply = bilibiliClient.mainAPI.childReply(oid = 16622855, root = 140560
 
 (子评论原理上可以再有子评论, 但是 B站 在逻辑上只有一层子评论)
 
-番剧下面的评论用一样的方式获取, 下同.
+用额外的 `minId` 参数来指定返回的起始子楼层.
+
+注意, 子楼层是越翻越大的.
+
+番剧下面的评论用一样的方式获取.
 
 ## 获得一个视频的弹幕
 看评论自然不够刺激, 我们想看到弹幕!
 
-//TODO
+获取弹幕非常简单
+
+```kotlin
+val danmakuFile = bilibiliClient.danmakuAPI.list(aid = 810872, oid = 1176840).await()
+```
+
+弹幕是一个文件, 可能非常大, 里面是二进制内容.
+
+为了解析弹幕, 我们要用到另一个类
+
+```kotlin
+val (flagMap, danmakuList) = DanmakuParser.parser(danmakuFile.byteStream())
+```
+
+`flagMap` 类型为 `Map<Long, Int>` 键和值分别表示 弹幕ID 与 弹幕等级.
+
+弹幕等级在区间 \[1, 10\] 内, 低于客户端设置的 "弹幕云屏蔽等级" 的弹幕将不会显示出来.
+
+`danmakuList` 类型为 `List<Danmaku>`, 内含所有解析得到的弹幕.
+
+使用以下代码来输出全部弹幕的内容
+
+```kotlin
+danmakuList.forEach {
+    println(it.content)
+}
+```
+
+客户端的弹幕屏蔽设置是对弹幕中的 `user` 属性做的. 而实际上 `danmaku.user` 是一个字符串.
+
+这个字符串是 用户ID 的 `CRC32` 的校验和.
+
+众所周知, 一切 hash 算法都有冲突的问题. 这也就意味着, 屏蔽一个用户的同时可能屏蔽掉了多个与该用户 hash 值相同的用户.
+
+在另一方面, 通过这个 `CRC32` 校验和进行用户 ID 反查, 将查询到多个可能的用户, 因此无法确定一条弹幕到底是哪个用户发送的.
+
+番剧的弹幕同理.
 
 # License
 GPL V3

@@ -10,6 +10,11 @@ import java.lang.management.ManagementFactory
 
 /**
  * 这里是播放器会访问的 API
+ * 返回内容中会有多个视频下载地址, 他们代表不同的视频质量(音频同理)
+ * 音频和视频是分开的
+ * 下载视频得到的是一个 m4s 文件, 但是实际上是完整的视频(例如整个番剧而非片段)
+ * 下载音频得到的也是一个 m4s 文件, 也是完整的
+ * 将视频和音频合在一起, 就可以播放了
  */
 @Suppress("DeferredIsResult", "SpellCheckingInspection")
 interface PlayerAPI {
@@ -38,7 +43,7 @@ interface PlayerAPI {
      *
      * @param aid 番剧的唯一标识
      * @param cid 在番剧详情页的返回值里
-     * @param seasonType 分级类型, 不明确, 似乎总为 1
+     * @param seasonType 分季类型, 不明确, 似乎总为 1
      * @param session 其值为 系统已运行时间(ms)的MD5值, 此处的默认值为 JVM 已启动时间, 在 Android 上请使用 SystemClock
      * @param trackPath 不明确
      *

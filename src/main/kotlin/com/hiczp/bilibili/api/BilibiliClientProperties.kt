@@ -6,6 +6,12 @@ package com.hiczp.bilibili.api
  */
 class BilibiliClientProperties {
     /**
+     * 默认 UA, 用于大多数访问
+     */
+    @Suppress("SpellCheckingInspection")
+    var defaultUserAgent = "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)"
+
+    /**
      * Android 平台的 appKey(该默认值为普通版客户端, 非概念版)
      */
     var appKey = "1d8b6e7d45233436"

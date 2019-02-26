@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.app.AppAPI
+import com.hiczp.bilibili.api.danmaku.DanmakuAPI
 import com.hiczp.bilibili.api.main.MainAPI
 import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
@@ -8,6 +9,7 @@ import com.hiczp.bilibili.api.passport.PassportAPI
 import com.hiczp.bilibili.api.passport.model.LoginResponse
 import com.hiczp.bilibili.api.player.PlayerAPI
 import com.hiczp.bilibili.api.player.PlayerInterceptor
+import com.hiczp.bilibili.api.retrofit.Header
 import com.hiczp.bilibili.api.retrofit.Param
 import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
@@ -72,21 +74,21 @@ class BilibiliClient(
 
     @Suppress("SpellCheckingInspection")
     private val defaultCommonHeaderInterceptor = CommonHeaderInterceptor(
-            "Display-ID" to { "${billingClientProperties.buildVersionId}-$initTime" },
-            "Buvid" to { billingClientProperties.buildVersionId },
-            "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
-            "Device-ID" to { billingClientProperties.hardwareId }
+            Header.DISPLAY_ID to { "${billingClientProperties.buildVersionId}-$initTime" },
+            Header.BUILD_VERSION_ID to { billingClientProperties.buildVersionId },
+            Header.USER_AGENT to { billingClientProperties.defaultUserAgent },
+            Header.DEVICE_ID to { billingClientProperties.hardwareId }
     )
 
     @Suppress("SpellCheckingInspection")
     private val defaultCommonParamArray = arrayOf(
             Param.ACCESS_KEY to { token },
             Param.APP_KEY to { billingClientProperties.appKey },
-            "build" to { billingClientProperties.build },
-            "channel" to { billingClientProperties.channel },
-            "mobi_app" to { billingClientProperties.platform },
-            "platform" to { billingClientProperties.platform },
-            "ts" to { Instant.now().epochSecond.toString() }
+            Param.BUILD to { billingClientProperties.build },
+            Param.CHANNEL to { billingClientProperties.channel },
+            Param.MOBILE_APP to { billingClientProperties.platform },
+            Param.PLATFORM to { billingClientProperties.platform },
+            Param.TIMESTAMP to { Instant.now().epochSecond.toString() }
     )
 
     private val defaultCommonQueryParamInterceptor = CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray)
@@ -100,11 +102,11 @@ class BilibiliClient(
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
                         Param.APP_KEY to { billingClientProperties.appKey },
-                        "build" to { billingClientProperties.build },
-                        "channel" to { billingClientProperties.channel },
-                        "mobi_app" to { billingClientProperties.platform },
-                        "platform" to { billingClientProperties.platform },
-                        "ts" to { Instant.now().epochSecond.toString() }
+                        Param.BUILD to { billingClientProperties.build },
+                        Param.CHANNEL to { billingClientProperties.channel },
+                        Param.MOBILE_APP to { billingClientProperties.platform },
+                        Param.PLATFORM to { billingClientProperties.platform },
+                        Param.TIMESTAMP to { Instant.now().epochSecond.toString() }
                 )
         )
     }
@@ -117,7 +119,7 @@ class BilibiliClient(
         createAPI<MessageAPI>(BaseUrl.message,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
-                        "actionKey" to { "appkey" },
+                        Param.ACTION_KEY to { Param.APP_KEY },
                         "has_up" to { "1" }
                 )
         )
@@ -142,10 +144,10 @@ class BilibiliClient(
         createAPI<MainAPI>(BaseUrl.main,
                 CommonHeaderInterceptor(
                         //如果未登陆则没有 Display-ID
-                        "Display-ID" to { userId?.let { "$it-$initTime" } },
-                        "Buvid" to { billingClientProperties.buildVersionId },
-                        "User-Agent" to { "Mozilla/5.0 BiliDroid/5.37.0 (bbcallen@gmail.com)" },
-                        "Device-ID" to { billingClientProperties.hardwareId }
+                        Header.DISPLAY_ID to { userId?.let { "$it-$initTime" } },
+                        Header.BUILD_VERSION_ID to { billingClientProperties.buildVersionId },
+                        Header.USER_AGENT to { billingClientProperties.defaultUserAgent },
+                        Header.DEVICE_ID to { billingClientProperties.hardwareId }
                 ),
                 defaultCommonQueryParamInterceptor
         )
@@ -159,12 +161,12 @@ class BilibiliClient(
         createAPI<VcAPI>(BaseUrl.vc,
                 defaultCommonHeaderInterceptor,
                 CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
-                        "_device" to { billingClientProperties.platform },
-                        "_hwid" to { billingClientProperties.hardwareId },
-                        "src" to { billingClientProperties.channel },
-                        "trace_id" to { generateTraceId() },
-                        "uid" to { userId?.toString() },
-                        "version" to { billingClientProperties.version }
+                        Param._DEVICE to { billingClientProperties.platform },
+                        Param._HARDWARE_ID to { billingClientProperties.hardwareId },
+                        Param.SOURCE to { billingClientProperties.channel },
+                        Param.TRACE_ID to { generateTraceId() },
+                        Param.USER_ID to { userId?.toString() },
+                        Param.VERSION to { billingClientProperties.version }
                 )
         )
     }
@@ -190,13 +192,31 @@ class BilibiliClient(
                 .client(OkHttpClient.Builder().apply {
                     addInterceptor(PlayerInterceptor(billingClientProperties) { loginResponse })
                     addInterceptor(FailureResponseInterceptor)
-                    //log
-                    if (logLevel != HttpLoggingInterceptor.Level.NONE) {
-                        addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                    }
+                    addNetworkInterceptor(httpLoggingInterceptor)
                 }.build())
                 .build()
                 .create(PlayerAPI::class.java)
+    }
+
+    /**
+     * 获取弹幕所用的 API
+     */
+    val danmakuAPI: DanmakuAPI by lazy {
+        Retrofit.Builder()
+                .baseUrl(BaseUrl.main)
+                .addCallAdapterFactory(coroutineCallAdapterFactory)
+                .client(OkHttpClient.Builder().apply {
+                    addInterceptor(CommonHeaderInterceptor(
+                            Header.ACCEPT to { "application/xhtml+xml,application/xml" },
+                            Header.ACCEPT_ENCODING to { "gzip, deflate" },
+                            Header.USER_AGENT to { billingClientProperties.defaultUserAgent }
+                    ))
+                    addInterceptor(defaultCommonQueryParamInterceptor)
+                    addInterceptor(sortAndSignInterceptor)
+                    addNetworkInterceptor(httpLoggingInterceptor)
+                }.build())
+                .build()
+                .create(DanmakuAPI::class.java)
     }
 
     /**
@@ -269,6 +289,7 @@ class BilibiliClient(
     fun logoutFuture() = GlobalScope.future { logout() }
 
     private val sortAndSignInterceptor = SortAndSignInterceptor(billingClientProperties.appSecret)
+    private val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(logLevel)
     private inline fun <reified T : Any> createAPI(
             baseUrl: String,
             vararg interceptors: Interceptor
@@ -282,10 +303,7 @@ class BilibiliClient(
                 }
                 addInterceptor(sortAndSignInterceptor)
                 addInterceptor(FailureResponseInterceptor)
-                //log
-                if (logLevel != HttpLoggingInterceptor.Level.NONE) {
-                    addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                }
+                addNetworkInterceptor(httpLoggingInterceptor)
             }.build())
             .build()
             .create(T::class.java)

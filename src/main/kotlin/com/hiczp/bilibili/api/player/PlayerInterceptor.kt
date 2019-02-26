@@ -26,9 +26,9 @@ class PlayerInterceptor(
 
         //添加 header
         val header = request.headers().newBuilder().apply {
-            add("Accept", "*/*")
-            add("User-Agent", "Bilibili Freedoooooom/MarkII")
-            add("Accept-Language", Header.ZH_CN)
+            add(Header.ACCEPT, "*/*")
+            add(Header.USER_AGENT, "Bilibili Freedoooooom/MarkII")
+            add(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8")
         }.build()
 
         //添加 Query Params
@@ -50,13 +50,13 @@ class PlayerInterceptor(
                 addParamEncode(Param.MID, "0")
             }
             //公共参数
-            addParamEncode("device", bilibiliClientProperties.platform)
-            addParamEncode("mobi_app", bilibiliClientProperties.platform)
-            addParamEncode("platform", bilibiliClientProperties.platform)
+            addParamEncode(Param.DEVICE, bilibiliClientProperties.platform)
+            addParamEncode(Param.MOBILE_APP, bilibiliClientProperties.platform)
+            addParamEncode(Param.PLATFORM, bilibiliClientProperties.platform)
             addParamEncode("otype", "json")
-            addParamEncode("ts", Instant.now().epochSecond.toString())
-            addParamEncode("build", bilibiliClientProperties.build)
-            addParamEncode("buvid", bilibiliClientProperties.buildVersionId)
+            addParamEncode(Param.TIMESTAMP, Instant.now().epochSecond.toString())
+            addParamEncode(Param.BUILD, bilibiliClientProperties.build)
+            addParamEncode(Param.BUILD_VERSION_ID, bilibiliClientProperties.buildVersionId)
         }.toString().let {
             //排序
             val sortedEncodedQuery = it.split('&').sorted().joinToString(separator = "&")

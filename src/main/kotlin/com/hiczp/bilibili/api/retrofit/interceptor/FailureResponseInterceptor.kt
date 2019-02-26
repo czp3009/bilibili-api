@@ -30,11 +30,20 @@ object FailureResponseInterceptor : Interceptor {
             contentType.charset(Charsets.UTF_8)!!
         }
 
-        //拷贝流并读取其内容
-        val jsonObject = body.source().also {
+        //拷贝流
+        val inputStreamReader = body.source().also {
             it.request(Long.MAX_VALUE)
-        }.buffer.clone().inputStream().reader(charset).let {
-            jsonParser.parse(it).obj
+        }.buffer.clone().inputStream().reader(charset)
+
+        //读取其内容
+        val jsonObject = try {
+            jsonParser.parse(inputStreamReader).obj
+        } catch (exception: Exception) {
+            //如果返回内容解析失败, 说明它不是一个合法的 json
+            //如果在拦截器抛出 MalformedJsonException 会导致 Retrofit 的异步请求一直卡着直到超时
+            return response
+        } finally {
+            inputStreamReader.close()
         }
 
         //判断 code 是否为 0
