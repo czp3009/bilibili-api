@@ -1,9 +1,6 @@
 package com.hiczp.bilibili.api.main
 
-import com.hiczp.bilibili.api.main.model.ChildReply
-import com.hiczp.bilibili.api.main.model.Recommend
-import com.hiczp.bilibili.api.main.model.Reply
-import com.hiczp.bilibili.api.main.model.Season
+import com.hiczp.bilibili.api.main.model.*
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -52,8 +49,8 @@ interface MainAPI {
     ): Deferred<ChildReply>
 
     /**
-     * 获得一个番剧的分季信息, 包含默认季(通常是最新的一季)的分集信息
-     * seasonId 或 episodeId 必须有一个, 返回的结果是一样的
+     * 获得一个番剧的分季信息(生成番剧页面所需的信息), 包含当前选择的季的分集信息
+     * seasonId 或 episodeId 必须有一个, 如果用 episodeId 将跳转到对应的 season 的页面
      * 返回值中, 每个 episode 都有 aid 和 cid
      *
      * @param seasonId 季的唯一标识
@@ -74,4 +71,47 @@ interface MainAPI {
      */
     @GET("/pgc/season/app/related/recommend")
     fun recommend(@Query("season_id") seasonId: Long): Deferred<Recommend>
+
+    /**
+     * 我的追番动态(追番页面上方的那一条 "我的追番")
+     * 首页 -> 追番 -> 我的追番
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/pgc/app/page/bangumi/mine")
+    fun myBangumiNews(
+            @Query("fnval") fnval: Int = 16,
+            @Query("fnver") fnver: Int = 0
+    ): Deferred<MyBangumiNews>
+
+    /**
+     * 追番页面(客户端用这里面的数据来生成追番页面)
+     * 每个模块(module)的数据(item)全部超过三个.
+     * 每个板块下面的 换一换 按钮并不重新请求数据, 而是从每个模块的数据里选出另一批
+     * 首页 -> 追番
+     *
+     * @param pgcHomeTimelineABTest 与 A/B Test 有关, 不明确其值含义, 有可能使得返回内容不一样
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/pgc/app/page/bangumi")
+    fun bangumiPage(
+            @Query("fnval") fnval: Int = 16,
+            @Query("fnver") fnver: Int = 0,
+            @Query("pgc_home_timeline_abtest") pgcHomeTimelineABTest: Int? = 13
+    ): Deferred<BangumiPage>
+
+    /**
+     * 获得更多 "编辑推荐"
+     * 首页 -> 追番 -> (下拉)
+     *
+     * @param cursor 表示时间(ms), 但是可能是科学计数法. 每次请求所用的 cursor 在上一次的返回值里的最后一个 item 里. 第一次请求所用的 cursor 在追番页面的返回值的最后.
+     * @param size 分页大小
+     * @param wid 不明确, 有可能是一些 padding, margin, 用于计算位置
+     *
+     * @see bangumiPage
+     */
+    fun bangumiMore(
+            @Query("cursor") cursor: String,
+            @Query("size") size: Int = 10,
+            @Query("wid") wid: String? = "78,79,80,81,59"
+    ): Deferred<BangumiMore>
 }

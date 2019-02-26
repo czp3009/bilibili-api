@@ -18,6 +18,9 @@ fun InputStream.readInt(): Int {
             (byteArray[3].toInt())
 }
 
+/**
+ * 以大端模式从流中读取一个 unsigned int
+ */
 @Suppress("EXPERIMENTAL_API_USAGE")
 fun InputStream.readUInt() = readInt().toUInt()
 

@@ -33,13 +33,17 @@ interface AppAPI {
 
     /**
      * 侧边栏中动态增加的按钮, 返回信息包含 URI 地址(到对应的 activity)
+     * 侧拉抽屉
      */
     @GET("/x/resource/sidebar")
     fun sidebar(): Deferred<Sidebar>
 
     /**
      * 首页内容(客户端通过解析返回的内容来生成页面内容, 下同)
+     * 该 API 没有翻页参数, 同样的参数每次请求都会返回不一样的内容. 刷新和下拉只是简单的重新访问此接口.
      * 首页 -> 推荐
+     *
+     * @param pull 如果是通过滑动到最顶端来刷新页面的, 那么将是 true, 将页面滑动到最底端来获取更多内容将是 false
      */
     @Suppress("SpellCheckingInspection")
     @GET("/x/v2/feed/index")
@@ -65,6 +69,9 @@ interface AppAPI {
     /**
      * 热门页面
      * 首页 -> 热门
+     *
+     * @param index 翻页参数, 一开始为 0, 然后每次滑动到底端就会加 10
+     * @param ver 第一次请求时没有这个参数, 第二次开始这个参数为上一次请求此接口时的返回值中的 `ver`
      */
     @GET("/x/v2/show/popular/index")
     fun popularPage(
@@ -75,7 +82,7 @@ interface AppAPI {
             @Query("last_param") lastParam: String? = null,
             @Query("login_event") loginEvent: Int = 0,
             @Query("qn") qn: Int = 32,
-            @Query("ver") ver: Long? = null //ver 的值为上一次请求该接口时的 timestamp-1
+            @Query("ver") ver: Long? = null
     ): Deferred<PopularPage>
 
     /**

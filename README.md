@@ -1,6 +1,8 @@
 # Bilibili API JVM 调用库
 该项目提供 Bilibili API 的 JVM 调用, 协议来自 Bilibili Android APP 的逆向工程以及截包分析.
 
+使用一台虚拟的 `Pixel 2` 设备来截取数据包, 一些固定参数可能与真实设备不一致.
+
 # 技术说明
 `BilibiliClient` 类表示一个模拟的客户端, 实例化此类即表示打开了 Bilibili APP.
 
