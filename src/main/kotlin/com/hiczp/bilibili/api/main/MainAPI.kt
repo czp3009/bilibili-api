@@ -34,7 +34,7 @@ interface MainAPI {
      *
      * @param minId 想要请求的子评论(复数)的第一个子评论的 id(子评论默认升序排序), 为 null 时从 0 楼开始
      * @param oid aid
-     * @param root 父评论的 id
+     * @param root 根评论的 id
      * @param size 分页大小
      */
     @GET("/x/v2/reply/reply/cursor")
@@ -47,6 +47,30 @@ interface MainAPI {
             @Query("sort") sort: Int = 0,
             @Query("type") type: Int = 1
     ): Deferred<ChildReply>
+
+    /**
+     * 查看 "对话列表"
+     * 当一个子评论中有多组人在互相 at 时, 旁边就会有一个按钮 "查看对话", 将启动一个 dialog 展示内容
+     * parentId 与 rootId 在请求子评论列表时取得
+     *
+     * @param dialog "查看对话" 按钮所在的评论所 at 的那条评论的 id, 即 parentId
+     * @param minFloor 最小楼层, 翻页参数
+     * @param oid aid
+     * @param root "查看对话" 按钮所在的根评论 id, 即 rootId
+     * @param size 分页大小
+     *
+     * @see childReply
+     */
+    @GET("/x/v2/reply/dialog/cursor")
+    fun chatList(
+            @Query("dialog") dialog: Long,
+            @Query("min_floor") minFloor: Long? = null,
+            @Query("oid") oid: Long,
+            @Query("plat") plat: Int? = 2,
+            @Query("root") root: Long,
+            @Query("size") size: Int = 20,
+            @Query("type") type: Int = 1
+    ): Deferred<ChatList>
 
     /**
      * 获得一个番剧的分季信息(生成番剧页面所需的信息), 包含当前选择的季的分集信息

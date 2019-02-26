@@ -266,15 +266,27 @@ val reply = bilibiliClient.mainAPI.reply(oid = 44154463).await()
 val childReply = bilibiliClient.mainAPI.childReply(oid = 16622855, root = 1405602348).await()
 ```
 
-其中的 `root` 表示父评论的 id.
+其中的 `root` 表示根评论的 id.
 
-(如果一个评论的父 id 为 0 表示它是顶层评论而非子评论)
+每个评论都有自己的 `replyId`, `parentId` 以及 `rootId`.
 
-(子评论原理上可以再有子评论, 但是 B站 在逻辑上只有一层子评论)
+假如一个人在一个评论的子评论里发布了一个评论并且 at 了其他人发的评论, 那么其 `parentId` 是他所 at 的评论, 其 `rootId` 为所在的根评论.
+
+如果不满足对应的层级逻辑关系(例如本身为根评论), `parentId` 与 `rootId` 可能为 0.
 
 用额外的 `minId` 参数来指定返回的起始子楼层.
 
 注意, 子楼层是越翻越大的.
+
+如果一个根评论下面有很多个喷子在互喷, 会导致看不清, 客户端上有一个按钮 "查看对话" 就是解决这个问题的.
+
+```kotlin
+val chatList = bilibiliClient.mainAPI.chatList(oid = 34175504, root = 1136310360, dialog = 1136351035).await()
+```
+
+`root` 为根评论 ID, `dialog` 为父评论 ID.
+
+用 `minFloor` 控制分页, 原理同上.
 
 番剧下面的评论用一样的方式获取.
 
