@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.main.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class ChatList(
@@ -50,9 +51,9 @@ data class ChatList(
                 @SerializedName("member")
                 var member: Member,
                 @SerializedName("mid")
-                var mid: Int, // 161745277
+                var mid: Long, // 161745277
                 @SerializedName("oid")
-                var oid: Int, // 34175504
+                var oid: Long, // 34175504
                 @SerializedName("parent")
                 var parent: Int, // 1136656601
                 @SerializedName("parent_str")
@@ -60,7 +61,7 @@ data class ChatList(
                 @SerializedName("rcount")
                 var rcount: Int, // 0
                 @SerializedName("replies")
-                var replies: Any?, // null
+                var replies: JsonElement?, // null
                 @SerializedName("root")
                 var root: Int, // 1136310360
                 @SerializedName("root_str")
@@ -89,7 +90,7 @@ data class ChatList(
                     @SerializedName("avatar")
                     var avatar: String, // http://static.hdslb.com/images/member/noface.gif
                     @SerializedName("fans_detail")
-                    var fansDetail: Any?, // null
+                    var fansDetail: JsonElement?, // null
                     @SerializedName("following")
                     var following: Int, // 0
                     @SerializedName("level_info")
@@ -115,7 +116,7 @@ data class ChatList(
             ) {
                 data class Pendant(
                         @SerializedName("expire")
-                        var expire: Int, // 0
+                        var expire: Long, // 0
                         @SerializedName("image")
                         var image: String,
                         @SerializedName("name")
@@ -177,7 +178,7 @@ data class ChatList(
                     @SerializedName("device")
                     var device: String, // phone
                     @SerializedName("members")
-                    var members: List<Any>,
+                    var members: List<JsonElement>,
                     @SerializedName("message")
                     var message: String, // 回复 @***全副武装 :耶酥是佛教徒
                     @SerializedName("plat")

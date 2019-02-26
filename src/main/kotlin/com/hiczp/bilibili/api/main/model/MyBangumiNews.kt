@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.main.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class MyBangumiNews(
@@ -12,7 +13,7 @@ data class MyBangumiNews(
 ) {
     data class Result(
             @SerializedName("delay")
-            var delay: List<Any>,
+            var delay: List<JsonElement>,
             @SerializedName("follow")
             var follow: Int, // 34
             @SerializedName("follows")

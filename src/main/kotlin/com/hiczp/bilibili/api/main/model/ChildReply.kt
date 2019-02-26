@@ -84,11 +84,11 @@ data class ChildReply(
                 @SerializedName("member")
                 var member: Member,
                 @SerializedName("mid")
-                var mid: Int, // 14363383
+                var mid: Long, // 14363383
                 @SerializedName("oid")
-                var oid: Int, // 16622855
+                var oid: Long, // 16622855
                 @SerializedName("parent")
-                var parent: Int, // 0
+                var parent: Long, // 0
                 @SerializedName("parent_str")
                 var parentStr: String, // 0
                 @SerializedName("rcount")
@@ -96,7 +96,7 @@ data class ChildReply(
                 @SerializedName("replies")
                 var replies: List<Reply>,
                 @SerializedName("root")
-                var root: Int, // 0
+                var root: Long, // 0
                 @SerializedName("root_str")
                 var rootStr: String, // 0
                 @SerializedName("rpid")
@@ -147,19 +147,19 @@ data class ChildReply(
                     @SerializedName("member")
                     var member: Member,
                     @SerializedName("mid")
-                    var mid: Int, // 14363383
+                    var mid: Long, // 14363383
                     @SerializedName("oid")
-                    var oid: Int, // 16622855
+                    var oid: Long, // 16622855
                     @SerializedName("parent")
-                    var parent: Int, // 1405602348
+                    var parent: Long, // 1405602348
                     @SerializedName("parent_str")
                     var parentStr: String, // 1405602348
                     @SerializedName("rcount")
                     var rcount: Int, // 0
                     @SerializedName("replies")
-                    var replies: List<JsonElement>,
+                    var replies: List<JsonElement>, // []
                     @SerializedName("root")
-                    var root: Int, // 1405602348
+                    var root: Long, // 1405602348
                     @SerializedName("root_str")
                     var rootStr: String, // 1405602348
                     @SerializedName("rpid")
@@ -223,7 +223,7 @@ data class ChildReply(
                 ) {
                     data class Pendant(
                             @SerializedName("expire")
-                            var expire: Int, // 0
+                            var expire: Long, // 0
                             @SerializedName("image")
                             var image: String,
                             @SerializedName("name")
@@ -341,7 +341,7 @@ data class ChildReply(
             ) {
                 data class Pendant(
                         @SerializedName("expire")
-                        var expire: Int, // 0
+                        var expire: Long, // 0
                         @SerializedName("image")
                         var image: String,
                         @SerializedName("name")

@@ -96,7 +96,7 @@ data class View(
                 @SerializedName("face")
                 var face: String, // http://i1.hdslb.com/bfs/face/9a586d1ef659b322af150c925976a134ad046a74.jpg
                 @SerializedName("mid")
-                var mid: Int, // 393484294
+                var mid: Long, // 393484294
                 @SerializedName("name")
                 var name: String // 娱乐酱鸭
         )
@@ -234,7 +234,7 @@ data class View(
                 @SerializedName("face")
                 var face: String, // http://i1.hdslb.com/bfs/face/9a586d1ef659b322af150c925976a134ad046a74.jpg
                 @SerializedName("mid")
-                var mid: Int, // 393484294
+                var mid: Long, // 393484294
                 @SerializedName("name")
                 var name: String, // 娱乐酱鸭
                 @SerializedName("official_verify")
@@ -314,7 +314,7 @@ data class View(
                     @SerializedName("face")
                     var face: String, // http://static.hdslb.com/images/member/noface.gif
                     @SerializedName("mid")
-                    var mid: Int, // 334512441
+                    var mid: Long, // 334512441
                     @SerializedName("name")
                     var name: String // 达岸电影2018
             )

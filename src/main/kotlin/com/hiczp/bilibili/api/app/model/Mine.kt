@@ -30,7 +30,7 @@ data class Mine(
             @SerializedName("level")
             var level: Int, // 5
             @SerializedName("mid")
-            var mid: Int, // 2866663
+            var mid: Long, // 2866663
             @SerializedName("name")
             var name: String, // hyx5020
             @SerializedName("new_followers")

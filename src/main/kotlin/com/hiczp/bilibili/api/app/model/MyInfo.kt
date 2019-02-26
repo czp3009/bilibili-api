@@ -26,7 +26,7 @@ data class MyInfo(
             @SerializedName("level")
             var level: Int, // 4
             @SerializedName("mid")
-            var mid: Int, // 20293030
+            var mid: Long, // 20293030
             @SerializedName("name")
             var name: String, // czp3009
             @SerializedName("official")

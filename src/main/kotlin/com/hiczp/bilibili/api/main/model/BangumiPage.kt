@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.main.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class BangumiPage(
@@ -20,7 +21,7 @@ data class BangumiPage(
                 @SerializedName("attr")
                 var attr: Attr,
                 @SerializedName("headers")
-                var headers: List<Any>,
+                var headers: List<JsonElement>,
                 @SerializedName("items")
                 var items: List<Item>,
                 @SerializedName("module_id")

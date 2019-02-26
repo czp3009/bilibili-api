@@ -74,19 +74,25 @@ data class Reply(
                 @SerializedName("member")
                 var member: Member,
                 @SerializedName("mid")
-                var mid: Int, // 14028833
+                var mid: Long, // 14028833
                 @SerializedName("oid")
-                var oid: Int, // 44012857
+                var oid: Long, // 44012857
                 @SerializedName("parent")
-                var parent: Int, // 0
+                var parent: Long, // 0
                 @SerializedName("parent_str")
                 var parentStr: String, // 0
+                /**
+                 * 评论数量
+                 */
                 @SerializedName("rcount")
                 var rcount: Int, // 1
+                /**
+                 * 如果 replies 为 null 说明没有评论
+                 */
                 @SerializedName("replies")
-                var replies: List<Reply>,
+                var replies: List<Reply>?,
                 @SerializedName("root")
-                var root: Int, // 0
+                var root: Long, // 0
                 @SerializedName("root_str")
                 var rootStr: String, // 0
                 @SerializedName("rpid")
@@ -155,11 +161,11 @@ data class Reply(
                     @SerializedName("member")
                     var member: Member,
                     @SerializedName("mid")
-                    var mid: Int, // 14674816
+                    var mid: Long, // 14674816
                     @SerializedName("oid")
-                    var oid: Int, // 44012857
+                    var oid: Long, // 44012857
                     @SerializedName("parent")
-                    var parent: Int, // 1405424731
+                    var parent: Long, // 1405424731
                     @SerializedName("parent_str")
                     var parentStr: String, // 1405424731
                     @SerializedName("rcount")
@@ -167,7 +173,7 @@ data class Reply(
                     @SerializedName("replies")
                     var replies: List<JsonElement>,
                     @SerializedName("root")
-                    var root: Int, // 1405424731
+                    var root: Long, // 1405424731
                     @SerializedName("root_str")
                     var rootStr: String, // 1405424731
                     @SerializedName("rpid")
@@ -240,7 +246,7 @@ data class Reply(
                 ) {
                     data class Pendant(
                             @SerializedName("expire")
-                            var expire: Int, // 0
+                            var expire: Long, // 0
                             @SerializedName("image")
                             var image: String,
                             @SerializedName("name")
@@ -331,7 +337,7 @@ data class Reply(
             ) {
                 data class Pendant(
                         @SerializedName("expire")
-                        var expire: Int, // 0
+                        var expire: Long, // 0
                         @SerializedName("image")
                         var image: String,
                         @SerializedName("name")
@@ -392,7 +398,7 @@ data class Reply(
 
         data class Upper(
                 @SerializedName("mid")
-                var mid: Int // 11248627
+                var mid: Long // 11248627
         )
 
         data class Config(
@@ -418,7 +424,7 @@ data class Reply(
                 @SerializedName("mode")
                 var mode: Int, // 1
                 @SerializedName("next")
-                var next: Int, // 295
+                var next: Long, // 295
                 @SerializedName("prev")
                 var prev: Int, // 314
                 @SerializedName("support_mode")
@@ -453,11 +459,11 @@ data class Reply(
                 @SerializedName("member")
                 var member: Member,
                 @SerializedName("mid")
-                var mid: Int, // 7937795
+                var mid: Long, // 7937795
                 @SerializedName("oid")
-                var oid: Int, // 44012857
+                var oid: Long, // 44012857
                 @SerializedName("parent")
-                var parent: Int, // 0
+                var parent: Long, // 0
                 @SerializedName("parent_str")
                 var parentStr: String, // 0
                 @SerializedName("rcount")
@@ -465,7 +471,7 @@ data class Reply(
                 @SerializedName("replies")
                 var replies: List<Reply>,
                 @SerializedName("root")
-                var root: Int, // 0
+                var root: Long, // 0
                 @SerializedName("root_str")
                 var rootStr: String, // 0
                 @SerializedName("rpid")
@@ -531,7 +537,7 @@ data class Reply(
             ) {
                 data class Pendant(
                         @SerializedName("expire")
-                        var expire: Int, // 1565150481
+                        var expire: Long, // 1565150481
                         @SerializedName("image")
                         var image: String, // http://i2.hdslb.com/bfs/face/5ac24fa22208f48126bfacb42901e932946f6aa3.png
                         @SerializedName("name")
@@ -643,11 +649,11 @@ data class Reply(
                     @SerializedName("member")
                     var member: Member,
                     @SerializedName("mid")
-                    var mid: Int, // 27407505
+                    var mid: Long, // 27407505
                     @SerializedName("oid")
-                    var oid: Int, // 44012857
+                    var oid: Long, // 44012857
                     @SerializedName("parent")
-                    var parent: Int, // 1400028639
+                    var parent: Long, // 1400028639
                     @SerializedName("parent_str")
                     var parentStr: String, // 1400028639
                     @SerializedName("rcount")
@@ -655,7 +661,7 @@ data class Reply(
                     @SerializedName("replies")
                     var replies: List<JsonElement>,
                     @SerializedName("root")
-                    var root: Int, // 1400028639
+                    var root: Long, // 1400028639
                     @SerializedName("root_str")
                     var rootStr: String, // 1400028639
                     @SerializedName("rpid")
@@ -738,7 +744,7 @@ data class Reply(
 
                     data class Pendant(
                             @SerializedName("expire")
-                            var expire: Int, // 1551514981
+                            var expire: Long, // 1551514981
                             @SerializedName("image")
                             var image: String, // http://i0.hdslb.com/bfs/face/ec152705d82f96381f1150058d55e057396f0576.png
                             @SerializedName("name")
@@ -824,11 +830,11 @@ data class Reply(
                     @SerializedName("member")
                     var member: Member,
                     @SerializedName("mid")
-                    var mid: Int, // 11248627
+                    var mid: Long, // 11248627
                     @SerializedName("oid")
-                    var oid: Int, // 44012857
+                    var oid: Long, // 44012857
                     @SerializedName("parent")
-                    var parent: Int, // 0
+                    var parent: Long, // 0
                     @SerializedName("parent_str")
                     var parentStr: String, // 0
                     @SerializedName("rcount")
@@ -836,7 +842,7 @@ data class Reply(
                     @SerializedName("replies")
                     var replies: List<Reply>,
                     @SerializedName("root")
-                    var root: Int, // 0
+                    var root: Long, // 0
                     @SerializedName("root_str")
                     var rootStr: String, // 0
                     @SerializedName("rpid")
@@ -887,11 +893,11 @@ data class Reply(
                         @SerializedName("member")
                         var member: Member,
                         @SerializedName("mid")
-                        var mid: Int, // 85049857
+                        var mid: Long, // 85049857
                         @SerializedName("oid")
-                        var oid: Int, // 44012857
+                        var oid: Long, // 44012857
                         @SerializedName("parent")
-                        var parent: Int, // 1401606362
+                        var parent: Long, // 1401606362
                         @SerializedName("parent_str")
                         var parentStr: String, // 1401606362
                         @SerializedName("rcount")
@@ -899,7 +905,7 @@ data class Reply(
                         @SerializedName("replies")
                         var replies: List<JsonElement>,
                         @SerializedName("root")
-                        var root: Int, // 1401074923
+                        var root: Long, // 1401074923
                         @SerializedName("root_str")
                         var rootStr: String, // 1401074923
                         @SerializedName("rpid")
@@ -945,7 +951,7 @@ data class Reply(
                     ) {
                         data class Pendant(
                                 @SerializedName("expire")
-                                var expire: Int, // 0
+                                var expire: Long, // 0
                                 @SerializedName("image")
                                 var image: String,
                                 @SerializedName("name")
@@ -1048,7 +1054,7 @@ data class Reply(
                         ) {
                             data class Pendant(
                                     @SerializedName("expire")
-                                    var expire: Int, // 0
+                                    var expire: Long, // 0
                                     @SerializedName("image")
                                     var image: String,
                                     @SerializedName("name")
@@ -1200,7 +1206,7 @@ data class Reply(
 
                     data class Pendant(
                             @SerializedName("expire")
-                            var expire: Int, // 1570032000
+                            var expire: Long, // 1570032000
                             @SerializedName("image")
                             var image: String, // http://i1.hdslb.com/bfs/face/14738b92760b90675d4bf35dd059b0a666113bae.png
                             @SerializedName("name")
