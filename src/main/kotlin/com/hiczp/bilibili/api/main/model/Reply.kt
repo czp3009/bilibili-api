@@ -28,8 +28,11 @@ data class Reply(
             var hots: List<Hot>,
             @SerializedName("notice")
             var notice: JsonElement?, // null
+            /**
+             * 没有评论的视频的 replies 为 null
+             */
             @SerializedName("replies")
-            var replies: List<Reply>,
+            var replies: List<Reply>?,
             @SerializedName("top")
             var top: Top?,
             @SerializedName("upper")
@@ -415,14 +418,22 @@ data class Reply(
         )
 
         data class Cursor(
+                /**
+                 * allCount 的数量为 所有根评论+所有子评论
+                 * 没有评论的视频的 allCount 为 null
+                 */
                 @SerializedName("all_count")
-                var allCount: Int, // 904
+                var allCount: Int?, // 904
                 @SerializedName("is_begin")
                 var isBegin: Boolean, // true
                 @SerializedName("is_end")
                 var isEnd: Boolean, // false
                 @SerializedName("mode")
                 var mode: Int, // 1
+                /**
+                 * 如果 next 为 0 说明没有评论
+                 * next 为 1 说明已经翻到底
+                 */
                 @SerializedName("next")
                 var next: Long, // 295
                 @SerializedName("prev")
@@ -798,7 +809,7 @@ data class Reply(
                 @SerializedName("admin")
                 var admin: JsonElement?, // null
                 @SerializedName("upper")
-                var upper: Upper,
+                var upper: Upper?,
                 @SerializedName("vote")
                 var vote: JsonElement? // null
         ) {

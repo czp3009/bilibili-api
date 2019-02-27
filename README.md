@@ -290,49 +290,6 @@ val chatList = bilibiliClient.mainAPI.chatList(oid = 34175504, root = 1136310360
 
 番剧下面的评论用一样的方式获取.
 
-以下给出一个获取一个视频下的全部评论(包括子评论)的示例
-
-```kotlin
-fun printAllReplies() {
-    val aid = 44651998L
-
-    val start = System.currentTimeMillis()
-
-    val bilibiliClient = BilibiliClient()
-    runBlocking {
-        val rootReplies = LinkedList<Reply.Data.Reply>()
-        val childReplies = HashMap<Long, Deferred<ChildReply>>()
-        var next: Long? = null
-        while (true) {
-            val reply = bilibiliClient.mainAPI.reply(oid = aid, next = next).await()
-            reply.data.replies.also {
-                rootReplies.addAll(it)
-            }.asSequence().filterNot {
-                it.rcount == 0  //去除没有子评论的根评论
-            }.forEach {
-                childReplies[it.rpid] = bilibiliClient.mainAPI.childReply(oid = aid, root = it.rpid, size = Int.MAX_VALUE)
-            }
-            //如果已经是最后一页
-            if (reply.data.cursor.isEnd) break
-            next = reply.data.cursor.next
-        }
-
-        //输出
-        rootReplies.forEach { rootReply ->
-            println(rootReply.content.message)
-            val childReply = childReplies[rootReply.rpid]
-            childReply?.await()?.data?.root?.replies?.forEach {
-                println("└──${it.content.message}")
-            }
-        }
-    }
-
-    val end = System.currentTimeMillis()
-
-    println("Done in ${end - start} ms")
-}
-```
-
 ## 获得一个视频的弹幕
 看评论自然不够刺激, 我们想看到弹幕!
 

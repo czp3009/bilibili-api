@@ -16,8 +16,8 @@ interface MainAPI {
      * 返回值中的 rpid 为评论 id. parent 为父评论的 id, parent 为 0 的是顶级评论
      *
      * @param oid 就是 aid, 视频的唯一标识
-     * @param pageSize 分页大小
-     * @param next 下一页的起始楼层, 注意, 翻页是越翻楼层越小的. 如果为 null 则从最后一楼开始
+     * @param pageSize 分页大小, 最大值 50
+     * @param next 下一页的起始楼层(这一层不包含在返回值内), 注意, 翻页是越翻楼层越小的. 如果为 null 则从最后一楼(最新的评论)开始
      */
     @GET("/x/v2/reply/main")
     fun reply(
