@@ -31,12 +31,11 @@ class DanmakuParser {
          * 解析弹幕文件
          *
          * @param inputStream 输入流, 可以指向任何位置
-         * @param autoClose 是否在解析后自动关闭流
          *
-         * @return 返回 flags map 与 弹幕列表. 注意, 原始的弹幕顺序是按发送时间来排的, 而非播放器时间.
+         * @return 返回 flags map 与 弹幕序列. 注意, 原始的弹幕顺序是按发送时间来排的, 而非播放器时间.
          */
         @JvmStatic
-        fun parser(inputStream: InputStream, autoClose: Boolean = true): Pair<Map<Long, Int>, List<Danmaku>> {
+        fun parse(inputStream: InputStream): Pair<Map<Long, Int>, Sequence<Danmaku>> {
             //Json 的长度
             val jsonLength = inputStream.readUInt()
 
@@ -74,47 +73,46 @@ class DanmakuParser {
 
             //json 解析完毕后, 剩下的内容是一个 gzip 压缩过的 xml
             val reader = GZIPInputStream(inputStream).reader()
-            val danmakus = LinkedList<Danmaku>()
             //流式解析 xml
             val xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(reader)
-            var startD = false  //之前解析到的 element 是否是 d
-            var p: String? = null   //之前解析到的 p 的值
-            while (xmlEventReader.hasNext()) {
-                val event = xmlEventReader.nextEvent()
-                when (event.eventType) {
-                    XMLStreamConstants.START_ELEMENT -> {
-                        with(event.asStartElement()) {
-                            startD = name.localPart == "d"
-                            if (startD) {
-                                p = getAttributeByName(P).value
+            //lazy sequence
+            val danmakus = sequence {
+                var startD = false  //之前解析到的 element 是否是 d
+                var p: String? = null   //之前解析到的 p 的值
+                while (xmlEventReader.hasNext()) {
+                    val event = xmlEventReader.nextEvent()
+                    when (event.eventType) {
+                        XMLStreamConstants.START_ELEMENT -> {
+                            with(event.asStartElement()) {
+                                startD = name.localPart == "d"
+                                if (startD) {
+                                    p = getAttributeByName(P).value
+                                }
                             }
                         }
-                    }
-                    XMLStreamConstants.CHARACTERS -> {
-                        //如果前一个解析到的是 d 标签, 那么此处得到的一定是 d 标签的 body
-                        if (startD) {
-                            val danmaku = with(StringTokenizer(p, ",")) {
-                                Danmaku(
-                                        nextToken().toLong(),
-                                        nextToken(),
-                                        nextToken().toLong(),
-                                        nextToken().toInt(),
-                                        nextToken().toInt(),
-                                        nextToken().toInt(),
-                                        nextToken().toLong(),
-                                        nextToken(),
-                                        nextToken(),
-                                        event.asCharacters().data
-                                )
+                        XMLStreamConstants.CHARACTERS -> {
+                            //如果前一个解析到的是 d 标签, 那么此处得到的一定是 d 标签的 body
+                            if (startD) {
+                                val danmaku = with(StringTokenizer(p, ",")) {
+                                    Danmaku(
+                                            nextToken().toLong(),
+                                            nextToken(),
+                                            nextToken().toLong(),
+                                            nextToken().toInt(),
+                                            nextToken().toInt(),
+                                            nextToken().toInt(),
+                                            nextToken().toLong(),
+                                            nextToken(),
+                                            nextToken(),
+                                            event.asCharacters().data
+                                    )
+                                }
+                                yield(danmaku)
                             }
-                            danmakus.add(danmaku)
                         }
                     }
                 }
             }
-
-            //自动关闭流
-            if (autoClose) inputStream.close()
 
             return danmakuFlags to danmakus
         }

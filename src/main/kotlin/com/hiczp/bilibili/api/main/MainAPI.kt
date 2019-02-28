@@ -2,8 +2,7 @@ package com.hiczp.bilibili.api.main
 
 import com.hiczp.bilibili.api.main.model.*
 import kotlinx.coroutines.Deferred
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * 这也是总站 API
@@ -138,4 +137,28 @@ interface MainAPI {
             @Query("size") size: Int = 10,
             @Query("wid") wid: String? = "78,79,80,81,59"
     ): Deferred<BangumiMore>
+
+    /**
+     * 发送评论
+     * 如果发送根评论则 root 和 parent 为 null
+     * 如果发送子评论则 root 和 parent 均为根评论的 id
+     * 如果在子评论中 at 别人(即对子评论进行评论), 那么 root 为所属根评论的 id, parent 为所 at 的那个评论的 id
+     * at 别人时, 评论的内容必须符合以下格式 "回复 @$username :$message"
+     *
+     * @param message 发送的内容
+     * @param oid aid
+     * @param parent 父评论 id
+     * @param root 根评论 id
+     */
+    @POST("/x/v2/reply/add")
+    @FormUrlEncoded
+    fun sendReply(
+            @Field("from") from: Int? = null,
+            @Field("message") message: String,
+            @Field("oid") oid: Long,
+            @Field("parent") parent: Long? = null,
+            @Field("plat") plat: Int = 2,
+            @Field("root") root: Long? = null,
+            @Field("type") type: Int = 1
+    ): Deferred<SendReplyResponse>
 }
