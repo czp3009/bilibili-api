@@ -200,4 +200,68 @@ interface MainAPI {
             @Field("rpid") replyId: Long,
             @Field("type") type: Int = 1
     ): Deferred<CommonResponse>
+
+    /**
+     * 查看视频的删除日志
+     * 这个 API 看起来有翻页, 其实没有页
+     * 视频 -> 评论 -> 右上角三个点 ->查看删除日志
+     *
+     * @return 有$replyCount条评论因$reportCount次举报已被管理员移除
+     */
+    @GET("/x/v2/reply/log")
+    fun deleteLog(
+            @Query("oid") oid: Long,
+            @Query("pn") pn: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 1
+    ): Deferred<DeleteLog>
+
+    /**
+     * 改变与某用户的关系(关注, 取消关注)
+     *
+     * @param action 动作类型(1: 关注;2: 取消关注)
+     * @param followId 操作对象的 ID(例如欲关注的那个用户的 ID)
+     * @param reSrc 不明确
+     */
+    @POST("/x/relation/modify")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun modifyRelation(
+            @Field("act") action: Int,
+            @Field("fid") followId: Long,
+            @Field("re_src") reSrc: Int? = 32
+    ): Deferred<CommonResponse>
+
+    /**
+     * 关注的分组
+     * 默认分组永远是 0
+     */
+    @GET("/x/relation/tag/m/tags")
+    fun relationTags(): Deferred<RelationTags>
+
+    /**
+     * 创建关注分组
+     *
+     * @param tag 不能包含绝大部分符号
+     */
+    @POST("/x/relation/tag/create")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun createRelationTag(@Field("tag") tag: String): Deferred<CreateRelationTagResponse>
+
+    /**
+     * 设置分组(对某个用户的关注的分组)
+     * 用户 -> 关注 -> 设置分组
+     *
+     * @param followIds 关注的人(不明确能不能有多个)
+     * @param tagIds 分组 id. 可以有多个, 用逗号隔开, 例如 "-10,110641"
+     */
+    @Suppress("SpellCheckingInspection")
+    @POST("/x/relation/tags/addUsers")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun relationAddUsers(
+            @Field("fids") followIds: String,
+            @Field("tagids") tagIds: String
+    ): Deferred<CommonResponse>
 }

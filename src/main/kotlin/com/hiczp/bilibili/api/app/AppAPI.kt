@@ -143,4 +143,25 @@ interface AppAPI {
             @Field("dislike") dislike: Int = 0,
             @Field("from") from: Int? = null
     ): Deferred<CommonResponse>
+
+    /**
+     * 投币
+     * 一个视频能投几个硬币是怎么获得的未知
+     *
+     * @param multiply 投币数量
+     * @param selectLike 为 1 表示投币的同时为视频点赞, 对番剧投币时, 该值总为 0
+     * @param upId 该值似乎总为 0
+     */
+    @Suppress("SpellCheckingInspection")
+    @POST("/x/v2/view/coin/add")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun addCoin(
+            @Field("aid") aid: Long,
+            @Field("avtype") avType: Int = 1,
+            @Field("from") from: Int? = null,
+            @Field("multiply") multiply: Int,
+            @Field("select_like") selectLike: Int = 0,
+            @Field("upid") upId: Long? = 0
+    ): Deferred<AddCoinResponse>
 }
