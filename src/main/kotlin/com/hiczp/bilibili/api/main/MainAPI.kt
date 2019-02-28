@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.main
 
 import com.hiczp.bilibili.api.main.model.*
+import com.hiczp.bilibili.api.retrofit.CommonResponse
 import com.hiczp.bilibili.api.retrofit.Header
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
@@ -163,4 +164,40 @@ interface MainAPI {
             @Field("root") root: Long? = null,
             @Field("type") type: Int = 1
     ): Deferred<SendReplyResponse>
+
+    /**
+     * 点赞(评论)
+     *
+     * @param action 为 1 时表示点赞, 0 表示取消点赞
+     * @param oid aid
+     * @param replyId 评论的 ID
+     */
+    @Suppress("SpellCheckingInspection")
+    @POST("/x/v2/reply/action")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun likeReply(
+            @Field("action") action: Int,
+            @Field("oid") oid: Long,
+            @Field("rpid") replyId: Long,
+            @Field("type") type: Int = 1
+    ): Deferred<CommonResponse>
+
+    /**
+     * 不喜欢(评论)
+     *
+     * @param action 为 1 时表示不喜欢, 为 0 时表示取消不喜欢
+     * @param oid aid
+     * @param replyId 评论的 ID
+     */
+    @Suppress("SpellCheckingInspection")
+    @POST("/x/v2/reply/hate")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun dislikeReply(
+            @Field("action") action: Int,
+            @Field("oid") oid: Long,
+            @Field("rpid") replyId: Long,
+            @Field("type") type: Int = 1
+    ): Deferred<CommonResponse>
 }

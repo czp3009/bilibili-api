@@ -1,9 +1,10 @@
 package com.hiczp.bilibili.api.app
 
 import com.hiczp.bilibili.api.app.model.*
+import com.hiczp.bilibili.api.retrofit.CommonResponse
+import com.hiczp.bilibili.api.retrofit.Header
 import kotlinx.coroutines.Deferred
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.time.Instant
 
 /**
@@ -73,6 +74,7 @@ interface AppAPI {
      * @param index 翻页参数, 一开始为 0, 然后每次滑动到底端就会加 10
      * @param ver 第一次请求时没有这个参数, 第二次开始这个参数为上一次请求此接口时的返回值中的 `ver`
      */
+    @Suppress("SpellCheckingInspection")
     @GET("/x/v2/show/popular/index")
     fun popularPage(
             @Query("fnval") fnVal: Int = 16,
@@ -107,4 +109,38 @@ interface AppAPI {
             @Query("qn") qn: Int = 32,
             @Query("trackid") trackId: String? = null //all_10.shylf-ai-recsys-120.1550674524909.237
     ): Deferred<View>
+
+    /**
+     * 点赞(视频)
+     *
+     * @param aid 视频的唯一标识
+     * @param like 为 0 时表示点赞, 为 1 时表示取消点赞
+     * @param dislike 正常为 0, 为 1 时(like 为 0)表示 取消不喜欢的同时为该视频点赞(等于做了两个操作, 下同)
+     */
+    @POST("/x/v2/view/like")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun like(
+            @Field("aid") aid: Long,
+            @Field("like") like: Int = 0,
+            @Field("dislike") dislike: Int = 0,
+            @Field("from") from: Int? = null
+    ): Deferred<LikeResponse>
+
+    /**
+     * 不喜欢(视频)
+     *
+     * @param aid 视频的唯一标识
+     * @param dislike 为 0 时表示不喜欢, 为 1 时表示取消不喜欢
+     * @param like 正常为 0, 为 1 时(dislike 为 0)表示 取消点赞的同时不喜欢该视频
+     */
+    @POST("/x/v2/view/dislike")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun dislike(
+            @Field("aid") aid: Long,
+            @Field("like") like: Int = 0,
+            @Field("dislike") dislike: Int = 0,
+            @Field("from") from: Int? = null
+    ): Deferred<CommonResponse>
 }
