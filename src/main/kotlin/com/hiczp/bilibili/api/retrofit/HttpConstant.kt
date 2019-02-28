@@ -20,6 +20,10 @@ object Header {
     const val ACCEPT = "Accept"
     const val ACCEPT_LANGUAGE = "Accept-Language"
     const val ACCEPT_ENCODING = "Accept-Encoding"
+
+    //强制将公共参数加到 FormBody 上
+    const val FORCE_FORM_BODY_NAME = "Force-Form-Body"
+    const val FORCE_FORM_BODY = "$FORCE_FORM_BODY_NAME: true"
 }
 
 object Param {

@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.main
 
 import com.hiczp.bilibili.api.main.model.*
+import com.hiczp.bilibili.api.retrofit.Header
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
@@ -152,6 +153,7 @@ interface MainAPI {
      */
     @POST("/x/v2/reply/add")
     @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
     fun sendReply(
             @Field("from") from: Int? = null,
             @Field("message") message: String,
