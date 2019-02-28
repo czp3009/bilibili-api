@@ -11,7 +11,7 @@
     <!--https://github.com/bilibili/DanmakuFlameMaster/blob/master/Sample/src/main/java/com/sample/BiliDanmukuParser.java 与现在版本不一致-->
     <!--0: 弹幕 id-->
     <!--1: 不明确(可能是弹幕池 id)-->
-    <!--2: 弹幕出现时间(从视频开始播放开始计算)(ms)(不一定与弹幕发送者的播放器时间一致)-->
+    <!--2: 弹幕出现时间(播放器时间)(ms)-->
     <!--3: 类型(1从右至左滚动弹幕|6从左至右滚动弹幕|5顶端固定弹幕|4底端固定弹幕|7高级弹幕|8脚本弹幕)-->
     <!--4: 字号-->
     <!--5: 颜色-->

@@ -24,6 +24,9 @@ data class View(
             var cmConfig: CmConfig,
             @SerializedName("cms")
             var cms: List<Cm>,
+            /**
+             * copyright 为 1 时表示自制, 2 表示转载
+             */
             @SerializedName("copyright")
             var copyright: Int, // 1
             @SerializedName("ctime")

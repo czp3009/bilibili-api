@@ -341,4 +341,37 @@ interface MainAPI {
             @Field("aid") aid: Long,
             @Field("fid") fid: String
     ): Deferred<CommonResponse>
+
+    /**
+     * 发送弹幕(视频, 番剧)
+     *
+     * @param oid cid
+     * @param random 9 位的随机数字
+     * @param progress 播放器时间(ms)
+     */
+    @POST("/x/v2/dm/post")
+    @FormUrlEncoded
+    fun sendDanmaku(
+            @Query("aid") aid: Long,
+            @Query("oid") oid: Long,
+            @Field("pool") pool: Int = 0,
+            @Field("rnd") random: Int = (100000000..999999999).random(),
+            @Field("oid") oidInBody: Long,
+            @Field("fontsize") fontSize: Int = 25,
+            @Field("msg") message: String,
+            @Field("mode") mode: Int = 1,
+            @Field("progress") progress: Long,
+            @Field("color") color: Int = 16777215,
+            @Field("plat") plat: Int = 2,
+            @Field("screen_state") screenState: Int = 0,
+            @Field("from") from: Int? = null,
+            @Field("type") type: Int = 1
+    ): Deferred<SendDanmakuResponse>
+
+    /**
+     * 发送弹幕的快捷方式
+     */
+    @JvmDefault
+    fun sendDanmaku(aid: Long, cid: Long, progress: Long, message: String) =
+            sendDanmaku(aid = aid, oid = cid, oidInBody = cid, progress = progress, message = message)
 }

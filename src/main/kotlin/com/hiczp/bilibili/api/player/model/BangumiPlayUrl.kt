@@ -38,7 +38,7 @@ data class BangumiPlayUrl(
         @SerializedName("status")
         var status: Int, // 2
         @SerializedName("timelength")
-        var timelength: Int, // 1420201
+        var timelength: Long, // 1420201
         @SerializedName("video_codecid")
         var videoCodecid: Int, // 7
         @SerializedName("video_project")

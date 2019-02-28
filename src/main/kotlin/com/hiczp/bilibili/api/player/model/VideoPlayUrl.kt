@@ -38,7 +38,7 @@ data class VideoPlayUrl(
             @SerializedName("seek_type")
             var seekType: String, // offset
             @SerializedName("timelength")
-            var timelength: Int, // 196367
+            var timelength: Long, // 196367
             @SerializedName("video_codecid")
             var videoCodecid: Int, // 7
             @SerializedName("video_project")

@@ -331,5 +331,18 @@ danmakuList.forEach {
 
 番剧的弹幕同理.
 
+## 发送弹幕
+光看不发憋着慌, 我们来发送一条视频弹幕:
+
+```kotlin
+bilibiliClient.mainAPI.sendDanmaku(aid = 40675923, cid = 71438168, progress = 2297, message = "2333").await()
+```
+
+其中 `progress` 是播放器时间, 其他观众将看到你的弹幕在视频的此处出现, 单位为毫秒.
+
+`message` 应该是有长度限制的, 但是没有测过.
+
+如果不确定视频的长度, 需要从[视频播放地址的 API](#获取视频播放地址) 中的 `data.timelength` 来获得, 单位也是毫秒.
+
 # License
 GPL V3

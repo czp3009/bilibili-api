@@ -146,11 +146,13 @@ interface AppAPI {
 
     /**
      * 投币
-     * 一个视频能投几个硬币是怎么获得的未知
+     * 自制视频能投两个, 转载视频只能投一个. 是转载还是自制在获取视频页面的 API 的 copyright.
      *
      * @param multiply 投币数量
      * @param selectLike 为 1 表示投币的同时为视频点赞, 对番剧投币时, 该值总为 0
      * @param upId 该值似乎总为 0
+     *
+     * @see view
      */
     @Suppress("SpellCheckingInspection")
     @POST("/x/v2/view/coin/add")
