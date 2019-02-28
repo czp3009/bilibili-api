@@ -70,7 +70,7 @@ data class ChildReply(
                 @SerializedName("ctime")
                 var ctime: Int, // 1550681500
                 @SerializedName("dialog")
-                var dialog: Int, // 0
+                var dialog: Long, // 0
                 @SerializedName("dialog_str")
                 var dialogStr: String,
                 @SerializedName("fansgrade")
@@ -133,7 +133,7 @@ data class ChildReply(
                     @SerializedName("ctime")
                     var ctime: Int, // 1550682402
                     @SerializedName("dialog")
-                    var dialog: Int, // 1405625526
+                    var dialog: Long, // 1405625526
                     @SerializedName("dialog_str")
                     var dialogStr: String,
                     @SerializedName("fansgrade")

@@ -63,7 +63,7 @@ data class Reply(
                 @SerializedName("ctime")
                 var ctime: Int, // 1550677636
                 @SerializedName("dialog")
-                var dialog: Int, // 0
+                var dialog: Long, // 0
                 @SerializedName("dialog_str")
                 var dialogStr: String,
                 @SerializedName("fansgrade")
@@ -150,7 +150,7 @@ data class Reply(
                     @SerializedName("ctime")
                     var ctime: Int, // 1550677973
                     @SerializedName("dialog")
-                    var dialog: Int, // 1405471211
+                    var dialog: Long, // 1405471211
                     @SerializedName("dialog_str")
                     var dialogStr: String,
                     @SerializedName("fansgrade")
@@ -456,7 +456,7 @@ data class Reply(
                 @SerializedName("ctime")
                 var ctime: Int, // 1550507590
                 @SerializedName("dialog")
-                var dialog: Int, // 0
+                var dialog: Long, // 0
                 @SerializedName("dialog_str")
                 var dialogStr: String,
                 @SerializedName("fansgrade")
@@ -646,7 +646,7 @@ data class Reply(
                     @SerializedName("ctime")
                     var ctime: Int, // 1550670930
                     @SerializedName("dialog")
-                    var dialog: Int, // 1405107877
+                    var dialog: Long, // 1405107877
                     @SerializedName("dialog_str")
                     var dialogStr: String,
                     @SerializedName("fansgrade")
@@ -827,7 +827,7 @@ data class Reply(
                     @SerializedName("ctime")
                     var ctime: Int, // 1550553976
                     @SerializedName("dialog")
-                    var dialog: Int, // 0
+                    var dialog: Long, // 0
                     @SerializedName("dialog_str")
                     var dialogStr: String,
                     @SerializedName("fansgrade")
@@ -890,7 +890,7 @@ data class Reply(
                         @SerializedName("ctime")
                         var ctime: Int, // 1550572214
                         @SerializedName("dialog")
-                        var dialog: Int, // 1401606362
+                        var dialog: Long, // 1401606362
                         @SerializedName("dialog_str")
                         var dialogStr: String,
                         @SerializedName("fansgrade")

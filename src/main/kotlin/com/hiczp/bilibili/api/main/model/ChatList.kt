@@ -37,7 +37,7 @@ data class ChatList(
                 @SerializedName("ctime")
                 var ctime: Int, // 1541824116
                 @SerializedName("dialog")
-                var dialog: Int, // 1136351035
+                var dialog: Long, // 1136351035
                 @SerializedName("dialog_str")
                 var dialogStr: String,
                 @SerializedName("fansgrade")
@@ -63,11 +63,11 @@ data class ChatList(
                 @SerializedName("replies")
                 var replies: JsonElement?, // null
                 @SerializedName("root")
-                var root: Int, // 1136310360
+                var root: Long, // 1136310360
                 @SerializedName("root_str")
                 var rootStr: String, // 1136310360
                 @SerializedName("rpid")
-                var rpid: Int, // 1175989845
+                var rpid: Long, // 1175989845
                 @SerializedName("rpid_str")
                 var rpidStr: String, // 1175989845
                 @SerializedName("state")

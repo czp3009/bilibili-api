@@ -9,12 +9,11 @@ class DanmakuTest {
     @Test
     fun fetchAndParseDanmaku() {
         runBlocking {
-            //著名的炮姐视频 你指尖跃动的闪光是我此生不变的信仰
+            //著名的炮姐视频 你指尖跃动的电光是我此生不变的信仰
             bilibiliClient.danmakuAPI.list(aid = 810872, oid = 1176840).await().let {
                 DanmakuParser.parser(it.byteStream())
-            }.let { (map, list) ->
-                println(map)
-                println(list)
+            }.second.forEach {
+                println("[${it.time}] ${it.content}")
             }
         }
     }
