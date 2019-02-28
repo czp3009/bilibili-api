@@ -21,7 +21,7 @@ data class Season(
             @SerializedName("link")
             var link: String, // http://www.bilibili.com/bangumi/media/md134912/
             @SerializedName("media_id")
-            var mediaId: Int, // 134912
+            var mimediaId: Long, // 134912
             @SerializedName("mode")
             var mode: Int, // 2
             @SerializedName("new_ep")

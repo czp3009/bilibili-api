@@ -621,7 +621,7 @@ data class Reply(
                         @SerializedName("score")
                         var score: Int, // 0
                         @SerializedName("uid")
-                        var uid: Int // 7937795
+                        var uid: Long // 7937795
                 )
             }
 

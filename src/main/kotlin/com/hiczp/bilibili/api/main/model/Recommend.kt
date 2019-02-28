@@ -73,7 +73,7 @@ data class Recommend(
                 @SerializedName("desc2")
                 var desc2: String, // 295
                 @SerializedName("item_id")
-                var itemId: Int, // 10005816
+                var itemid: Long, // 10005816
                 @SerializedName("pic")
                 var pic: String, // https://i0.hdslb.com/bfs/mall/mall/c3/f0/c3f029d8221c6ecc96bd1ab321034bc2.jpg
                 @SerializedName("title")

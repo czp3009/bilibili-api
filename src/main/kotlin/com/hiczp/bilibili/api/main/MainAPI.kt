@@ -211,7 +211,7 @@ interface MainAPI {
     @GET("/x/v2/reply/log")
     fun deleteLog(
             @Query("oid") oid: Long,
-            @Query("pn") pn: Int = 1,
+            @Query("pn") pageNumber: Int = 1,
             @Query("ps") pageSize: Int = 20,
             @Query("type") type: Int = 1
     ): Deferred<DeleteLog>
@@ -233,7 +233,7 @@ interface MainAPI {
     ): Deferred<CommonResponse>
 
     /**
-     * 关注的分组
+     * 查看关注分组
      * 默认分组永远是 0
      */
     @GET("/x/relation/tag/m/tags")
@@ -263,5 +263,82 @@ interface MainAPI {
     fun relationAddUsers(
             @Field("fids") followIds: String,
             @Field("tagids") tagIds: String
+    ): Deferred<CommonResponse>
+
+    /**
+     * 收藏文章
+     *
+     * @param id 文章的 id
+     */
+    @POST("/x/article/favorites/add")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun addFavoriteArticle(@Field("id") id: Long): Deferred<CommonResponse>
+
+    /**
+     * 点赞(文章)
+     *
+     * @param id 文章的 id
+     * @param type 操作类型, 1 为点赞, 2 为取消点赞
+     */
+    @POST("/x/article/like")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun articleLike(@Field("id") id: Long, @Field("type") type: Int): Deferred<CommonResponse>
+
+    /**
+     * 查看收藏夹分组
+     *
+     * @param aid 视频的唯一标识, 用于判断是否已经将当前视频加入收藏夹
+     * @param vmId 用户 id
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/fav/folder")
+    fun favoriteFolder(
+            @Query("aid") aid: Long,
+            @Query("vmid") vmId: Long
+    ): Deferred<FavoriteFolder>
+
+    /**
+     * 创建收藏夹
+     *
+     * @param name 收藏夹名
+     * @param public 是否公开, 0 为公开
+     */
+    @POST("/x/v2/fav/folder/add")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun createFavoriteFolder(
+            @Field("name") name: String,
+            @Field("public") public: Int = 0
+    ): Deferred<CreateFavoriteFolderResponse>
+
+    /**
+     * 收藏视频
+     *
+     * @param fid 收藏夹的 id, 可以有多个, 用逗号隔开. 例如 795158,3326376
+     */
+    @POST("/x/v2/fav/video/add")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun addFavoriteVideo(
+            @Field("aid") aid: Long,
+            @Field("fid") fid: String,
+            @Field("from") from: Int? = null
+    ): Deferred<CommonResponse>
+
+    /**
+     * 取消收藏视频
+     *
+     * @param fid 收藏夹的 id, 可以有多个, 同上
+     *
+     * @see addFavoriteVideo
+     */
+    @POST("/x/v2/fav/video/del")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_FORM_BODY)
+    fun deleteFavoriteVideo(
+            @Field("aid") aid: Long,
+            @Field("fid") fid: String
     ): Deferred<CommonResponse>
 }

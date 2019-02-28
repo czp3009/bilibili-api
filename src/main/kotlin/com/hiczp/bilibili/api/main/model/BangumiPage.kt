@@ -49,7 +49,7 @@ data class BangumiPage(
                     @SerializedName("is_new")
                     var isNew: Int, // 0
                     @SerializedName("item_id")
-                    var itemId: Int, // 34265
+                    var itemid: Long, // 34265
                     @SerializedName("link")
                     var link: String, // https://www.bilibili.com/blackboard/topic/activity-dm4qK4-BI.html
                     @SerializedName("title")

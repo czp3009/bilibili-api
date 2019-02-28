@@ -164,4 +164,64 @@ interface AppAPI {
             @Field("select_like") selectLike: Int = 0,
             @Field("upid") upId: Long? = 0
     ): Deferred<AddCoinResponse>
+
+    /**
+     * 查看某个用户的主页(也可以查看自己)
+     *
+     * @param vmId 欲查看的用户的 id
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/space")
+    fun space(
+            @Query("from") from: Int? = 0,
+            @Query("ps") pageSize: Int = 10,
+            @Query("vmid") vmId: Long
+    ): Deferred<Space>
+
+    /**
+     * 收藏页面
+     * 侧拉抽屉 -> 收藏
+     *
+     * @param vmId 所查看的用户的 id(看自己的收藏也要有该参数)
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/favorite")
+    fun favoritePage(
+            @Query("aid") aid: Long = 0,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("vmid") vmId: Long
+    ): Deferred<FavoritePage>
+
+    /**
+     * 收藏的视频
+     * 侧拉抽屉 -> 收藏 -> 视频 -> (打开一个收藏夹)
+     *
+     * @param fid 收藏夹的 id, 在拉取收藏页面时获得
+     * @param tid 不明确
+     * @param vmId 用户 id
+     *
+     * @see favoritePage
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/favorite/video")
+    fun favoriteVideo(
+            @Query("fid") fid: Long,
+            @Query("order") order: String = "ftime",
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("tid") tid: Long = 0,
+            @Query("vmid") vmId: Long
+    ): Deferred<FavoriteVideo>
+
+    /**
+     * 收藏的文章
+     * 这个 API 的返回内容里没有总页数, 真实的客户端会直接访问下一页来确认当前页是不是最后一页
+     * 侧拉抽屉 -> 收藏 -> 专栏
+     */
+    @GET("/x/v2/favorite/article")
+    fun favoriteArticle(
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20
+    ): Deferred<FavoriteArticle>
 }

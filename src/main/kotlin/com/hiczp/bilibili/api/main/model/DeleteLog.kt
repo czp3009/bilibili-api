@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.main.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class DeleteLog(
@@ -14,7 +15,7 @@ data class DeleteLog(
 ) {
     data class Data(
             @SerializedName("logs")
-            var logs: Any?, // null
+            var logs: JsonElement?, // null
             @SerializedName("page")
             var page: Page,
             @SerializedName("reply_count")
