@@ -5,7 +5,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 class DanmakuTest {
-    //339.6kib 的弹幕文件在 0.5s 内解析完毕(i5-4200H), 通常视频的弹幕不会超过这个容量
+    //6250 行弹幕的解析加用户 ID 反查在 4098ms 内完成(i7-8700)
     @Test
     fun fetchAndParseDanmaku() {
         runBlocking {
@@ -13,7 +13,7 @@ class DanmakuTest {
             val responseBody = bilibiliClient.danmakuAPI.list(aid = 810872, oid = 1176840).await()
             timer {
                 DanmakuParser.parse(responseBody.byteStream()).second.forEach {
-                    println("[${it.time}] ${it.content}")
+                    println("[${it.time}] ${it.calculatePossibleUserIds()} ${it.content}")
                 }
             }
         }

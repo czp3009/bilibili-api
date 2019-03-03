@@ -1,5 +1,7 @@
 package com.hiczp.bilibili.api.danmaku
 
+import com.hiczp.crc32crack.Crc32Cracker
+
 data class Danmaku(
         /**
          * 弹幕 id
@@ -54,4 +56,11 @@ data class Danmaku(
          * 这可能表示某种特殊的输出格式
          */
         val content: String
-)
+) {
+        /**
+         * 计算弹幕发送者 ID(可能有多个)
+         * 第一次调用 Crc32Cracker 将花费大约 300ms 来生成反查表
+         * hash 反查通常不超过 1ms
+         */
+        fun calculatePossibleUserIds() = Crc32Cracker.crack(user)
+}

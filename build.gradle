@@ -22,6 +22,7 @@ apply plugin: 'kotlin'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 //kotlin
@@ -69,6 +70,12 @@ dependencies {
 dependencies {
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
+}
+
+//checksum
+dependencies {
+    // https://mvnrepository.com/artifact/com.hiczp/crc32-crack
+    compile group: 'com.hiczp', name: 'crc32-crack', version: '1.0'
 }
 
 //unit test
