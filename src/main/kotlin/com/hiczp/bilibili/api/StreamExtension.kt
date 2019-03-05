@@ -31,5 +31,5 @@ fun InputStream.boundedReader(maxCharsFromTargetReader: Int, charset: Charset = 
 
 fun InputStream.bounded(size: Long) = BoundedInputStream(this, size)
 
-@Suppress("EXPERIMENTAL_API_USAGE")
+@UseExperimental(ExperimentalUnsignedTypes::class)
 fun InputStream.bounded(size: UInt) = bounded(size.toLong())

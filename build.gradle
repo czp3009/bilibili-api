@@ -49,7 +49,7 @@ dependencies {
     // https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging
     compile group: 'io.github.microutils', name: 'kotlin-logging', version: '1.6.25'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
 }
 
 //http

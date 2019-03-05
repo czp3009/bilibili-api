@@ -41,6 +41,7 @@ import javax.crypto.Cipher
  * @param billingClientProperties 客户端的固有属性, 是一种常量
  * @param logLevel 日志打印等级
  */
+@Suppress("unused")
 class BilibiliClient(
         @Suppress("MemberVisibilityCanBePrivate")
         val billingClientProperties: BilibiliClientProperties = BilibiliClientProperties(),
@@ -54,13 +55,11 @@ class BilibiliClient(
     /**
      * 登陆操作得到的 Response
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     var loginResponse: LoginResponse? = null
 
     /**
      * 是否已登录
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     val isLogin
         get() = loginResponse != null
 
