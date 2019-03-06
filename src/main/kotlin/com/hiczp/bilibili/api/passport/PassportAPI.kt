@@ -2,12 +2,10 @@ package com.hiczp.bilibili.api.passport
 
 import com.hiczp.bilibili.api.passport.model.GetKeyResponse
 import com.hiczp.bilibili.api.passport.model.LoginResponse
+import com.hiczp.bilibili.api.passport.model.OAuth2Info
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import kotlinx.coroutines.Deferred
-import retrofit2.http.Field
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * 用户鉴权相关的接口
@@ -55,4 +53,24 @@ interface PassportAPI {
             @FieldMap cookieMap: Map<String, String>,
             @Field("access_token") accessToken: String
     ): Deferred<CommonResponse>
+
+    /**
+     * 获取 OAuth2 信息
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/api/v2/oauth2/info")
+    fun info(
+            @Query("DedeUserID") dedeUserId: String,
+            @Query("DedeUserID__ckMd5") ckMd5: String,
+            @Query("SESSDATA") sessData: String,
+            @Query("access_token") accessToken: String,
+            @Query("bili_jct") biliJct: String,
+            @Query("sid") sid: String
+    ): Deferred<OAuth2Info>
+
+    @GET("/api/v2/oauth2/info")
+    fun info(
+            @QueryMap cookieMap: Map<String, String>,
+            @Query("access_token") accessToken: String
+    ): Deferred<OAuth2Info>
 }
