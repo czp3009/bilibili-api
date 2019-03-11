@@ -57,6 +57,7 @@ interface PassportAPI {
 
     /**
      * 获取 OAuth2 信息
+     * 如果未登录会返回 {"message":"user not login","ts":1552319204,"code":-101}
      */
     @Suppress("SpellCheckingInspection")
     @GET("/api/v2/oauth2/info")

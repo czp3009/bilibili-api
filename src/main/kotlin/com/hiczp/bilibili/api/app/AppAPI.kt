@@ -20,6 +20,7 @@ interface AppAPI {
 
     /**
      * 登陆完成后将请求一次此接口以获得个人资料
+     * 如果未登录将返回 {"code":-101,"message":"账号未登录","ttl":1}
      */
     @Suppress("SpellCheckingInspection")
     @GET("/x/v2/account/myinfo")
