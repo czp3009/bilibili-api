@@ -11,7 +11,6 @@ import com.hiczp.bilibili.api.player.PlayerAPI
 import com.hiczp.bilibili.api.player.PlayerInterceptor
 import com.hiczp.bilibili.api.retrofit.Header
 import com.hiczp.bilibili.api.retrofit.Param
-import com.hiczp.bilibili.api.retrofit.ParamType
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonHeaderInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.CommonParamInterceptor
@@ -90,7 +89,7 @@ class BilibiliClient(
             Param.TIMESTAMP to { Instant.now().epochSecond.toString() }
     )
 
-    private val defaultCommonQueryParamInterceptor = CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray)
+    private val defaultCommonParamInterceptor = CommonParamInterceptor(*defaultCommonParamArray)
 
     /**
      * 用户鉴权相关的接口
@@ -99,7 +98,7 @@ class BilibiliClient(
     val passportAPI by lazy {
         createAPI<PassportAPI>(BaseUrl.passport,
                 defaultCommonHeaderInterceptor,
-                CommonParamInterceptor(ParamType.FORM_URL_ENCODED,
+                CommonParamInterceptor(
                         Param.APP_KEY to { billingClientProperties.appKey },
                         Param.BUILD to { billingClientProperties.build },
                         Param.CHANNEL to { billingClientProperties.channel },
@@ -117,7 +116,7 @@ class BilibiliClient(
     val messageAPI by lazy {
         createAPI<MessageAPI>(BaseUrl.message,
                 defaultCommonHeaderInterceptor,
-                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
+                CommonParamInterceptor(*defaultCommonParamArray,
                         Param.ACTION_KEY to { Param.APP_KEY },
                         "has_up" to { "1" }
                 )
@@ -131,7 +130,7 @@ class BilibiliClient(
     val appAPI by lazy {
         createAPI<AppAPI>(BaseUrl.app,
                 defaultCommonHeaderInterceptor,
-                defaultCommonQueryParamInterceptor
+                defaultCommonParamInterceptor
         )
     }
 
@@ -148,7 +147,7 @@ class BilibiliClient(
                         Header.USER_AGENT to { billingClientProperties.defaultUserAgent },
                         Header.DEVICE_ID to { billingClientProperties.hardwareId }
                 ),
-                defaultCommonQueryParamInterceptor
+                defaultCommonParamInterceptor
         )
     }
 
@@ -159,7 +158,7 @@ class BilibiliClient(
     val vcAPI by lazy {
         createAPI<VcAPI>(BaseUrl.vc,
                 defaultCommonHeaderInterceptor,
-                CommonParamInterceptor(ParamType.QUERY, *defaultCommonParamArray,
+                CommonParamInterceptor(*defaultCommonParamArray,
                         Param._DEVICE to { billingClientProperties.platform },
                         Param._HARDWARE_ID to { billingClientProperties.hardwareId },
                         Param.SOURCE to { billingClientProperties.channel },
@@ -176,7 +175,7 @@ class BilibiliClient(
     val memberAPI by lazy {
         createAPI<MemberAPI>(BaseUrl.member,
                 defaultCommonHeaderInterceptor,
-                defaultCommonQueryParamInterceptor
+                defaultCommonParamInterceptor
         )
     }
 
@@ -210,7 +209,7 @@ class BilibiliClient(
                             Header.ACCEPT_ENCODING to { "gzip, deflate" },
                             Header.USER_AGENT to { billingClientProperties.defaultUserAgent }
                     ))
-                    addInterceptor(defaultCommonQueryParamInterceptor)
+                    addInterceptor(defaultCommonParamInterceptor)
                     addInterceptor(sortAndSignInterceptor)
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }.build())

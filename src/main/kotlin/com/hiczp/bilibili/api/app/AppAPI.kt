@@ -2,7 +2,6 @@ package com.hiczp.bilibili.api.app
 
 import com.hiczp.bilibili.api.app.model.*
 import com.hiczp.bilibili.api.retrofit.CommonResponse
-import com.hiczp.bilibili.api.retrofit.Header
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 import java.time.Instant
@@ -119,7 +118,6 @@ interface AppAPI {
      */
     @POST("/x/v2/view/like")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun like(
             @Field("aid") aid: Long,
             @Field("like") like: Int = 0,
@@ -136,7 +134,6 @@ interface AppAPI {
      */
     @POST("/x/v2/view/dislike")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun dislike(
             @Field("aid") aid: Long,
             @Field("like") like: Int = 0,
@@ -157,7 +154,6 @@ interface AppAPI {
     @Suppress("SpellCheckingInspection")
     @POST("/x/v2/view/coin/add")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun addCoin(
             @Field("aid") aid: Long,
             @Field("avtype") avType: Int = 1,

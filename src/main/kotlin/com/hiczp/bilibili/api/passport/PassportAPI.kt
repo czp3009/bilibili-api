@@ -6,6 +6,7 @@ import com.hiczp.bilibili.api.passport.model.OAuth2Info
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
+import java.util.*
 
 /**
  * 用户鉴权相关的接口
@@ -36,12 +37,12 @@ interface PassportAPI {
     @POST("/api/v2/oauth2/revoke")
     @FormUrlEncoded
     fun revoke(
-            @Field("DedeUserID") dedeUserId: String,
-            @Field("DedeUserID__ckMd5") ckMd5: String,
-            @Field("SESSDATA") sessData: String,
+            @Field("DedeUserID") dedeUserId: String? = null,
+            @Field("DedeUserID__ckMd5") ckMd5: String? = null,
+            @Field("SESSDATA") sessData: String? = null,
             @Field("access_token") accessToken: String,
-            @Field("bili_jct") biliJct: String,
-            @Field("sid") sid: String
+            @Field("bili_jct") biliJct: String? = null,
+            @Field("sid") sid: String? = null
     ): Deferred<CommonResponse>
 
     /**
@@ -50,7 +51,7 @@ interface PassportAPI {
     @POST("/api/v2/oauth2/revoke")
     @FormUrlEncoded
     fun revoke(
-            @FieldMap cookieMap: Map<String, String>,
+            @FieldMap cookieMap: Map<String, String> = Collections.emptyMap(),
             @Field("access_token") accessToken: String
     ): Deferred<CommonResponse>
 
@@ -60,17 +61,17 @@ interface PassportAPI {
     @Suppress("SpellCheckingInspection")
     @GET("/api/v2/oauth2/info")
     fun info(
-            @Query("DedeUserID") dedeUserId: String,
-            @Query("DedeUserID__ckMd5") ckMd5: String,
-            @Query("SESSDATA") sessData: String,
+            @Query("DedeUserID") dedeUserId: String? = null,
+            @Query("DedeUserID__ckMd5") ckMd5: String? = null,
+            @Query("SESSDATA") sessData: String? = null,
             @Query("access_token") accessToken: String,
-            @Query("bili_jct") biliJct: String,
-            @Query("sid") sid: String
+            @Query("bili_jct") biliJct: String? = null,
+            @Query("sid") sid: String? = null
     ): Deferred<OAuth2Info>
 
     @GET("/api/v2/oauth2/info")
     fun info(
-            @QueryMap cookieMap: Map<String, String>,
+            @QueryMap cookieMap: Map<String, String> = Collections.emptyMap(),
             @Query("access_token") accessToken: String
     ): Deferred<OAuth2Info>
 }

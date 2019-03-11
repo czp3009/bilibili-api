@@ -21,9 +21,12 @@ object Header {
     const val ACCEPT_LANGUAGE = "Accept-Language"
     const val ACCEPT_ENCODING = "Accept-Encoding"
 
-    //强制将公共参数加到 FormBody 上
-    const val FORCE_FORM_BODY_NAME = "Force-Form-Body"
-    const val FORCE_FORM_BODY = "$FORCE_FORM_BODY_NAME: true"
+    //强制公共参数添加位置
+    const val FORCE_PARAM = "Retrofit-Force-Param"
+    const val FORCE_PARAM_QUERY = "query"
+    const val FORCE_PARAM_FORMBODY = "formBody"
+    const val FORCE_QUERY = "$FORCE_PARAM: $FORCE_PARAM_QUERY"
+    const val FORCE_FORMBODY = "$FORCE_PARAM: $FORCE_PARAM_FORMBODY"
 }
 
 object Param {

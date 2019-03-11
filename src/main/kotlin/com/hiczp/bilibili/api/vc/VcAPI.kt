@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * 小视频
+ * 小视频(好像 动态 也是在这个站)
  */
 @Suppress("DeferredIsResult")
 interface VcAPI {

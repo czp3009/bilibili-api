@@ -14,14 +14,7 @@ class UserInfoTest {
     @Test
     fun oauthInfo() {
         runBlocking {
-            with(bilibiliClient) {
-                passportAPI.info(
-                        loginResponse!!.data.cookieInfo.cookies.associate {
-                            it.name to it.value
-                        },
-                        token!!
-                ).await()
-            }
+            bilibiliClient.passportAPI.info(accessToken = bilibiliClient.token!!).await()
         }
     }
 }

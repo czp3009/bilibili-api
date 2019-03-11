@@ -154,7 +154,6 @@ interface MainAPI {
      */
     @POST("/x/v2/reply/add")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun sendReply(
             @Field("from") from: Int? = null,
             @Field("message") message: String,
@@ -175,7 +174,6 @@ interface MainAPI {
     @Suppress("SpellCheckingInspection")
     @POST("/x/v2/reply/action")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun likeReply(
             @Field("action") action: Int,
             @Field("oid") oid: Long,
@@ -193,7 +191,6 @@ interface MainAPI {
     @Suppress("SpellCheckingInspection")
     @POST("/x/v2/reply/hate")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun dislikeReply(
             @Field("action") action: Int,
             @Field("oid") oid: Long,
@@ -225,7 +222,6 @@ interface MainAPI {
      */
     @POST("/x/relation/modify")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun modifyRelation(
             @Field("act") action: Int,
             @Field("fid") followId: Long,
@@ -246,7 +242,6 @@ interface MainAPI {
      */
     @POST("/x/relation/tag/create")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun createRelationTag(@Field("tag") tag: String): Deferred<CreateRelationTagResponse>
 
     /**
@@ -259,7 +254,6 @@ interface MainAPI {
     @Suppress("SpellCheckingInspection")
     @POST("/x/relation/tags/addUsers")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun relationAddUsers(
             @Field("fids") followIds: String,
             @Field("tagids") tagIds: String
@@ -272,7 +266,6 @@ interface MainAPI {
      */
     @POST("/x/article/favorites/add")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun addFavoriteArticle(@Field("id") id: Long): Deferred<CommonResponse>
 
     /**
@@ -283,7 +276,6 @@ interface MainAPI {
      */
     @POST("/x/article/like")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun articleLike(@Field("id") id: Long, @Field("type") type: Int): Deferred<CommonResponse>
 
     /**
@@ -307,7 +299,6 @@ interface MainAPI {
      */
     @POST("/x/v2/fav/folder/add")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun createFavoriteFolder(
             @Field("name") name: String,
             @Field("public") public: Int = 0
@@ -320,7 +311,6 @@ interface MainAPI {
      */
     @POST("/x/v2/fav/video/add")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun addFavoriteVideo(
             @Field("aid") aid: Long,
             @Field("fid") fid: String,
@@ -336,7 +326,6 @@ interface MainAPI {
      */
     @POST("/x/v2/fav/video/del")
     @FormUrlEncoded
-    @Headers(Header.FORCE_FORM_BODY)
     fun deleteFavoriteVideo(
             @Field("aid") aid: Long,
             @Field("fid") fid: String
@@ -351,6 +340,7 @@ interface MainAPI {
      */
     @POST("/x/v2/dm/post")
     @FormUrlEncoded
+    @Headers(Header.FORCE_QUERY)
     fun sendDanmaku(
             @Query("aid") aid: Long,
             @Query("oid") oid: Long,
