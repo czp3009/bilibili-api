@@ -24,9 +24,10 @@ object Header {
     //强制公共参数添加位置
     const val FORCE_PARAM = "Retrofit-Force-Param"
     const val FORCE_PARAM_QUERY = "query"
-    const val FORCE_PARAM_FORMBODY = "formBody"
+    @Suppress("MemberVisibilityCanBePrivate")
+    const val FORCE_PARAM_FORM_BODY = "formBody"
     const val FORCE_QUERY = "$FORCE_PARAM: $FORCE_PARAM_QUERY"
-    const val FORCE_FORMBODY = "$FORCE_PARAM: $FORCE_PARAM_FORMBODY"
+    const val FORCE_FORM_BODY = "$FORCE_PARAM: $FORCE_PARAM_FORM_BODY"
 }
 
 object Param {

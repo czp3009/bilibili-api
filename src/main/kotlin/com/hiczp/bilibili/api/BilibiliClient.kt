@@ -2,6 +2,7 @@ package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.danmaku.DanmakuAPI
+import com.hiczp.bilibili.api.live.LiveAPI
 import com.hiczp.bilibili.api.main.MainAPI
 import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
@@ -215,6 +216,25 @@ class BilibiliClient(
                 }.build())
                 .build()
                 .create(DanmakuAPI::class.java)
+    }
+
+    /**
+     * 直播站
+     */
+    val liveAPI by lazy {
+        createAPI<LiveAPI>(BaseUrl.live,
+                CommonHeaderInterceptor(
+                        //如果未登陆则没有 Display-ID
+                        Header.DISPLAY_ID to { userId?.let { "$it-$initTime" } },
+                        Header.BUILD_VERSION_ID to { billingClientProperties.buildVersionId },
+                        Header.USER_AGENT to { billingClientProperties.defaultUserAgent },
+                        Header.DEVICE_ID to { billingClientProperties.hardwareId }
+                ),
+                CommonParamInterceptor(*defaultCommonParamArray,
+                        Param.ACTION_KEY to { Param.APP_KEY },
+                        Param.DEVICE to { billingClientProperties.platform }
+                )
+        )
     }
 
     /**
