@@ -9,7 +9,7 @@ data class Danmaku(
         val id: Long,
 
         /**
-         * 下标 1, 不明属性
+         * TODO 下标 1, 不明属性
          */
         val unknownAttribute1: String,
 
@@ -40,7 +40,7 @@ data class Danmaku(
         val timestamp: Long,
 
         /**
-         * 下标 7, 不明属性
+         * TODO 下标 7, 不明属性
          */
         val unknownAttribute7: String,
 

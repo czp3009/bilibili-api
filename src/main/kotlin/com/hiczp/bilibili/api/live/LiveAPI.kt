@@ -60,8 +60,32 @@ interface LiveAPI {
     fun getAnchorInRoom(@Query("roomid") roomId: Long): Deferred<AnchorInRoom>
 
     /**
-     * 获取自己在直播间的基本信息, 包括自己的直播间号, 银瓜子, 金瓜子数量等
+     * 获取自己在直播站的基本信息, 包括自己的直播间号, 银瓜子, 金瓜子数量等
      */
     @GET("/mobile/getUser")
     fun getUser(): Deferred<User>
+
+    /**
+     * 获取自己在当前直播间的信息, 包括自己的权限以及是否是管理员等
+     *
+     * @param roomId 房间号
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/live_user/v1/UserInfo/get_info_in_room")
+    fun getUserInfoInRoom(@Query("roomid") roomId: Long): Deferred<UserInfoInRoom>
+
+    /**
+     * 获取所有头衔
+     *
+     * @param scale 屏幕尺寸
+     */
+    @GET("/appUser/getTitle")
+    fun getTitle(@Query("scale") scale: String = "xxhdpi"): Deferred<Title>
+
+    /**
+     * 查询是否关注了当前主播
+     */
+    @POST("/relation/v1/Feed/isFollowed")
+    @FormUrlEncoded
+    fun isFollowed(@Field("follow") follow: Long): Deferred<Follow>
 }

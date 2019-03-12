@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.live.model
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class User(
@@ -18,7 +19,7 @@ data class User(
             @SerializedName("isSign")
             var isSign: Int, // 0
             @SerializedName("medal")
-            var medal: Any?, // null
+            var medal: JsonElement?, // null
             @SerializedName("new")
             var new: Int, // 1
             @SerializedName("room_id")

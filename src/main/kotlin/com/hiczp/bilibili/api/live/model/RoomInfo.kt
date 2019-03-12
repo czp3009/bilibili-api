@@ -24,6 +24,9 @@ data class RoomInfo(
             var areaName: String, // 其他游戏
             @SerializedName("area_pendants")
             var areaPendants: String,
+            /**
+             * 粉丝数
+             */
             @SerializedName("attention")
             var attention: Int, // 62
             @SerializedName("background")
