@@ -113,6 +113,21 @@ val myInfo = bilibiliClient.appAPI.myInfo().await()
 
 返回用户 ID, vip 信息等.
 
+## 搜索
+当我们想看某些内容时, 我们会首先使用搜索功能, 例如
+
+```kotlin
+val searchResult = bilibiliClient.appAPI.search(keyword = "刀剑神域").await()
+```
+
+实际上这对应客户端上的 搜索 -> 综合.
+
+如果要搜索番剧则使用 `bilibiliClient.appAPI.searchBangumi`.
+
+同理, 搜索直播, 用户, 影视, 专栏分别使用 `searchLive`, `searchUser`, `searchMovie`, `searchArticle`.
+
+所有的搜索都使用 `pageNumber` 参数来控制翻页(从 1 开始).
+
 ## 获取视频播放地址
 获取视频实际播放地址的 API 比较特殊, 被单独分了出来, 示例如下
 
@@ -242,8 +257,6 @@ val season = bilibiliClient.mainAPI.season(seasonId = 25617).await()
 该 API 还可以用 `episodeId` 作为查询条件, 即以集为条件打开一个番剧页面(会跳转到对应的季).
 
 返回值中的 `result.episodes` 包含了当前所选择的季的全部集的 `aid` 与 `cid`.
-
-搜索视频和番剧的功能绝赞咕咕咕中.
 
 ## 查看视频下面的评论
 看完了视频当然要看一下傻吊网友都在说些什么. 使用以下 API 获取一个视频的评论.

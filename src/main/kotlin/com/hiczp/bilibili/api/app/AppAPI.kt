@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api.app
 
+import com.google.gson.JsonObject
 import com.hiczp.bilibili.api.app.model.*
 import com.hiczp.bilibili.api.retrofit.CommonResponse
 import kotlinx.coroutines.Deferred
@@ -223,4 +224,113 @@ interface AppAPI {
             @Query("pn") pageNumber: Int = 1,
             @Query("ps") pageSize: Int = 20
     ): Deferred<FavoriteArticle>
+
+    /**
+     * 搜索(综合)
+     *
+     * 上方搜索栏
+     *
+     * @param duration 不明确
+     * @param keyword 搜索的关键字, 下同
+     * @param from_source 来源, 如果是直接搜索的则为 app_search, 在历史记录里点击的则为 apphistory_search
+     * @param pageNumber 分页, 从 1 开始
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/search")
+    fun search(
+            @Query("duration") duration: Int = 0,
+            @Query("from_source") from_source: String = "app_search",
+            @Query("highlight") highlight: Int = 1,
+            @Query("keyword") keyword: String,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("recommend") recommend: Int = 1
+    ): Deferred<SearchResult>
+
+    /**
+     * 搜索直播间
+     *
+     * 上方搜索栏 -> 直播
+     *
+     * @param type 搜索的内容的类型, 每种搜索的 type 都是固定的, 下同
+     */
+    @GET("/x/v2/search/live")
+    fun searchLive(
+            @Query("keyword") keyword: String,
+            @Suppress("SpellCheckingInspection")
+            @Query("order") order: String = "totalrank",
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 4
+    ): Deferred<SearchLiveResult>
+
+    /**
+     * 根据某个类型来进行搜索(自定义)
+     */
+    @GET("/x/v2/search/type")
+    fun searchType(
+            @Query("keyword") keyword: String,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int,
+            @QueryMap additionParam: Map<String, String>
+    ): Deferred<JsonObject>
+
+    /**
+     * 搜索番剧
+     *
+     * 上方搜索栏 -> 番剧
+     */
+    @GET("/x/v2/search/type")
+    fun searchBangumi(
+            @Query("keyword") keyword: String,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 7
+    ): Deferred<SearchBangumiResult>
+
+    /**
+     * 搜索用户
+     *
+     * 上方搜索栏 -> 用户
+     */
+    @GET("/x/v2/search/type")
+    fun searchUser(
+            @Query("highlight") highlight: Int = 1,
+            @Query("keyword") keyword: String,
+            @Suppress("SpellCheckingInspection")
+            @Query("order") order: String = "totalrank",
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 2,
+            @Query("user_type") userType: Int = 0
+    ): Deferred<SearchUserResult>
+
+    /**
+     * 搜索影视(包括动漫的剧场版和纪录片)
+     *
+     * 上方搜索栏 -> 影视
+     */
+    @GET("/x/v2/search/type")
+    fun searchMovie(
+            @Query("keyword") keyword: String,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 8
+    ): Deferred<SearchMovieResult>
+
+    /**
+     * 搜索文章
+     *
+     * 上方搜索栏 -> 专栏
+     */
+    @GET("/x/v2/search/type")
+    fun searchArticle(
+            @Query("category_id") categoryId: Int = 0,
+            @Query("highlight") highlight: Int = 1,
+            @Query("keyword") keyword: String,
+            @Query("pn") pageNumber: Int = 1,
+            @Query("ps") pageSize: Int = 20,
+            @Query("type") type: Int = 6
+    ): Deferred<SearchArticleResult>
 }
