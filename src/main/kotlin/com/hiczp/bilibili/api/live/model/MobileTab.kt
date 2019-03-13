@@ -17,7 +17,7 @@ data class MobileTab(
              * 如果是非顶层 Tab 则 default 为 null
              */
             @SerializedName("default")
-            var default: Int? = null, // 0
+            var default: Int?, // 0
             @SerializedName("default_sub_tab")
             var defaultSubTab: String,
             @SerializedName("desc")

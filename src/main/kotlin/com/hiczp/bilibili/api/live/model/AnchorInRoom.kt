@@ -26,7 +26,7 @@ data class AnchorInRoom(
                 @SerializedName("gender")
                 var gender: Int, // 0
                 @SerializedName("identification")
-                var identification: Int? = null, // 1
+                var identification: Int?, // 1
                 @SerializedName("mobile_verify")
                 var mobileVerify: Int, // 0
                 @SerializedName("official_verify")
@@ -62,7 +62,7 @@ data class AnchorInRoom(
                 @SerializedName("master_level")
                 var masterLevel: MasterLevel,
                 @SerializedName("rcost")
-                var rcost: Int, // 3668592
+                var rcost: Long, // 3668592
                 @SerializedName("svip")
                 var svip: Int, // 0
                 @SerializedName("svip_time")

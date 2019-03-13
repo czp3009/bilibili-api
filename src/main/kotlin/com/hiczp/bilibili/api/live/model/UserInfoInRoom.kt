@@ -86,7 +86,7 @@ data class UserInfoInRoom(
                 @SerializedName("master_level")
                 var masterLevel: MasterLevel,
                 @SerializedName("rcost")
-                var rcost: Int, // 2737665
+                var rcost: Long, // 2737665
                 @SerializedName("svip")
                 var svip: Int, // 0
                 @SerializedName("svip_time")

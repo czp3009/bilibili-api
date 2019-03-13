@@ -18,6 +18,9 @@ data class RoomInfo(
             var allowChangeAreaTime: Int, // 0
             @SerializedName("allow_upload_cover_time")
             var allowUploadCoverTime: Int, // 0
+            /**
+             * 没有 old 前缀的表示 v2 版本, 例如 area_v2_id. 下同
+             */
             @SerializedName("area_id")
             var areaId: Int, // 107
             @SerializedName("area_name")

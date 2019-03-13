@@ -46,9 +46,8 @@ interface LiveAPI {
      */
     @GET("/room/v1/Danmu/getConf")
     fun getDanmakuConfig(
-            @Field("room_id") roomId: Long
+            @Query("room_id") roomId: Long
     ): Deferred<DanmakuConfig>
-
 
     /**
      * 获取该房间的主播的头像和等级一类的信息
@@ -84,8 +83,104 @@ interface LiveAPI {
 
     /**
      * 查询是否关注了当前主播
+     *
+     * @param follow 所查询的主播的用户 ID
      */
     @POST("/relation/v1/Feed/isFollowed")
     @FormUrlEncoded
     fun isFollowed(@Field("follow") follow: Long): Deferred<Follow>
+
+    /**
+     * 进入直播间的时候, 客户端会访问该接口来动态获取上方的 Tab. 包括 互动, 主播, 贡献榜 等
+     *
+     * @param roomId 房间号
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/room/v2/Room/mobileTab")
+    fun mobileTab(@Query("roomid") roomId: Long): Deferred<MobileTab>
+
+    /**
+     * 获取房间的历史弹幕(10条)
+     *
+     * @param roomId 房间号
+     */
+    @GET("/AppRoom/msg")
+    fun roomMessage(@Query("room_id") roomId: Long): Deferred<RoomMessage>
+
+    /**
+     * 获取进房后右下角显示的那些东西, 通常是一些活动, 它们导向 H5 页面
+     *
+     * @param roomId 房间号
+     * @param roomUserId 主播的用户 ID
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/activity/v1/Common/mobileRoomBanner")
+    fun mobileRoomBanner(
+            @Query("area_v2_id") areaV2Id: Int,
+            @Query("area_v2_parent_id") areaV2ParentId: Int,
+            @Query("roomid") roomId: Long,
+            @Query("ruid") roomUserId: Long
+    ): Deferred<MobileRoomBanner>
+
+    /**
+     * 获取各种礼物的基本信息, 包括贴图地址, 描述, 价格等
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/gift/v3/live/gift_config")
+    fun getGiftConfig(
+            @Query("area_v2_id") areaV2Id: Int,
+            @Query("area_v2_parent_id") areaV2ParentId: Int,
+            @Query("roomid") roomId: Long
+    ): Deferred<GiftConfig>
+
+    /**
+     * 获取访问 小时总榜 的地址(H5)
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/rankdb/v1/Common/roomRank")
+    fun roomRank(
+            @Query("area_v2_id") areaV2Id: Int,
+            @Query("area_v2_parent_id") areaV2ParentId: Int,
+            @Query("roomid") roomId: Long,
+            @Query("ruid") roomUserId: Long
+    ): Deferred<RoomRank>
+
+    /**
+     * 直播站首页
+     * 首页 -> 直播
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/xlive/app-interface/v2/index/getAllList")
+    fun homePage(
+            @Query("quality") quality: Int = 0,
+            @Query("rec_page") recPage: Int = 2,
+            @Query("relation_page") relationPage: Int = 2,
+            @Query("scale") scale: String = "xxhdpi"
+    ): Deferred<HomePage>
+
+    /**
+     * 获取某个直播分类下的全部子分类
+     */
+    @GET("/room/v1/Area/getList")
+    fun getAreaList(@Query("parent_id") parentId: Int): Deferred<AreaList>
+
+    /**
+     * 根据某种维度来获取房间列表
+     * area, parent, category 为 0 表示不筛选这些维度
+     * sortType 为 null 表示不排序
+     *
+     * 首页 -> 直播 -> 查看更多/全部直播
+     *
+     * @param page 分页, 从 1 开始
+     * @param sortType 排序维度, 已知的有 online(最热直播), live_time(最新开播)
+     */
+    @GET("/room/v3/Area/getRoomList")
+    fun getRoomList(
+            @Query("area_id") areaId: Int = 0,
+            @Query("parent_area_id") parentAreaId: Int = 0,
+            @Query("cate_id") categoryId: Int = 0,
+            @Query("page") page: Int = 1,
+            @Query("page_size") pageSize: Int = 30,
+            @Query("sort_type") sortType: String? = null
+    ): Deferred<RoomList>
 }
