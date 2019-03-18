@@ -226,13 +226,45 @@ interface AppAPI {
     ): Deferred<FavoriteArticle>
 
     /**
+     * 大家都在搜(热搜关键字列表)
+     *
+     * 上方搜索栏 -> 搜索提示
+     *
+     * @param limit 分页大小
+     */
+    @GET("/x/v2/search/hot")
+    fun searchHot(@Query("limit") limit: Int = 50): Deferred<SearchHot>
+
+    /**
+     * 默认搜索词, 当点击搜索框但是没输入内容时就会显示该词条.
+     *
+     * 上方搜索框 -> placeholder
+     */
+    @Suppress("SpellCheckingInspection")
+    @GET("/x/v2/search/defaultwords")
+    fun searchDefaultWords(): Deferred<SearchDefaultWords>
+
+    /**
+     * 搜索联想
+     *
+     * 上方搜索框 -> 搜索时的显示的候选项
+     */
+    @GET("/x/v2/search/suggest3")
+    fun searchSuggest(
+            @Query("highlight") highlight: Int = 1,
+            @Query("keyword") keyword: String
+    ): Deferred<SearchSuggest>
+
+    /**
      * 搜索(综合)
      *
      * 上方搜索栏
      *
-     * @param duration 不明确
+     * @param order 排序. null/default 默认排序, view 播放多, pubdate 新发布, danmaku 弹幕多
+     * @param duration 视频时长. 0 全部时长, 1 0-10分钟, 2 10-30分钟, 3 30-60分钟, 4 60+分钟
+     * @param rid 按某种分区搜索, 编号为数字. null 全部分区.
      * @param keyword 搜索的关键字, 下同
-     * @param from_source 来源, 如果是直接搜索的则为 app_search, 在历史记录里点击的则为 apphistory_search
+     * @param from_source 来源, 如果是直接搜索的则为 app_search, 在历史记录里点击的则为 apphistory_search, 从搜索时的候选项里点的为 appsuggest_search
      * @param pageNumber 分页, 从 1 开始
      */
     @Suppress("SpellCheckingInspection")
@@ -242,9 +274,11 @@ interface AppAPI {
             @Query("from_source") from_source: String = "app_search",
             @Query("highlight") highlight: Int = 1,
             @Query("keyword") keyword: String,
+            @Query("order") order: String? = null,
             @Query("pn") pageNumber: Int = 1,
             @Query("ps") pageSize: Int = 20,
-            @Query("recommend") recommend: Int = 1
+            @Query("recommend") recommend: Int = 1,
+            @Query("rid") rid: Int? = null
     ): Deferred<SearchResult>
 
     /**
@@ -293,13 +327,19 @@ interface AppAPI {
      * 搜索用户
      *
      * 上方搜索栏 -> 用户
+     *
+     * @param order 排序维度. totalrank 默认排序,fans 粉丝, level 等级.
+     * @param orderSort 排序顺序. 0 从高到低, 1 从低到高.
+     * @param userType 用户类型. 0 全部用户, 1 up主, 2 普通用户, 3 认证用户.
+     *
      */
+    @Suppress("SpellCheckingInspection")
     @GET("/x/v2/search/type")
     fun searchUser(
             @Query("highlight") highlight: Int = 1,
             @Query("keyword") keyword: String,
-            @Suppress("SpellCheckingInspection")
             @Query("order") order: String = "totalrank",
+            @Query("order_sort") orderSort: Int? = null,
             @Query("pn") pageNumber: Int = 1,
             @Query("ps") pageSize: Int = 20,
             @Query("type") type: Int = 2,
@@ -323,12 +363,19 @@ interface AppAPI {
      * 搜索文章
      *
      * 上方搜索栏 -> 专栏
+     *
+     * @param order 排序. null 默认排序, pubdate 发布时间, click 按阅读数, scores 按评论数, attention 按点赞数.
+     * @param categoryId 分类, 编号为数字. 0 全部分类.
+     *
+     * @see com.hiczp.bilibili.api.main.MainAPI.articleCategories
      */
+    @Suppress("SpellCheckingInspection")
     @GET("/x/v2/search/type")
     fun searchArticle(
             @Query("category_id") categoryId: Int = 0,
             @Query("highlight") highlight: Int = 1,
             @Query("keyword") keyword: String,
+            @Query("order") order: String? = null,
             @Query("pn") pageNumber: Int = 1,
             @Query("ps") pageSize: Int = 20,
             @Query("type") type: Int = 6

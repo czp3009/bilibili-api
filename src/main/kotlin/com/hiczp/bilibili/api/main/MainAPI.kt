@@ -364,4 +364,10 @@ interface MainAPI {
     @JvmDefault
     fun sendDanmaku(aid: Long, cid: Long, progress: Long, message: String) =
             sendDanmaku(aid = aid, oid = cid, oidInBody = cid, progress = progress, message = message)
+
+    /**
+     * 获取文章分类列表
+     */
+    @GET("/x/article/categories")
+    fun articleCategories(): Deferred<ArticleCategories>
 }
