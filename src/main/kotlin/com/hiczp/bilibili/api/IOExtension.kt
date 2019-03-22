@@ -1,5 +1,6 @@
 package com.hiczp.bilibili.api
 
+import io.ktor.util.InternalAPI
 import org.apache.commons.io.IOUtils
 import org.apache.commons.io.input.BoundedInputStream
 import org.apache.commons.io.input.BoundedReader
@@ -33,3 +34,6 @@ fun InputStream.bounded(size: Long) = BoundedInputStream(this, size)
 
 @UseExperimental(ExperimentalUnsignedTypes::class)
 fun InputStream.bounded(size: UInt) = bounded(size.toLong())
+
+@UseExperimental(InternalAPI::class)
+internal fun ByteArray.toPrettyPrintString() = joinToString(prefix = "[", postfix = "]") { "%02x".format(it) }

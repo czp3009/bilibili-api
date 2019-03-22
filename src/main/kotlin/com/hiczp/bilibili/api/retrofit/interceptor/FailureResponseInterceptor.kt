@@ -3,8 +3,8 @@ package com.hiczp.bilibili.api.retrofit.interceptor
 import com.github.salomonbrys.kotson.fromJson
 import com.github.salomonbrys.kotson.int
 import com.github.salomonbrys.kotson.obj
-import com.google.gson.Gson
-import com.google.gson.JsonParser
+import com.hiczp.bilibili.api.gson
+import com.hiczp.bilibili.api.jsonParser
 import com.hiczp.bilibili.api.retrofit.exception.BilibiliApiException
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,10 +13,6 @@ import okhttp3.Response
  * 如果服务器返回的 code 不为 0 则抛出异常
  */
 object FailureResponseInterceptor : Interceptor {
-    private val jsonParser = JsonParser()
-    @Suppress("SpellCheckingInspection")
-    private val gson = Gson()
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
         val body = response.body()
