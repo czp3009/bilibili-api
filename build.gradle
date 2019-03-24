@@ -38,7 +38,7 @@ dependencies {
 compileKotlin {
     kotlinOptions {
         jvmTarget = jvm_target
-        freeCompilerArgs = ["-Xjvm-default=enable", "-Xuse-experimental=kotlin.Experimental"]
+        freeCompilerArgs = ["-Xjvm-default=enable", "-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
     }
 }
 compileTestKotlin {

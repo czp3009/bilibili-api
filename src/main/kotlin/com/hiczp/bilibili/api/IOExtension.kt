@@ -36,4 +36,4 @@ fun InputStream.bounded(size: Long) = BoundedInputStream(this, size)
 fun InputStream.bounded(size: UInt) = bounded(size.toLong())
 
 @UseExperimental(InternalAPI::class)
-internal fun ByteArray.toPrettyPrintString() = joinToString(prefix = "[", postfix = "]") { "%02x".format(it) }
+internal fun ByteArray.toPrettyPrintString() = joinToString(prefix = "[", postfix = "]") { "0x%02x".format(it) }

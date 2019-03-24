@@ -1,0 +1,27 @@
+{
+  "cmd": "GUARD_LOTTERY_START",
+  "data": {
+    "id": 955580,
+    "roomid": 1029,
+    "message": "renbye 在【1029】购买了舰长，请前往抽奖",
+    "type": "guard",
+    "privilege_type": 3,
+    "link": "https://live.bilibili.com/1029",
+    "payflow_id": "gds_74e19a449c1fdaaa73_201903",
+    "lottery": {
+      "id": 955580,
+      "sender": {
+        "uid": 1781654,
+        "uname": "renbye",
+        "face": "http://i1.hdslb.com/bfs/face/0b7a8be6e5d2a89a7de7ccd211a529599f03284e.jpg"
+      },
+      "keyword": "guard",
+      "privilege_type": 3,
+      "time": 1200,
+      "status": 1,
+      "mobile_display_mode": 2,
+      "mobile_static_asset": "",
+      "mobile_animation_asset": ""
+    }
+  }
+}

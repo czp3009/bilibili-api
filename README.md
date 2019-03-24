@@ -377,5 +377,96 @@ bilibiliClient.mainAPI.sendDanmaku(aid = 40675923, cid = 71438168, progress = 22
 
 如果不确定视频的长度, 需要从[视频播放地址的 API](#获取视频播放地址) 中的 `data.timelength` 来获得, 单位也是毫秒.
 
+## 获取直播弹幕
+刚进入直播间时, 看到的十条弹幕实际上是最近的历史弹幕, 通过以下方式来获取
+
+```kotlin
+bilibiliClient.liveAPI.roomMessage(roomId).await()
+```
+
+接下来的弹幕都是实时弹幕, 直播间实时弹幕通过 `Websocket` 来推送.
+
+```kotlin
+bilibiliClient.liveClient(
+        roomId = 3,
+        onConnect = {
+            println("Connected")
+        },
+        onPopularityPacket = { _, popularity ->
+            println("Current popularity: $popularity")
+        },
+        onCommandPacket = { _, jsonObject ->
+            println(jsonObject)
+        },
+        onClose = { _, closeReason ->
+            println(closeReason)
+        }
+).start()
+```
+
+服务器推送的 `Message` 有两种, 一种是 `人气值` 数据, 另一种是 `Command` 数据.
+
+`Command` 数据包用于控制客户端渲染何种内容. 弹幕, 送礼, 系统公告等全部都是由 `Command` 数据包控制的, 其本体为一个 `JsonObject`.
+
+例如一个弹幕数据是这样的(`cmd` 字段的值为 `DANMU_MSG`):
+
+```json
+{"cmd":"DANMU_MSG","info":[[0,1,25,16777215,1553417856,1553414245,0,"9e539d78",0,0,0],"记得存档！",[3432444,"喵的叫一声",0,0,0,10000,1,""],[6,"日常","奶粉の日常",35399,5805790,""],[22,0,5805790,">50000"],["",""],0,0,null,{"ts":1553417856,"ct":"87255D9C"}]}
+```
+
+`Welcome` 的数据是这样的
+```json
+{"cmd":"WELCOME","data":{"uid":110208099,"uname":"霸刀宋壹i","is_admin":false,"svip":1}}
+```
+
+各种 `Command` 数据包的结构经常改变, 因此不提供实体类.
+
+由于 `DANMU_MSG` 的数据结构太过意识流, 因此提供了额外的辅助工具来方便地解析它.
+
+`DanmakuMessage` 是一个 `inline class` 请不要对其进行太过复杂的操作.
+
+```kotlin
+onCommandPacket = { _, jsonObject ->
+    val cmd by jsonObject.byString
+    println(
+            if (cmd == "DANMU_MSG") {
+                with(DanmakuMessage(jsonObject)) {
+                    "${if (fansMedalInfo.isNotEmpty()) "[$fansMedalName $fansMedalLevel] " else ""}[UL$userLevel] $nickname: $message"
+                }
+            } else {
+                jsonObject.toString()
+            }
+    )
+}
+```
+
+输出:
+
+```
+[甜甜天 7] [UL25] czp3009: 233
+```
+
+更多 `Command` 数据包的数据结构详见本项目的 [/record/直播弹幕](record/直播弹幕) 文件夹.
+
+注意, `start()` 方法会 suspend 当前协程直到连接关闭, 如果当前协程上下文还需要执行更多逻辑则如下所示
+
+```kotlin
+val liveClient = bilibiliClient.liveClient(args)
+launch { liveClient.start() }
+println("We do more thing here")
+delay(100_000)
+liveClient.close()
+```
+
+如果要实现断线重连, 需要在额外的协程中进行连接操作, 例如 `onClose` 回调如下所示(手动调用 `close()` 方法也会触发 `onClose` 回调, 请用额外变量来记录该次关闭是否是最终用户的行为)
+
+```kotlin
+onClose = { liveClient, closeReason ->
+    launch {
+        liveClient.start()
+    }
+}
+```
+
 # License
 GPL V3
