@@ -448,7 +448,7 @@ onCommandPacket = { _, jsonObject ->
 
 更多 `Command` 数据包的数据结构详见本项目的 [/record/直播弹幕](record/直播弹幕) 文件夹.
 
-注意, `start()` 方法会 suspend 当前协程直到连接关闭, 如果当前协程上下文还需要执行更多逻辑则如下所示
+注意, `start()` 方法会 suspend 当前协程直到连接关闭, 如果当前协程还需要执行更多逻辑则如下所示
 
 ```kotlin
 val liveClient = bilibiliClient.liveClient(args)
@@ -467,6 +467,10 @@ onClose = { liveClient, closeReason ->
     }
 }
 ```
+
+如果网络不可达, 那么 `start()` 方法会抛出异常, 且不会触发 `onConnect` 以及 `onClose` 回调.
+
+如果数据包被中间人修改, 那么可能不会触发 `onConnect` 回调, 但是会触发 `onClose`.
 
 # License
 GPL V3

@@ -10,18 +10,18 @@ import java.nio.ByteBuffer
  * 数据包模型
  * 由于 Android APP 并未全线换成 wss, 以下用的是移动版网页的协议
  * 数据包头部结构  00 00 00 65  00 10 00 01  00 00 00 07  00 00 00 01
- *              |数据包总长度| |头长| |ver|  |数据包类型 |  | single |
+ *              |数据包总长度| |头长| |tag|  |数据包类型 |  |  tag  |
  *
- * @param protocolVersion 协议版本
+ * @param tagShort 一种 tag, 如果是非 command 数据包则为 1, 否则为 0, short 类型
  * @param packetType 数据包类型
- * @param single 如果一个 Message 只有一个数据包则为 1, 否则为 0
+ * @param tag 同 tagShort, 但是为 int 类型
  * @param content 正文内容
  */
 @Suppress("MemberVisibilityCanBePrivate")
 class Packet(
-        val protocolVersion: Short = 1,
+        val tagShort: Short = 1,
         val packetType: PacketType,
-        val single: Int = 1,
+        val tag: Int = 1,
         val content: ByteBuffer
 ) {
     val totalLength
@@ -33,9 +33,9 @@ class Packet(
             ByteBuffer.allocate(totalLength)
                     .putInt(totalLength)
                     .putShort(headerLength)
-                    .putShort(protocolVersion)
+                    .putShort(tagShort)
                     .putInt(packetType.value)
-                    .putInt(single)
+                    .putInt(tag)
                     .put(content).apply {
                         flip()
                     }!!
@@ -59,14 +59,14 @@ internal fun Frame.toPackets(): List<Packet> {
         val startPosition = buffer.position()
         val totalLength = buffer.int
         buffer.position(buffer.position() + 2)    //skip headerLength
-        val protocolVersion = buffer.short
+        val tagShort = buffer.short
         val packetType = PacketType.getByValue(buffer.int)
-        val sequence = buffer.int
+        val tag = buffer.int
         buffer.limit(startPosition + totalLength)
         val content = buffer.slice()
         buffer.position(buffer.limit())
         buffer.limit(bufferLength)
-        list.add(Packet(protocolVersion, packetType, sequence, content))
+        list.add(Packet(tagShort, packetType, tag, content))
     }
     return list
 }
