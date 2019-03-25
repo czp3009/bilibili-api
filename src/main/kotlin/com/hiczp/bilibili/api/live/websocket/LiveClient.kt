@@ -14,6 +14,7 @@ import io.ktor.util.InternalAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.decodeString
 import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ import kotlinx.io.errors.IOException
  * @param fetchRoomId 是否在连接前先获取房间号(长号)
  * @param fetchDanmakuConfig 是否在连接前先获取弹幕推送服务器地址
  * @param doEntryRoomAction 是否产生直播间观看历史记录
+ * @param sendUserOnlineHeart 是否发送 rest 心跳包, 这会增加观看直播的时长, 用于服务端统计(与弹幕推送无关)
  * @param onConnect 回调函数, 连接成功时触发
  * @param onPopularityPacket 回调函数, 接收到人气值数据包时触发
  * @param onCommandPacket 回调函数, 接收到 Command 数据包时触发
@@ -38,6 +40,7 @@ class LiveClient(
         private val fetchRoomId: Boolean = true,
         private val fetchDanmakuConfig: Boolean = true,
         private val doEntryRoomAction: Boolean = false,
+        private val sendUserOnlineHeart: Boolean = false,
         private val onConnect: (LiveClient) -> Unit,
         private val onPopularityPacket: (LiveClient, Int) -> Unit,
         private val onCommandPacket: (LiveClient, JsonObject) -> Unit,
@@ -50,7 +53,8 @@ class LiveClient(
         private set
 
     /**
-     * 开启连接, 注意此方法是 suspend 的
+     * 开启连接
+     * 注意此方法将 suspend 所在协程直到连接关闭
      */
     @UseExperimental(KtorExperimentalAPI::class, ObsoleteCoroutinesApi::class, InternalAPI::class)
     suspend fun start() {
@@ -78,7 +82,7 @@ class LiveClient(
 
         //产生历史记录
         @Suppress("DeferredResultUnused")
-        if (doEntryRoomAction) liveAPI.roomEntryAction(roomId)
+        if (doEntryRoomAction && bilibiliClient.isLogin) liveAPI.roomEntryAction(roomId)
 
         //开启 websocket
         HttpClient(CIO).config { install(WebSockets) }.wss(host = host, port = port, path = "/sub") {
@@ -98,8 +102,22 @@ class LiveClient(
                 close(IOException("Receive unreadable server response"))
             }
 
-            //发送心跳包
-            launch {
+            //发送 rest 心跳包
+            val restHeartBeatJob = if (sendUserOnlineHeart && bilibiliClient.isLogin) {
+                launch {
+                    val scale = bilibiliClient.billingClientProperties.scale
+                    while (true) {
+                        @Suppress("DeferredResultUnused")
+                        liveAPI.userOnlineHeart(roomId, scale)
+                        delay(300_000)
+                    }
+                }
+            } else {
+                null
+            }
+
+            //发送 websocket 心跳包
+            val websocketHeartBeatJob = launch {
                 while (true) {
                     send(PresetPacket.heartbeatPacket())
                     delay(30_000)
@@ -120,6 +138,9 @@ class LiveClient(
                 }
             }
 
+            restHeartBeatJob?.cancelAndJoin()
+            websocketHeartBeatJob.cancelAndJoin()
+
             launch {
                 val closeReason = closeReason.await()
                 try {
@@ -138,4 +159,10 @@ class LiveClient(
         websocketSession = null
         close(CloseReason(CloseReason.Codes.NORMAL, "user close"))
     } ?: Unit
+
+    /**
+     * 发送弹幕
+     */
+    fun sendMessage(message: String) =
+            liveAPI.sendMessage(cid = roomId, mid = bilibiliClient.userId ?: 0, message = message)
 }

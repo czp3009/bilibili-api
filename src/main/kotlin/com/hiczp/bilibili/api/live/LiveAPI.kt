@@ -2,8 +2,10 @@ package com.hiczp.bilibili.api.live
 
 import com.hiczp.bilibili.api.live.model.*
 import com.hiczp.bilibili.api.retrofit.CommonResponse
+import com.hiczp.bilibili.api.retrofit.Header
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
+import kotlin.random.Random
 
 /**
  * 直播站 API
@@ -183,4 +185,49 @@ interface LiveAPI {
             @Query("page_size") pageSize: Int = 30,
             @Query("sort_type") sortType: String? = null
     ): Deferred<RoomList>
+
+    /**
+     * 发送弹幕(直播)
+     *
+     * @param bubble 气泡, 不明确含义
+     * @param cid 房间号
+     * @param mid 发送者的用户 ID
+     * @param message 弹幕内容
+     * @param random 随机数, 不包括符号位有 9 位 或者 10 位
+     * @param mode 弹幕模式, 可能与视频弹幕的模式含义相同, 可能需要特殊身份才能使用额外模式, 下同
+     * @param pool 弹幕池
+     * @param type 固定为 "json"
+     * @param color 弹幕颜色
+     * @param fontSize 弹幕字号
+     * @param playTime 不明确
+     */
+    @Suppress("SpellCheckingInspection")
+    @POST("/api/sendmsg")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_QUERY)
+    fun sendMessage(
+            @Field("bubble") bubble: Int = 0,
+            @Field("cid") cid: Long,
+            @Field("mid") mid: Long,
+            @Field("msg") message: String,
+            @Field("rnd") random: Int = (if (Random.nextBoolean()) 1 else -1) * Random.nextInt(100000000, Int.MAX_VALUE),
+            @Field("mode") mode: Int = 1,
+            @Field("pool") pool: Int = 0,
+            @Field("type") type: String = "json",
+            @Field("color") color: Int = 16777215,
+            @Field("fontsize") fontSize: Int = 25,
+            @Field("playTime") playTime: Float = 0.0f
+    ): Deferred<CommonResponse>
+
+    /**
+     * 用于确认客户端在看直播的心跳包(与弹幕推送无关)
+     * 每五分钟发送一次
+     */
+    @POST("/mobile/userOnlineHeart")
+    @FormUrlEncoded
+    @Headers(Header.FORCE_QUERY)
+    fun userOnlineHeart(
+            @Field("room_id") roomId: Long,
+            @Field("scale") scale: String = "xxhdpi"
+    ): Deferred<CommonResponse>
 }

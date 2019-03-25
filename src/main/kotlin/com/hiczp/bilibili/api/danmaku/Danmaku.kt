@@ -19,10 +19,10 @@ data class Danmaku(
         val time: Long,
 
         /**
-         * 弹幕类型
+         * 弹幕模式
          * (1从右至左滚动弹幕|6从左至右滚动弹幕|5顶端固定弹幕|4底端固定弹幕|7高级弹幕|8脚本弹幕)
          */
-        val type: Int,
+        val mode: Int,
 
         /**
          * 字号

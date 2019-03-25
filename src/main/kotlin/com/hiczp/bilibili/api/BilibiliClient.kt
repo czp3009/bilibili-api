@@ -248,12 +248,13 @@ class BilibiliClient(
             fetchRoomId: Boolean = true,
             fetchDanmakuConfig: Boolean = true,
             doEntryRoomAction: Boolean = false,
+            sendUserOnlineHeart: Boolean = false,
             onConnect: (LiveClient) -> Unit,
             onPopularityPacket: (LiveClient, Int) -> Unit,
             onCommandPacket: (LiveClient, JsonObject) -> Unit,
             onClose: (LiveClient, CloseReason?) -> Unit
     ) = LiveClient(
-            this, roomId, fetchRoomId, fetchDanmakuConfig, doEntryRoomAction,
+            this, roomId, fetchRoomId, fetchDanmakuConfig, doEntryRoomAction, sendUserOnlineHeart,
             onConnect, onPopularityPacket, onCommandPacket, onClose
     )
 

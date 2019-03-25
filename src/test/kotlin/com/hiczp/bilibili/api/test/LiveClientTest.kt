@@ -17,6 +17,7 @@ class LiveClientTest {
         runBlocking {
             bilibiliClient.liveClient(
                     roomId = 3,
+                    sendUserOnlineHeart = true,
                     onConnect = {
                         println("Connected")
                     },

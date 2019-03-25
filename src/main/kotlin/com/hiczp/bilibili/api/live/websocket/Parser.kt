@@ -26,10 +26,10 @@ inline class DanmakuMessage(val data: JsonObject) {
         get() = basicInfo[0].int
 
     /**
-     * 弹幕类型, 可能和视频弹幕一致
+     * 弹幕模式, 可能和视频弹幕一致
      * (1从右至左滚动弹幕|6从左至右滚动弹幕|5顶端固定弹幕|4底端固定弹幕|7高级弹幕|8脚本弹幕)
      */
-    inline val type
+    inline val mode
         get() = basicInfo[1].int
 
     /**
