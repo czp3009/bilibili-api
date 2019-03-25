@@ -15,6 +15,8 @@ enum class PacketType(val value: Int) {
     ENTER_ROOM_RESPONSE(8);
 
     companion object {
-        fun getByValue(value: Int) = values().firstOrNull { it.value == value } ?: UNKNOWN
+        private val byValueMap = PacketType.values().associateBy { it.value }
+
+        fun getByValue(value: Int) = byValueMap[value] ?: UNKNOWN
     }
 }

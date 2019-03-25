@@ -9,7 +9,6 @@ import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.wss
 import io.ktor.http.cio.websocket.CloseReason
 import io.ktor.http.cio.websocket.WebSocketSession
-import io.ktor.http.cio.websocket.close
 import io.ktor.util.InternalAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.decodeString
@@ -155,9 +154,10 @@ class LiveClient(
     /**
      * 关闭连接
      */
-    suspend fun close() = websocketSession?.run {
+    fun close() = websocketSession?.run {
         websocketSession = null
-        close(CloseReason(CloseReason.Codes.NORMAL, "user close"))
+        //client 不能使用 close(), 因为 WebsocketSession 本体执行完毕时会自动执行一次 close(), 这会导致多次关闭
+        incoming.cancel()
     } ?: Unit
 
     /**

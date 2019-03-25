@@ -20,6 +20,11 @@ class LiveClientTest {
                     sendUserOnlineHeart = true,
                     onConnect = {
                         println("Connected")
+                        //想要这么做的人一定逻辑学有问题
+//                        launch {
+//                            delay(5_000)
+//                            it.close()
+//                        }
                     },
                     onPopularityPacket = { _, popularity ->
                         println("Current popularity: $popularity")
