@@ -472,7 +472,7 @@ onClose = { liveClient, closeReason ->
 
 如果数据包被中间人修改, 那么可能不会触发 `onConnect` 回调, 但是会触发 `onClose`.
 
-如果手动取消了执行 `start()` 方法的协程将不会触发 `onClose`.
+如果手动 `cancel` 了执行 `start()` 方法的协程将不会触发 `onClose`.
 
 ## 发送直播弹幕
 在直播间里发送弹幕也非常简单(必须先登陆)

@@ -3,6 +3,7 @@ package com.hiczp.bilibili.api.test
 import com.github.salomonbrys.kotson.byString
 import com.hiczp.bilibili.api.isNotEmpty
 import com.hiczp.bilibili.api.live.websocket.DanmakuMessage
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
@@ -15,7 +16,7 @@ class LiveClientTest {
         }
 
         runBlocking {
-            bilibiliClient.liveClient(
+            val liveClient = bilibiliClient.liveClient(
                     roomId = 3,
                     sendUserOnlineHeart = true,
                     onConnect = {
@@ -49,7 +50,11 @@ class LiveClientTest {
                     onClose = { _, closeReason ->
                         println(closeReason)
                     }
-            ).start()
+            )
+            val job = launch {
+                liveClient.start()
+            }
+            job.join()
         }
     }
 }
