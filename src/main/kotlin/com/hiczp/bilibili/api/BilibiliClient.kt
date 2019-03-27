@@ -22,8 +22,6 @@ import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.hiczp.bilibili.api.vc.VcAPI
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.ktor.http.cio.websocket.CloseReason
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.future.future
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -300,15 +298,6 @@ class BilibiliClient(
     }
 
     /**
-     * 返回 Future 类型的 login 接口, 用于兼容 Java, 下同
-     */
-    fun loginFuture(username: String, password: String,
-                    challenge: String?,
-                    secCode: String?,
-                    validate: String?
-    ) = GlobalScope.future { login(username, password, challenge, secCode, validate) }
-
-    /**
      * 登出
      * 这个方法不一定是线程安全的, 登出的同时如果进行登陆操作可能引发错误
      */
@@ -321,11 +310,6 @@ class BilibiliClient(
         passportAPI.revoke(cookieMap, response.token).await()
         loginResponse = null
     }
-
-    /**
-     * 返回 Future 类型的 logout 接口
-     */
-    fun logoutFuture() = GlobalScope.future { logout() }
 
     private val sortAndSignInterceptor = SortAndSignInterceptor(billingClientProperties.appSecret)
     private val httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(logLevel)

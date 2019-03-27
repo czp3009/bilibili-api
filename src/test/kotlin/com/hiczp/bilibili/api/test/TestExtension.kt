@@ -1,11 +1,11 @@
 package com.hiczp.bilibili.api.test
 
+import kotlin.system.measureTimeMillis
+
 /**
- * 土制切面
+ * 输出执行时间
  */
-inline fun timer(block: () -> Unit) {
-    val start = System.currentTimeMillis()
-    block()
-    val end = System.currentTimeMillis()
-    println("Done in ${end - start} ms")
+inline fun printTimeMillis(block: () -> Unit) {
+    val time = measureTimeMillis(block)
+    println("Done in $time ms")
 }

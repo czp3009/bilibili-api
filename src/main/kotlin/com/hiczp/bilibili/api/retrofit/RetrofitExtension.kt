@@ -42,7 +42,7 @@ fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {
     return this
 }
 
-typealias ParamExpression = Pair<String, () -> String?>
+internal typealias ParamExpression = Pair<String, () -> String?>
 
 internal inline fun Array<out ParamExpression>.forEachNonNull(action: (String, String) -> Unit) {
     forEach { (name, valueExpression) ->

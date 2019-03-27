@@ -25,100 +25,96 @@ import javax.xml.stream.XMLStreamConstants
  * @see com.hiczp.bilibili.api.danmaku.DanmakuAPI.list
  */
 @Suppress("SpellCheckingInspection")
-class DanmakuParser {
-    companion object {
-        /**
-         * 解析弹幕文件
-         *
-         * @param inputStream 输入流, 可以指向任何位置
-         *
-         * @return 返回 flags map 与 弹幕序列. 注意, 原始的弹幕顺序是按发送时间来排的, 而非播放器时间.
-         */
-        @JvmStatic
-        fun parse(inputStream: InputStream): Pair<Map<Long, Int>, Sequence<Danmaku>> {
-            //Json 的长度
-            val jsonLength = inputStream.readUInt()
+object DanmakuParser {
+    /**
+     * 解析弹幕文件
+     *
+     * @param inputStream 输入流, 可以指向任何位置
+     *
+     * @return 返回 flags map 与 弹幕序列. 注意, 原始的弹幕顺序是按发送时间来排的, 而非播放器时间.
+     */
+    fun parse(inputStream: InputStream): Pair<Map<Long, Int>, Sequence<Danmaku>> {
+        //Json 的长度
+        val jsonLength = inputStream.readUInt()
 
-            //弹幕ID-Flag
-            val danmakuFlags = HashMap<Long, Int>()
-            //gson 会从 reader 中自行缓冲 1024 个字符, 这会导致额外的字符被消费. 因此要限制其读取数量
-            //流式解析 Json
-            with(JsonReader(inputStream.bounded(jsonLength).reader())) {
-                beginObject()
-                while (hasNext()) {
-                    when (nextName()) {
-                        "dmflags" -> {
-                            beginArray()
+        //弹幕ID-Flag
+        val danmakuFlags = HashMap<Long, Int>()
+        //gson 会从 reader 中自行缓冲 1024 个字符, 这会导致额外的字符被消费. 因此要限制其读取数量
+        //流式解析 Json
+        with(JsonReader(inputStream.bounded(jsonLength).reader())) {
+            beginObject()
+            while (hasNext()) {
+                when (nextName()) {
+                    "dmflags" -> {
+                        beginArray()
+                        while (hasNext()) {
+                            var danmakuId = 0L
+                            var flag = 0
+                            beginObject()
                             while (hasNext()) {
-                                var danmakuId = 0L
-                                var flag = 0
-                                beginObject()
-                                while (hasNext()) {
-                                    when (nextName()) {
-                                        "dmid" -> danmakuId = nextLong()
-                                        "flag" -> flag = nextInt()
-                                        else -> skipValue()
-                                    }
+                                when (nextName()) {
+                                    "dmid" -> danmakuId = nextLong()
+                                    "flag" -> flag = nextInt()
+                                    else -> skipValue()
                                 }
-                                endObject()
-                                danmakuFlags[danmakuId] = flag
                             }
-                            endArray()
+                            endObject()
+                            danmakuFlags[danmakuId] = flag
                         }
-                        else -> skipValue()
+                        endArray()
                     }
-                }
-                endObject()
-            }
-
-            //json 解析完毕后, 剩下的内容是一个 gzip 压缩过的 xml
-            val reader = GZIPInputStream(inputStream).reader()
-            //流式解析 xml
-            val xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(reader)
-            //lazy sequence
-            val danmakus = sequence {
-                var startD = false  //之前解析到的 element 是否是 d
-                var p: String? = null   //之前解析到的 p 的值
-                while (xmlEventReader.hasNext()) {
-                    val event = xmlEventReader.nextEvent()
-                    when (event.eventType) {
-                        XMLStreamConstants.START_ELEMENT -> {
-                            with(event.asStartElement()) {
-                                startD = name.localPart == "d"
-                                if (startD) {
-                                    p = getAttributeByName(P).value
-                                }
-                            }
-                        }
-                        XMLStreamConstants.CHARACTERS -> {
-                            //如果前一个解析到的是 d 标签, 那么此处得到的一定是 d 标签的 body
-                            if (startD) {
-                                val danmaku = with(StringTokenizer(p, ",")) {
-                                    Danmaku(
-                                            nextToken().toLong(),
-                                            nextToken(),
-                                            nextToken().toLong(),
-                                            nextToken().toInt(),
-                                            nextToken().toInt(),
-                                            nextToken().toInt(),
-                                            nextToken().toLong(),
-                                            nextToken(),
-                                            nextToken(),
-                                            event.asCharacters().data
-                                    )
-                                }
-                                yield(danmaku)
-                            }
-                        }
-                    }
+                    else -> skipValue()
                 }
             }
-
-            return danmakuFlags to danmakus
+            endObject()
         }
 
-        //常量, 用于加快速度
-        @JvmStatic
-        private val P = QName("p")
+        //json 解析完毕后, 剩下的内容是一个 gzip 压缩过的 xml
+        val reader = GZIPInputStream(inputStream).reader()
+        //流式解析 xml
+        val xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(reader)
+        //lazy sequence
+        val danmakus = sequence {
+            var startD = false  //之前解析到的 element 是否是 d
+            var p: String? = null   //之前解析到的 p 的值
+            while (xmlEventReader.hasNext()) {
+                val event = xmlEventReader.nextEvent()
+                when (event.eventType) {
+                    XMLStreamConstants.START_ELEMENT -> {
+                        with(event.asStartElement()) {
+                            startD = name.localPart == "d"
+                            if (startD) {
+                                p = getAttributeByName(P).value
+                            }
+                        }
+                    }
+                    XMLStreamConstants.CHARACTERS -> {
+                        //如果前一个解析到的是 d 标签, 那么此处得到的一定是 d 标签的 body
+                        if (startD) {
+                            val danmaku = with(StringTokenizer(p, ",")) {
+                                Danmaku(
+                                        nextToken().toLong(),
+                                        nextToken(),
+                                        nextToken().toLong(),
+                                        nextToken().toInt(),
+                                        nextToken().toInt(),
+                                        nextToken().toInt(),
+                                        nextToken().toLong(),
+                                        nextToken(),
+                                        nextToken(),
+                                        event.asCharacters().data
+                                )
+                            }
+                            yield(danmaku)
+                        }
+                    }
+                }
+            }
+        }
+
+        return danmakuFlags to danmakus
     }
+
+    //常量, 用于加快速度
+    private val P = QName("p")
 }

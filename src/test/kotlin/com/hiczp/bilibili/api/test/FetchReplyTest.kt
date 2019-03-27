@@ -29,7 +29,7 @@ class FetchReplyTest {
         val aid = 150998L
         val bilibiliClient = BilibiliClient(logLevel = HttpLoggingInterceptor.Level.BASIC)
 
-        timer {
+        printTimeMillis {
             var total: Int? = null
             var next: Long = 0
             runBlocking {
@@ -44,7 +44,7 @@ class FetchReplyTest {
             //如果没有评论则不做进一步操作
             if (total == null) {
                 println("<NoReply>")
-                return@timer
+                return@printTimeMillis
             }
 
             val pages = list {

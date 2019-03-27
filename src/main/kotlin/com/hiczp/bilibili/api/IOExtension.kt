@@ -1,13 +1,33 @@
 package com.hiczp.bilibili.api
 
+import com.hiczp.bilibili.api.thirdpart.commons.BoundedInputStream
 import io.ktor.util.InternalAPI
-import org.apache.commons.io.IOUtils
-import org.apache.commons.io.input.BoundedInputStream
-import org.apache.commons.io.input.BoundedReader
+import kotlinx.io.errors.EOFException
 import java.io.InputStream
-import java.nio.charset.Charset
 
-fun InputStream.readFully(length: Int) = IOUtils.readFully(this, length)!!
+//减少包引入
+//https://github.com/apache/commons-io/blob/master/src/main/java/org/apache/commons/io/IOUtils.java
+fun InputStream.readFully(length: Int): ByteArray {
+    if (length < 0) {
+        throw  IllegalArgumentException("Length must not be negative: $length")
+    }
+
+    val byteArray = ByteArray(length)
+    var remaining = length
+
+    while (remaining > 0) {
+        val count = read(byteArray, length - remaining, remaining)
+        if (count == -1) break
+        remaining -= count
+    }
+
+    val actual = length - remaining
+    if (actual != length) {
+        throw  EOFException("Length to read: $length actual: $actual")
+    }
+
+    return byteArray
+}
 
 /**
  * 以大端模式从流中读取一个 int
@@ -26,9 +46,6 @@ fun InputStream.readInt(): Int {
  */
 @UseExperimental(ExperimentalUnsignedTypes::class)
 fun InputStream.readUInt() = readInt().toUInt()
-
-fun InputStream.boundedReader(maxCharsFromTargetReader: Int, charset: Charset = Charsets.UTF_8) =
-        BoundedReader(reader(charset), maxCharsFromTargetReader)
 
 fun InputStream.bounded(size: Long) = BoundedInputStream(this, size)
 

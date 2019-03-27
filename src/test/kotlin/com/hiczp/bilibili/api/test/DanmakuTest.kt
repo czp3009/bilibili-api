@@ -11,7 +11,7 @@ class DanmakuTest {
         runBlocking {
             //著名的炮姐视频 你指尖跃动的电光是我此生不变的信仰
             val responseBody = bilibiliClient.danmakuAPI.list(aid = 810872, oid = 1176840).await()
-            timer {
+            printTimeMillis {
                 DanmakuParser.parse(responseBody.byteStream()).second.forEach {
                     println("[${it.time}] ${it.calculatePossibleUserIds()} ${it.content}")
                 }
