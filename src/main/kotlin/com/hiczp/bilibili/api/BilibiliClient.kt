@@ -1,10 +1,10 @@
 package com.hiczp.bilibili.api
 
-import com.google.gson.JsonObject
 import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.danmaku.DanmakuAPI
 import com.hiczp.bilibili.api.live.LiveAPI
 import com.hiczp.bilibili.api.live.websocket.LiveClient
+import com.hiczp.bilibili.api.live.websocket.LiveClientCallbackDSL
 import com.hiczp.bilibili.api.main.MainAPI
 import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
@@ -21,7 +21,6 @@ import com.hiczp.bilibili.api.retrofit.interceptor.FailureResponseInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.hiczp.bilibili.api.vc.VcAPI
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import io.ktor.http.cio.websocket.CloseReason
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -247,13 +246,10 @@ class BilibiliClient(
             fetchDanmakuConfig: Boolean = true,
             doEntryRoomAction: Boolean = false,
             sendUserOnlineHeart: Boolean = false,
-            onConnect: (LiveClient) -> Unit,
-            onPopularityPacket: (LiveClient, Int) -> Unit,
-            onCommandPacket: (LiveClient, JsonObject) -> Unit,
-            onClose: (LiveClient, CloseReason?) -> Unit
+            callback: LiveClientCallbackDSL.() -> Unit
     ) = LiveClient(
             this, roomId, fetchRoomId, fetchDanmakuConfig, doEntryRoomAction, sendUserOnlineHeart,
-            onConnect, onPopularityPacket, onCommandPacket, onClose
+            callback
     )
 
     /**
