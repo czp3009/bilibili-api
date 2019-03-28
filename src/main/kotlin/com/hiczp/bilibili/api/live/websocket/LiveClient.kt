@@ -9,13 +9,16 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.wss
 import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.WebSocketSession
+import io.ktor.http.cio.websocket.close
 import io.ktor.util.InternalAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.decodeString
+import io.ktor.util.error
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.io.errors.IOException
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger { }
 
 /**
  * 直播客户端
@@ -31,7 +34,7 @@ import kotlinx.io.errors.IOException
 @Suppress("CanBeParameter")
 class LiveClient(
         private val bilibiliClient: BilibiliClient,
-        private val maybeShortRoomId: Long,
+        maybeShortRoomId: Long,
         private val fetchRoomId: Boolean = true,
         private val fetchDanmakuConfig: Boolean = true,
         private val doEntryRoomAction: Boolean = false,
@@ -40,7 +43,6 @@ class LiveClient(
 ) {
     private val callback = LiveClientCallbackDSL().apply { callback() }
     private val liveAPI = bilibiliClient.liveAPI
-    private var websocketSession: WebSocketSession? = null
 
     var roomId = maybeShortRoomId
         private set
@@ -49,124 +51,120 @@ class LiveClient(
      * 开启连接
      */
     @UseExperimental(KtorExperimentalAPI::class, ObsoleteCoroutinesApi::class, InternalAPI::class)
-    fun start() {
-        GlobalScope.launch(CoroutineExceptionHandler { _, throwable ->
-            callback.onError?.invoke(this, throwable) ?: throwable.printStackTrace()
-        }) {
-            //得到原始房间号和主播的用户ID
-            var anchorUserId = 0L
-            if (fetchRoomId) {
-                liveAPI.mobileRoomInit(maybeShortRoomId).await().data.also {
-                    roomId = it.roomId
-                    anchorUserId = it.uid
+    fun launch() = GlobalScope.launch(CoroutineExceptionHandler { _, throwable ->
+        callback.onError?.invoke(this, throwable) ?: logger.error(throwable)
+    }) {
+        //得到原始房间号和主播的用户ID
+        var anchorUserId = 0L
+        if (fetchRoomId) {
+            liveAPI.mobileRoomInit(roomId).await().data.also {
+                roomId = it.roomId
+                anchorUserId = it.uid
+            }
+        }
+
+        //获得 wss 地址和端口(推荐服务器)
+        @Suppress("SpellCheckingInspection")
+        var host = "broadcastlv.chat.bilibili.com"
+        var port = 443
+        if (fetchDanmakuConfig) {
+            liveAPI.getDanmakuConfig(roomId).await().data.also { data ->
+                host = data.host
+                data.hostServerList.find { it.host == host }?.wssPort?.also {
+                    port = it
                 }
             }
+        }
 
-            //获得 wss 地址和端口(推荐服务器)
-            @Suppress("SpellCheckingInspection")
-            var host = "broadcastlv.chat.bilibili.com"
-            var port = 443
-            if (fetchDanmakuConfig) {
-                liveAPI.getDanmakuConfig(roomId).await().data.also { data ->
-                    host = data.host
-                    data.hostServerList.find { it.host == host }?.wssPort?.also {
-                        port = it
-                    }
+        //产生历史记录
+        @Suppress("DeferredResultUnused")
+        if (doEntryRoomAction && bilibiliClient.isLogin) liveAPI.roomEntryAction(roomId)
+
+        //开启 websocket
+        HttpClient(CIO).config { install(WebSockets) }.wss(host = host, port = port, path = "/sub") {
+            pingIntervalMillis = 30_000
+            timeoutMillis = 10_000
+
+            //发送进房数据包
+            send(PresetPacket.enterRoomPacket(anchorUserId, roomId))
+            val enterRoomResponsePacket = incoming.receive().toPackets()[0]
+            if (enterRoomResponsePacket.packetType == PacketType.ENTER_ROOM_RESPONSE) {
+                try {
+                    callback.onConnect?.invoke(this@LiveClient)
+                } catch (e: Exception) {
+                    logger.error(e)
                 }
+            } else {
+                //impossible
+                logger.error { "Receive unreadable server response: $enterRoomResponsePacket" }
+                close(CloseReason(CloseReason.Codes.NOT_CONSISTENT, ""))
+                return@wss
             }
 
-            //产生历史记录
-            @Suppress("DeferredResultUnused")
-            if (doEntryRoomAction && bilibiliClient.isLogin) liveAPI.roomEntryAction(roomId)
-
-            //开启 websocket
-            HttpClient(CIO).config { install(WebSockets) }.wss(host = host, port = port, path = "/sub") {
-                websocketSession = this
-                pingIntervalMillis = -1
-
-                //发送进房数据包
-                send(PresetPacket.enterRoomPacket(anchorUserId, roomId))
-                val enterRoomResponsePacket = incoming.receive().toPackets()[0]
-                if (enterRoomResponsePacket.packetType == PacketType.ENTER_ROOM_RESPONSE) {
-                    try {
-                        callback.onConnect?.invoke(this@LiveClient)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+            //发送 rest 心跳包
+            //五分钟一次
+            val restHeartBeatJob = if (sendUserOnlineHeart && bilibiliClient.isLogin) {
+                launch {
+                    val scale = bilibiliClient.billingClientProperties.scale
+                    while (true) {
+                        @Suppress("DeferredResultUnused")
+                        liveAPI.userOnlineHeart(roomId, scale)
+                        delay(300_000)
                     }
-                } else {
-                    //impossible
-                    close(IOException("Receive unreadable server response: $enterRoomResponsePacket"))
                 }
+            } else {
+                null
+            }
 
-                //发送 rest 心跳包
-                //五分钟一次
-                val restHeartBeatJob = if (sendUserOnlineHeart && bilibiliClient.isLogin) {
-                    launch {
-                        val scale = bilibiliClient.billingClientProperties.scale
-                        while (true) {
-                            @Suppress("DeferredResultUnused")
-                            liveAPI.userOnlineHeart(roomId, scale)
-                            delay(300_000)
-                        }
-                    }
-                } else {
-                    null
-                }
-
-                //发送 websocket 心跳包
-                //30 秒一次
-                val websocketHeartBeatJob = launch {
-                    //TODO 阻止异常传播
+            //发送 websocket 心跳包
+            //30 秒一次
+            val websocketHeartBeatJob = launch {
+                try {
                     while (true) {
                         send(PresetPacket.heartbeatPacket())
                         delay(30_000)
                     }
+                } catch (ignore: CancellationException) {
+                    //ignore
+                } catch (e: Exception) {
+                    logger.error(e)
                 }
+            }
 
-                try {
-                    incoming.consumeEach { frame ->
-                        frame.toPackets().forEach {
-                            try {
-                                @Suppress("NON_EXHAUSTIVE_WHEN")
-                                when (it.packetType) {
-                                    PacketType.POPULARITY -> callback.onPopularityPacket?.invoke(
-                                            this@LiveClient,
-                                            it.content.int
-                                    )
-                                    PacketType.COMMAND -> callback.onCommandPacket?.invoke(
-                                            this@LiveClient,
-                                            jsonParser.parse(it.content.decodeString()).obj
-                                    )
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+            try {
+                incoming.consumeEach { frame ->
+                    frame.toPackets().forEach {
+                        try {
+                            @Suppress("NON_EXHAUSTIVE_WHEN")
+                            when (it.packetType) {
+                                PacketType.POPULARITY -> callback.onPopularityPacket?.invoke(
+                                        this@LiveClient,
+                                        it.content.int
+                                )
+                                PacketType.COMMAND -> callback.onCommandPacket?.invoke(
+                                        this@LiveClient,
+                                        jsonParser.parse(it.content.decodeString()).obj
+                                )
                             }
+                        } catch (e: Exception) {
+                            logger.error(e)
                         }
                     }
-                } finally {
-                    restHeartBeatJob?.cancel()
-                    websocketHeartBeatJob.cancel()
-                    launch {
-                        val closeReason = closeReason.await()
-                        try {
-                            callback.onClose?.invoke(this@LiveClient, closeReason)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                }
+            } catch (e: CancellationException) {
+                close()
+            } finally {
+                restHeartBeatJob?.cancel()
+                websocketHeartBeatJob.cancel()
+                launch(NonCancellable) {
+                    val closeReason = closeReason.await()
+                    try {
+                        callback.onClose?.invoke(this@LiveClient, closeReason)
+                    } catch (e: Exception) {
+                        logger.error(e)
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * 关闭连接
-     */
-    fun close() {
-        websocketSession?.run {
-            websocketSession = null
-            //client 不能使用 close(), 因为 WebsocketSession 本体执行完毕时会自动执行一次 close(), 这会导致多次关闭
-            incoming.cancel()
         }
     }
 
@@ -203,3 +201,18 @@ class LiveClientCallbackDSL {
      */
     var onClose: (suspend (LiveClient, CloseReason?) -> Unit)? = null
 }
+
+/**
+ * 打开一个直播客户端
+ */
+fun BilibiliClient.liveClient(
+        roomId: Long,
+        fetchRoomId: Boolean = true,
+        fetchDanmakuConfig: Boolean = true,
+        doEntryRoomAction: Boolean = false,
+        sendUserOnlineHeart: Boolean = false,
+        callback: LiveClientCallbackDSL.() -> Unit
+) = LiveClient(
+        this, roomId, fetchRoomId, fetchDanmakuConfig, doEntryRoomAction, sendUserOnlineHeart,
+        callback
+)

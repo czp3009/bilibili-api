@@ -3,8 +3,6 @@ package com.hiczp.bilibili.api
 import com.hiczp.bilibili.api.app.AppAPI
 import com.hiczp.bilibili.api.danmaku.DanmakuAPI
 import com.hiczp.bilibili.api.live.LiveAPI
-import com.hiczp.bilibili.api.live.websocket.LiveClient
-import com.hiczp.bilibili.api.live.websocket.LiveClientCallbackDSL
 import com.hiczp.bilibili.api.main.MainAPI
 import com.hiczp.bilibili.api.member.MemberAPI
 import com.hiczp.bilibili.api.message.MessageAPI
@@ -236,21 +234,6 @@ class BilibiliClient(
                 )
         )
     }
-
-    /**
-     * 打开一个直播客户端
-     */
-    fun liveClient(
-            roomId: Long,
-            fetchRoomId: Boolean = true,
-            fetchDanmakuConfig: Boolean = true,
-            doEntryRoomAction: Boolean = false,
-            sendUserOnlineHeart: Boolean = false,
-            callback: LiveClientCallbackDSL.() -> Unit
-    ) = LiveClient(
-            this, roomId, fetchRoomId, fetchDanmakuConfig, doEntryRoomAction, sendUserOnlineHeart,
-            callback
-    )
 
     /**
      * 登陆

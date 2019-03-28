@@ -389,21 +389,23 @@ bilibiliClient.liveAPI.roomMessage(roomId).await()
 接下来的弹幕都是实时弹幕, 直播间实时弹幕通过 `Websocket` 来推送.
 
 ```kotlin
-bilibiliClient.liveClient(
-        roomId = 3,
-        onConnect = {
-            println("Connected")
-        },
-        onPopularityPacket = { _, popularity ->
-            println("Current popularity: $popularity")
-        },
-        onCommandPacket = { _, jsonObject ->
-            println(jsonObject)
-        },
-        onClose = { _, closeReason ->
-            println(closeReason)
-        }
-).start()
+val job = bilibiliClient.liveClient(roomId = 3) {
+    onConnect = {
+        println("Connected")
+    }
+
+    onPopularityPacket = { _, popularity ->
+        println("Current popularity: $popularity")
+    }
+
+    onCommandPacket = { _, jsonObject ->
+        println(jsonObject)
+    }
+
+    onClose = { _, closeReason ->
+        println(closeReason)
+    }
+}.launch()
 ```
 
 服务器推送的 `Message` 有两种, 一种是 `人气值` 数据, 另一种是 `Command` 数据.
@@ -431,13 +433,13 @@ bilibiliClient.liveClient(
 onCommandPacket = { _, jsonObject ->
     val cmd by jsonObject.byString
     println(
-            if (cmd == "DANMU_MSG") {
-                with(DanmakuMessage(jsonObject)) {
-                    "${if (fansMedalInfo.isNotEmpty()) "[$fansMedalName $fansMedalLevel] " else ""}[UL$userLevel] $nickname: $message"
-                }
-            } else {
-                jsonObject.toString()
+        if (cmd == "DANMU_MSG") {
+            with(DanmakuMessage(jsonObject)) {
+                "${if (fansMedalInfo.isNotEmpty()) "[$fansMedalName $fansMedalLevel] " else ""}[UL$userLevel] $nickname: $message"
             }
+        } else {
+            jsonObject.toString()
+        }
     )
 }
 ```
@@ -450,31 +452,13 @@ onCommandPacket = { _, jsonObject ->
 
 更多 `Command` 数据包的数据结构详见本项目的 [/record/直播弹幕](record/直播弹幕) 文件夹.
 
-注意, `start()` 方法会 suspend 当前协程直到连接关闭, 如果当前协程还需要执行更多逻辑则如下所示
+注意, `onPopularityPacket`, `onCommandPacket` 这些回调不能进行耗时操作.
+
+关闭连接
 
 ```kotlin
-val liveClient = bilibiliClient.liveClient(args)
-launch { liveClient.start() }
-println("We do more thing here")
-delay(100_000)
-liveClient.close()
+job.cancel()
 ```
-
-如果要实现断线重连, 需要在额外的协程中进行连接操作, 例如 `onClose` 回调如下所示(手动调用 `close()` 方法也会触发 `onClose` 回调, 请用额外变量来记录该次关闭是否是最终用户的行为)
-
-```kotlin
-onClose = { liveClient, closeReason ->
-    launch {
-        liveClient.start()
-    }
-}
-```
-
-如果网络不可达, 那么 `start()` 方法会抛出异常, 且不会触发 `onConnect` 以及 `onClose` 回调.
-
-如果数据包被中间人修改, 那么可能不会触发 `onConnect` 回调, 但是会触发 `onClose`.
-
-如果手动 `cancel` 了执行 `start()` 方法的协程将不会触发 `onClose`.
 
 ## 发送直播弹幕
 在直播间里发送弹幕也非常简单(必须先登陆)

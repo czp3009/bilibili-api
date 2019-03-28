@@ -3,6 +3,7 @@ package com.hiczp.bilibili.api.test
 import com.github.salomonbrys.kotson.byString
 import com.hiczp.bilibili.api.isNotEmpty
 import com.hiczp.bilibili.api.live.websocket.DanmakuMessage
+import com.hiczp.bilibili.api.live.websocket.liveClient
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -15,13 +16,9 @@ class LiveClientTest {
             it.toFile().mkdirs()
         }
 
-        bilibiliClient.liveClient(roomId = 3, sendUserOnlineHeart = true) {
+        val job = bilibiliClient.liveClient(roomId = 3, sendUserOnlineHeart = true) {
             onConnect = {
                 println("Connected")
-            }
-
-            onError = { _, throwable ->
-                throwable.printStackTrace()
             }
 
             onPopularityPacket = { _, popularity ->
@@ -49,9 +46,9 @@ class LiveClientTest {
             onClose = { _, closeReason ->
                 println(closeReason)
             }
-        }.start()
+        }.launch()
         runBlocking {
-            delay(99999999)
+            delay(9999999)
         }
     }
 }
