@@ -15,7 +15,6 @@ import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.decodeString
 import io.ktor.util.error
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumeEach
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger { }
@@ -82,9 +81,6 @@ class LiveClient(
 
         //开启 websocket
         HttpClient(CIO).config { install(WebSockets) }.wss(host = host, port = port, path = "/sub") {
-            pingIntervalMillis = 30_000
-            timeoutMillis = 10_000
-
             //发送进房数据包
             send(PresetPacket.enterRoomPacket(anchorUserId, roomId))
             val enterRoomResponsePacket = incoming.receive().toPackets()[0]
@@ -107,8 +103,9 @@ class LiveClient(
                 launch {
                     val scale = bilibiliClient.billingClientProperties.scale
                     while (true) {
-                        @Suppress("DeferredResultUnused")
-                        liveAPI.userOnlineHeart(roomId, scale)
+                        liveAPI.userOnlineHeart(roomId, scale).invokeOnCompletion {
+                            if (it != null) logger.error(it)
+                        }
                         delay(300_000)
                     }
                 }
@@ -132,8 +129,10 @@ class LiveClient(
             }
 
             try {
-                incoming.consumeEach { frame ->
-                    frame.toPackets().forEach {
+                while (true) {
+                    withTimeout(40_000) {
+                        incoming.receive()
+                    }.toPackets().forEach {
                         try {
                             @Suppress("NON_EXHAUSTIVE_WHEN")
                             when (it.packetType) {
@@ -151,12 +150,14 @@ class LiveClient(
                         }
                     }
                 }
+            } catch (e: TimeoutCancellationException) {
+                throw e
             } catch (e: CancellationException) {
                 close()
             } finally {
                 restHeartBeatJob?.cancel()
                 websocketHeartBeatJob.cancel()
-                launch(NonCancellable) {
+                launch {
                     val closeReason = closeReason.await()
                     try {
                         callback.onClose?.invoke(this@LiveClient, closeReason)
@@ -179,7 +180,7 @@ class LiveClientCallbackDSL {
     /**
      * 成功进入房间时触发
      */
-    var onConnect: (suspend (LiveClient) -> Unit)? = null
+    var onConnect: ((LiveClient) -> Unit)? = null
 
     /**
      * 抛出异常时触发
@@ -189,17 +190,17 @@ class LiveClientCallbackDSL {
     /**
      * 收到人气值数据包
      */
-    var onPopularityPacket: (suspend (LiveClient, Int) -> Unit)? = null
+    var onPopularityPacket: ((LiveClient, Int) -> Unit)? = null
 
     /**
      * 收到 command 数据包
      */
-    var onCommandPacket: (suspend (LiveClient, JsonObject) -> Unit)? = null
+    var onCommandPacket: ((LiveClient, JsonObject) -> Unit)? = null
 
     /**
      * 连接关闭时触发
      */
-    var onClose: (suspend (LiveClient, CloseReason?) -> Unit)? = null
+    var onClose: ((LiveClient, CloseReason?) -> Unit)? = null
 }
 
 /**

@@ -28,7 +28,7 @@ object PresetPacket {
 
     /**
      * 心跳包
-     * 心跳包的正文内容可能是故意的, 为固定值 [object Object]
+     * 心跳包的正文内容可能是故意的, 为固定值 "[object Object]"
      */
     fun heartbeatPacket(content: ByteBuffer = ByteBuffer.wrap("[object Object]".toByteArray())) = Packet(
             packetType = PacketType.HEARTBEAT,

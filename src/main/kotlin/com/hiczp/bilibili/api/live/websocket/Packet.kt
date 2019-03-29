@@ -1,9 +1,7 @@
 package com.hiczp.bilibili.api.live.websocket
 
-import com.hiczp.bilibili.api.toPrettyPrintString
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.WebSocketSession
-import io.ktor.http.cio.websocket.readBytes
 import java.nio.ByteBuffer
 
 /**
@@ -12,14 +10,14 @@ import java.nio.ByteBuffer
  * 数据包头部结构  00 00 00 65  00 10 00 01  00 00 00 07  00 00 00 01
  *              |数据包总长度| |头长| |tag|  |数据包类型 |  |  tag  |
  *
- * @param tagShort 一种 tag, 如果是非 command 数据包则为 1, 否则为 0, short 类型
+ * @param shortTag 一种 tag, 如果是非 command 数据包则为 1, 否则为 0, short 类型
  * @param packetType 数据包类型
  * @param tag 同 tagShort, 但是为 int 类型
  * @param content 正文内容
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class Packet(
-        val tagShort: Short = 1,
+data class Packet(
+        val shortTag: Short = 1,
         val packetType: PacketType,
         val tag: Int = 1,
         val content: ByteBuffer
@@ -29,24 +27,18 @@ class Packet(
 
     val headerLength: Short = 0x10
 
-    fun toByteBuffer() =
+    fun toFrame() = Frame.Binary(
+            true,
             ByteBuffer.allocate(totalLength)
                     .putInt(totalLength)
                     .putShort(headerLength)
-                    .putShort(tagShort)
+                    .putShort(shortTag)
                     .putInt(packetType.value)
                     .putInt(tag)
                     .put(content).apply {
                         flip()
                     }!!
-
-    fun toFrame() = Frame.Binary(
-            true,
-            toByteBuffer()
     )
-
-    //for debug
-    override fun toString() = toFrame().readBytes().toPrettyPrintString()
 }
 
 /**
@@ -59,14 +51,14 @@ internal fun Frame.toPackets(): List<Packet> {
         val startPosition = buffer.position()
         val totalLength = buffer.int
         buffer.position(buffer.position() + 2)    //skip headerLength
-        val tagShort = buffer.short
+        val shortTag = buffer.short
         val packetType = PacketType.getByValue(buffer.int)
         val tag = buffer.int
         buffer.limit(startPosition + totalLength)
         val content = buffer.slice()
         buffer.position(buffer.limit())
         buffer.limit(bufferLength)
-        list.add(Packet(tagShort, packetType, tag, content))
+        list.add(Packet(shortTag, packetType, tag, content))
     }
     return list
 }
