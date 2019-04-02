@@ -19,6 +19,7 @@ import com.hiczp.bilibili.api.retrofit.interceptor.FailureResponseInterceptor
 import com.hiczp.bilibili.api.retrofit.interceptor.SortAndSignInterceptor
 import com.hiczp.bilibili.api.vc.VcAPI
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -190,6 +191,7 @@ class BilibiliClient(
                     addInterceptor(PlayerInterceptor(billingClientProperties) { loginResponse })
                     addInterceptor(FailureResponseInterceptor)
                     addNetworkInterceptor(httpLoggingInterceptor)
+                    connectionPool(connectionPool)
                 }.build())
                 .build()
                 .create(PlayerAPI::class.java)
@@ -211,6 +213,7 @@ class BilibiliClient(
                     addInterceptor(defaultCommonParamInterceptor)
                     addInterceptor(sortAndSignInterceptor)
                     addNetworkInterceptor(httpLoggingInterceptor)
+                    connectionPool(connectionPool)
                 }.build())
                 .build()
                 .create(DanmakuAPI::class.java)
@@ -306,6 +309,7 @@ class BilibiliClient(
                 addInterceptor(sortAndSignInterceptor)
                 addInterceptor(FailureResponseInterceptor)
                 addNetworkInterceptor(httpLoggingInterceptor)
+                connectionPool(connectionPool)
             }.build())
             .build()
             .create(T::class.java)
@@ -314,6 +318,7 @@ class BilibiliClient(
         @Suppress("SpellCheckingInspection")
         private val gsonConverterFactory = GsonConverterFactory.create()
         private val coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
+        private val connectionPool = ConnectionPool()
         private val traceIdFormat = SimpleDateFormat("yyyyMMddHHmm000ss")
         private fun generateTraceId() = traceIdFormat.format(Date())
     }
