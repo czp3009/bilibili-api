@@ -16,10 +16,12 @@ buildscript {
 }
 
 group = 'com.hiczp'
-version = '1.0.0'
+version = '0.1.0'
 description = 'Bilibili Android client API library for Kotlin'
 
 apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
@@ -83,4 +85,66 @@ dependencies {
 dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.4.1'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    repositories {
+        maven {
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = project.properties.ossUsername
+                password = project.properties.ossPassword
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = project.name
+                description = project.description
+                url = 'https://github.com/czp3009/bilibili-api'
+
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE Version 3'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'czp3009'
+                        name = 'czp3009'
+                        email = 'czp3009@gmail.com'
+                        url = 'https://www.hiczp.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/czp3009/bilibili-api.git'
+                    developerConnection = 'scm:git:ssh://github.com/czp3009/bilibili-api.git'
+                    url = 'https://github.com/czp3009/bilibili-api'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
