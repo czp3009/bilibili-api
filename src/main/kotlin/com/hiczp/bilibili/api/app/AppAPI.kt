@@ -94,7 +94,7 @@ interface AppAPI {
      * 从这个接口得到视频的 cid
      * 如果返回内容里的 pages 有多个表明有多个 p, 每个 p 有自己的 cid(外层的 cid 为默认的那个 p 的 cid)
      *
-     * @param aid 视频的唯一标识
+     * @param aid av 号
      */
     @Suppress("SpellCheckingInspection")
     @GET("/x/v2/view")
