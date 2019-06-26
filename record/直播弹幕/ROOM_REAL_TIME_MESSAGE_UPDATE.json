@@ -2,6 +2,7 @@
   "cmd": "ROOM_REAL_TIME_MESSAGE_UPDATE",
   "data": {
     "roomid": 23058,
-    "fans": 300958
+    "fans": 297141,
+    "red_notice": -1
   }
 }

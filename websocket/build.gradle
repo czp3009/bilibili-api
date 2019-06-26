@@ -1,0 +1,15 @@
+//ktor
+dependencies {
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-websocket
+    api group: 'io.ktor', name: 'ktor-client-websocket', version: ktor_version
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-cio
+    api group: 'io.ktor', name: 'ktor-client-cio', version: ktor_version
+}
+
+//json
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    api group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    // https://mvnrepository.com/artifact/com.github.salomonbrys.kotson/kotson
+    api group: 'com.github.salomonbrys.kotson', name: 'kotson', version: '2.5.0'
+}

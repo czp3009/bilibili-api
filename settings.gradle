@@ -1,1 +1,4 @@
-rootProject.name='bilibili-api'
+rootProject.name = 'bilibili-api'
+
+include 'rest'
+include 'websocket'
