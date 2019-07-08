@@ -1,7 +1,6 @@
 {
   "username": "123456789",
   "password": "123456",
-  "roomId": "3",
   "loginResponse": {
     "ts": 1550629285,
     "code": 0,

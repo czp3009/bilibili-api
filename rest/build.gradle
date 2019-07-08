@@ -1,13 +1,13 @@
 //http
 dependencies {
     // https://mvnrepository.com/artifact/com.hiczp/caeruleum
-    api group: 'com.hiczp', name: 'caeruleum', version: '1.0.0'
+    api group: 'com.hiczp', name: 'caeruleum', version: '1.2.1'
 }
 
 //ktor
 dependencies {
-    // https://mvnrepository.com/artifact/io.ktor/ktor-client-logging
-    api group: 'io.ktor', name: 'ktor-client-logging', version: ktor_version
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-logging-jvm
+    api group: 'io.ktor', name: 'ktor-client-logging-jvm', version: ktor_version
     // https://mvnrepository.com/artifact/io.ktor/ktor-client-gson
     api group: 'io.ktor', name: 'ktor-client-gson', version: ktor_version
 }

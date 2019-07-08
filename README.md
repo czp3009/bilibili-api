@@ -14,11 +14,6 @@ Websocket(用于连接直播间弹幕推送服务器以获取实时弹幕)
 compile group: 'com.hiczp', name: 'bilibili-api-websocket', version: '0.2.0'
 ```
 
-全部引入
-```groovy
-compile group: 'com.hiczp', name: 'bilibili-api', version: '0.2.0'
-```
-
 # 获取直播间实时弹幕
 举个例子
 ```kotlin

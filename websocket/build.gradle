@@ -1,7 +1,8 @@
 //ktor
 dependencies {
     // https://mvnrepository.com/artifact/io.ktor/ktor-client-websocket
-    api group: 'io.ktor', name: 'ktor-client-websocket', version: ktor_version
+    //api group: 'io.ktor', name: 'ktor-client-websocket', version: ktor_version
+    api group: 'io.ktor', name: 'ktor-client-websocket', version: '1.2.0-alpha-2'
     // https://mvnrepository.com/artifact/io.ktor/ktor-client-cio
     api group: 'io.ktor', name: 'ktor-client-cio', version: ktor_version
 }
