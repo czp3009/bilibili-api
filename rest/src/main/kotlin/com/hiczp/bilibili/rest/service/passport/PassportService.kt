@@ -4,10 +4,10 @@ import com.hiczp.bilibili.rest.BilibiliClientInherent
 import com.hiczp.bilibili.rest.ktor.appendMissing
 import com.hiczp.bilibili.rest.ktor.commonParams
 import com.hiczp.bilibili.rest.ktor.logging
-import com.hiczp.bilibili.rest.service.Response
 import com.hiczp.bilibili.rest.service.passport.model.GetKeyResponse
 import com.hiczp.bilibili.rest.service.passport.model.LoginResponse
 import com.hiczp.bilibili.rest.service.passport.model.OAuth2Info
+import com.hiczp.bilibili.rest.service.passport.model.RevokeResponse
 import com.hiczp.caeruleum.annotation.*
 import com.hiczp.caeruleum.create
 import io.ktor.client.HttpClient
@@ -63,7 +63,7 @@ interface PassportService {
             @Field("SESSDATA") sessData: String? = null,
             @Field("bili_jct") biliJct: String? = null,
             @Field sid: String? = null
-    ): Response
+    ): RevokeResponse
 
     /**
      * 将所有 cookie 以 Map 形式传入
@@ -73,7 +73,7 @@ interface PassportService {
     suspend fun revoke(
             @Field("access_token") accessToken: String,
             @FieldMap cookieMap: Map<String, String> = emptyMap()
-    ): Response
+    ): RevokeResponse
 
     /**
      * 获取 OAuth2 信息

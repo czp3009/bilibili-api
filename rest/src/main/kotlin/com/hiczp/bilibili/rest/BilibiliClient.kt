@@ -1,14 +1,9 @@
 package com.hiczp.bilibili.rest
 
-import com.hiczp.bilibili.rest.ktor.appendMissing
-import com.hiczp.bilibili.rest.ktor.commonParams
-import com.hiczp.bilibili.rest.ktor.logging
-import com.hiczp.bilibili.rest.ktor.rsaEncrypt
+import com.hiczp.bilibili.rest.ktor.*
 import com.hiczp.bilibili.rest.service.live.LiveService
-import com.hiczp.bilibili.rest.service.passport.Credential
-import com.hiczp.bilibili.rest.service.passport.PassportService
-import com.hiczp.bilibili.rest.service.passport.cookieMap
-import com.hiczp.bilibili.rest.service.passport.toCredential
+import com.hiczp.bilibili.rest.service.orThrow
+import com.hiczp.bilibili.rest.service.passport.*
 import com.hiczp.caeruleum.create
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -41,6 +36,7 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
      *
      * @return new credential
      */
+    @Throws(LoginException::class)
     suspend fun login(
             username: String, password: String,
             //极验
@@ -49,10 +45,12 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
             validate: String? = null
     ): Credential {
         val (hash, key) = PassportService.getKey().let { response ->
-            response.hash to response.key.split('\n').filterNot { it.startsWith('-') }.joinToString(separator = "")
+            response.hash to response.key.toDER()
         }
         val cipheredPassword = (hash + password).rsaEncrypt(key)
-        return PassportService.login(username, cipheredPassword, challenge, secCode, validate).let {
+        return PassportService.login(username, cipheredPassword, challenge, secCode, validate).orThrow {
+            LoginException(it)
+        }.let {
             credential.updateAndGet { oldCredential ->
                 if (oldCredential != null) logger.warn { "Override credential: ${oldCredential.userId}" }
                 it.toCredential().also {
@@ -67,12 +65,15 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
      *
      * @return return old credential, null if not logged in
      */
+    @Throws(RevokeException::class)
     suspend fun revoke() = credential.getAndUpdate { oldCredential ->
         if (oldCredential != null) {
             PassportService.revoke(
                     oldCredential.accessToken,
                     oldCredential.cookieMap()
-            )
+            ).orThrow {
+                RevokeException(it)
+            }
             logger.debug { "Token revoked: ${oldCredential.userId}" }
         }
         null

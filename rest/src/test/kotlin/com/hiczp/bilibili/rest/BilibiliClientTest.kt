@@ -39,7 +39,7 @@ class BilibiliClientTest {
         runBlocking {
             bilibiliClient.login(username, password)
             bilibiliClient.credential.value!!.println()
-            bilibiliClient.revoke()
+            bilibiliClient.revoke()!!.println()
         }
     }
 

@@ -22,11 +22,17 @@ internal fun String.base64() = Base64.getDecoder().decode(this)
 
 internal fun ByteArray.base64() = String(Base64.getEncoder().encode(this))
 
-internal fun String.rsaEncrypt(publicKey: String) =
-        X509EncodedKeySpec(publicKey.base64()).let {
+internal fun String.rsaEncrypt(publicKey: DER) =
+        X509EncodedKeySpec(publicKey).let {
             KeyFactory.getInstance("RSA").generatePublic(it)
         }.let {
             Cipher.getInstance("RSA/ECB/PKCS1Padding").apply {
                 init(Cipher.ENCRYPT_MODE, it)
             }
         }.doFinal(toByteArray()).base64()
+
+internal typealias PEM = String
+
+internal typealias DER = ByteArray
+
+internal fun PEM.toDER(): DER = split('\n').filterNot { it.startsWith('-') }.joinToString(separator = "").base64()
