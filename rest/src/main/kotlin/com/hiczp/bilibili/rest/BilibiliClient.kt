@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.rest
 
 import com.hiczp.bilibili.rest.ktor.*
+import com.hiczp.bilibili.rest.service.app.AppService
 import com.hiczp.bilibili.rest.service.live.LiveService
 import com.hiczp.bilibili.rest.service.orThrow
 import com.hiczp.bilibili.rest.service.passport.*
@@ -12,6 +13,7 @@ import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.headers
+import io.ktor.http.ContentType
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.getAndUpdate
@@ -98,6 +100,12 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
             defaultRequest {
                 headers {
                     with(BilibiliClientInherent) {
+                        appendMissing(
+                                "Display-ID",
+                                this@BilibiliClient.credential.value?.let {
+                                    "${it.userId}-$initTime"
+                                } ?: "$buvid-$initTime"
+                        )
                         appendMissing("Display-ID", "$buvid-$initTime")
                         appendMissing("Buvid", buvid)
                         appendMissing("Device-ID", hardwareId)
@@ -116,6 +124,7 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
                     appendMissing("build", build)
                     appendMissing("buvid", buvid)
                     appendMissing("channel", channel)
+                    appendMissing("device", platform)
                     appendMissing("mobi_app", platform)
                     appendMissing("platform", platform)
                     appendMissing("statistics", statistics)
@@ -124,11 +133,16 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
             }
             install(JsonFeature) {
                 serializer = GsonSerializer()
+                acceptContentTypes = listOf(
+                        ContentType.Application.Json,
+                        ContentType("text", "json")
+                )
             }
             logging { }
         }
     }
 
+    val appService by lazy { commonClient.create<AppService>() }
     val liveService by lazy { commonClient.create<LiveService>() }
 
     override fun close() {
