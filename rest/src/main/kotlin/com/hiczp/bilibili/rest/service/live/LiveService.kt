@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.rest.service.live
 
 import com.hiczp.bilibili.rest.BilibiliClientInherent
+import com.hiczp.bilibili.rest.ktor.FORCE_QUERY_COMMON_PARAMS
 import com.hiczp.bilibili.rest.service.Response
 import com.hiczp.caeruleum.annotation.*
 
@@ -22,7 +23,6 @@ interface LiveService {
     suspend fun getOffLiveList(
             @Query("area_id") areaId: Int,
             @Query("room_id") roomId: Long,
-            @Query("device_name") deviceName: String = BilibiliClientInherent.mobileModel,
             @Query qn: Int = 0
     ): Response
 
@@ -83,5 +83,80 @@ interface LiveService {
     suspend fun skinList(
             @Query("skin_platform") skinPlatform: String = BilibiliClientInherent.platform,
             @Query("skin_version") skinVersion: Int = 1
+    ): Response
+
+    /**
+     * 我的直播站信息
+     */
+    @Get("/live_user/v1/UserInfo/my_info")
+    suspend fun myInfo(): Response
+
+    /**
+     * 我的头衔列表
+     */
+    @Get("/appUser/myTitleList")
+    suspend fun myTitleList(): Response
+
+    /**
+     * 今日是否已签到
+     */
+    @Get("/rc/v2/Sign/getSignInfo")
+    suspend fun getSignInfo(): Response
+
+    /**
+     * 直播中心 -> 签到
+     */
+    @Get("/rc/v1/Sign/doSign")
+    suspend fun doSign(): Response
+
+    /**
+     * 直播中心 -> 我的勋章
+     */
+    @Get("/fans_medal/v2/HighQps/received_medals")
+    suspend fun receivedMedals(): Response
+
+    /**
+     * 直播中心 -> 我的勋章 -> 取消佩戴
+     *
+     * 取消佩戴当前正在佩戴的勋章
+     */
+    @Get("/fans_medal/v5/live_fans_medal/cancelWearMedal")
+    suspend fun cancelWearMedal(): Response
+
+    /**
+     * 直播中心 -> 我的勋章 -> 佩戴
+     */
+    @Attribute(FORCE_QUERY_COMMON_PARAMS)
+    @Post("/fans_medal/v1/fans_medal/wear_medal")
+    @FormUrlEncoded
+    suspend fun wearMedal(@Field("medal_id") medalId: Long): Response
+
+    /**
+     * 直播中心 -> 我的关注(上方的分类按钮)
+     */
+    @Get("/relation/v1/App/getViewConfig")
+    suspend fun relationViewConfig(): Response
+
+    /**
+     * 直播中心 -> 我的关注(正在直播)
+     *
+     * @param sortRule 分类代码由 {@link #relationViewConfig()} 提供, 默认为(从 0 到 3) 默认排序, 新开播, 按人气, 送礼最多
+     */
+    @Get("/xlive/app-interface/v1/relation/liveAnchor")
+    suspend fun relationLiveAnchor(
+            @Query filterRule: Int = 0,
+            @Query qn: Int = 0,
+            @Query sortRule: Int = 0
+    ): Response
+
+    /**
+     * 直播中心 -> 我的关注(暂未开播)
+     *
+     * @param page 翻页参数, 从 1 开始
+     */
+    @Get("/xlive/app-interface/v1/relation/unliveAnchor")
+    suspend fun relationUnliveAnchor(
+            @Query page: Long = 1,
+            @Query("pagesize") pageSize: Long = 20
     ): Response
 }

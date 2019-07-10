@@ -125,6 +125,7 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
                     appendMissing("buvid", buvid)
                     appendMissing("channel", channel)
                     appendMissing("device", platform)
+                    appendMissing("device_name", mobileModel)
                     appendMissing("mobi_app", platform)
                     appendMissing("platform", platform)
                     appendMissing("statistics", statistics)
