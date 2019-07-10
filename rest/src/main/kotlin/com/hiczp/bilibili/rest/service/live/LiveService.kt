@@ -159,4 +159,10 @@ interface LiveService {
             @Query page: Long = 1,
             @Query("pagesize") pageSize: Long = 20
     ): Response
+
+    /**
+     * 直播中心 -> 我的头衔
+     */
+    @Get("/rc/v1/UserTitle/getMyTitles")
+    suspend fun getMyTitles(): Response
 }
