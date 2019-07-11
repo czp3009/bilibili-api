@@ -120,7 +120,6 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
                 }
                 with(BilibiliClientInherent) {
                     appendMissing("actionKey", actionKey)
-                    appendMissing("appkey", appKey)
                     appendMissing("build", build)
                     appendMissing("buvid", buvid)
                     appendMissing("channel", channel)

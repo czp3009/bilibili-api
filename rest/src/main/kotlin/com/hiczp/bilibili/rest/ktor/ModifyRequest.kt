@@ -36,22 +36,25 @@ internal class ModifyRequest(private val builder: HttpRequestBuilder.() -> Unit)
 
 @UseExperimental(InternalAPI::class)
 internal fun HttpClientConfig<*>.commonParams(
-        appSecret: String = BilibiliClientInherent.appSecret,
         block: StringValuesBuilder.() -> Unit
 ) {
+    fun StringValuesBuilder.addCommonParams(request: HttpRequestBuilder): StringValuesBuilder {
+        block()
+        @Suppress("SpellCheckingInspection")
+        appendMissing("appkey", request.attributes.getOrNull(APP_KEY_ATTRIBUTE_KEY) ?: BilibiliClientInherent.appKey)
+        sortAndSign(request.attributes.getOrNull(APP_SECRET_ATTRIBUTE_KEY) ?: BilibiliClientInherent.appSecret)
+        return this
+    }
+
     install(ModifyRequest) {
         //add params to query
         if (method == HttpMethod.Get || attributes.contains(FORCE_QUERY_COMMON_PARAMS_ATTRIBUTE_KEY)) {
-            url.parameters.apply {
-                block()
-                sortAndSign(appSecret)
-            }
+            url.parameters.addCommonParams(this)
         } else if (method == HttpMethod.Post) { //add to body
             when (val originBody = body) {
                 is EmptyContent -> {
                     body = FormDataContent(Parameters.build {
-                        block()
-                        sortAndSign(appSecret)
+                        addCommonParams(this@install)
                     })
                 }
                 is FormDataContent -> {
@@ -59,8 +62,7 @@ internal fun HttpClientConfig<*>.commonParams(
                         originBody.formData.forEach { key, value ->
                             appendAll(key, value)
                         }
-                        block()
-                        sortAndSign(appSecret)
+                        addCommonParams(this@install)
                     })
                 }
             }
@@ -70,7 +72,7 @@ internal fun HttpClientConfig<*>.commonParams(
 
 @UseExperimental(InternalAPI::class)
 internal fun StringValuesBuilder.appendMissing(name: String, value: String) {
-    if (getAll(name).isNullOrEmpty()) {
+    if (!contains(name)) {
         append(name, value)
     }
 }

@@ -7,16 +7,19 @@ import io.ktor.util.StringValuesBuilder
 @UseExperimental(InternalAPI::class)
 internal fun StringValuesBuilder.sortAndSign(appSecret: String) {
     val sorted = entries().sortedBy { it.key }
-    val sign = sorted.joinToString(separator = "&") { (key, value) ->
-        value.joinToString(separator = "&") {
-            "$key=${it.encodeURLParameter()}"
-        }
-    }.let {
-        it + appSecret
-    }.md5()
     clear()
     sorted.forEach { (key, value) ->
         appendAll(key, value)
     }
-    append("sign", sign)
+    if (!contains("sign")) {
+        sorted.joinToString(separator = "&") { (key, value) ->
+            value.joinToString(separator = "&") {
+                "$key=${it.encodeURLParameter()}"
+            }
+        }.let {
+            it + appSecret
+        }.md5().let {
+            append("sign", it)
+        }
+    }
 }

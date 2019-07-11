@@ -1,7 +1,7 @@
 //http
 dependencies {
     // https://mvnrepository.com/artifact/com.hiczp/caeruleum
-    api group: 'com.hiczp', name: 'caeruleum', version: '1.2.1'
+    api group: 'com.hiczp', name: 'caeruleum', version: '1.2.2'
 }
 
 //ktor
