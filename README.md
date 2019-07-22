@@ -49,6 +49,10 @@ runBlocking {
 如果凭证是错误的, 将抛出 `RevokeException`.
 
 # 获取直播间实时弹幕
+直播间实时弹幕是一个 Websocket.
+
+`LiveClient` 是一个模拟的 Websocket 客户端, 内含回调函数, 可以重复调用 `connect()` 函数.
+
 举个例子
 ```kotlin
 val liveClient = LiveClient(roomId = 23058) {
@@ -97,4 +101,4 @@ if (command.cmd == "DANMU_MSG") {
 注意: 如果使用短房间号来连接弹幕推送服务器, 可能会得不到正确的人气值信息(一直为 0 或者一直为 1). 因此在连接弹幕推送服务器前应当首先获取直播间基本信息. 同时, 弹幕服务器不是唯一的, 在构造 `LiveClient` 时可以传入其他服务器地址.
 
 # License
-GPL V3
+Apache License 2.0
