@@ -10,13 +10,13 @@ import javax.crypto.Cipher
 private val hexTable = "0123456789abcdef".toCharArray()
 
 //optimized md5
-internal fun String.md5() = StringBuilder(32).apply {
+internal fun String.md5() = buildString(32) {
     MessageDigest.getInstance("MD5").digest(toByteArray()).forEach {
         val value = it.toInt() and 0xFF
         append(hexTable[value ushr 4])
         append(hexTable[value and 0x0F])
     }
-}.toString()
+}
 
 internal fun String.base64() = Base64.getDecoder().decode(this)
 
