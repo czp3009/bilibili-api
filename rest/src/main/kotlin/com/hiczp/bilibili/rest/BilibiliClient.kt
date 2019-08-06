@@ -5,6 +5,7 @@ import com.hiczp.bilibili.rest.service.app.AppService
 import com.hiczp.bilibili.rest.service.live.LiveService
 import com.hiczp.bilibili.rest.service.orThrow
 import com.hiczp.bilibili.rest.service.passport.*
+import com.hiczp.bilibili.rest.utils.isLazyInitialized
 import com.hiczp.caeruleum.create
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -21,8 +22,6 @@ import kotlinx.atomicfu.updateAndGet
 import mu.KotlinLogging
 import java.io.Closeable
 import java.time.Instant
-import kotlin.reflect.KProperty0
-import kotlin.reflect.jvm.isAccessible
 
 private val logger = KotlinLogging.logger { }
 
@@ -45,22 +44,19 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
             challenge: String? = null,
             secCode: String? = null,
             validate: String? = null
-    ): Credential {
+    ) = credential.updateAndGet {
+        if (it != null) logger.warn { "Override credential: ${it.userId}" }
         val (hash, key) = PassportService.getKey().let { response ->
             response.hash to response.key.toDER()
         }
         val cipheredPassword = (hash + password).rsaEncrypt(key)
-        return PassportService.login(username, cipheredPassword, challenge, secCode, validate).orThrow {
-            LoginException(it)
-        }.let {
-            credential.updateAndGet { oldCredential ->
-                if (oldCredential != null) logger.warn { "Override credential: ${oldCredential.userId}" }
-                it.toCredential().also {
-                    logger.debug { "Logged with userId ${it.userId}" }
-                }
-            }!!
+        PassportService.login(
+                username, cipheredPassword,
+                challenge, secCode, validate
+        ).orThrow(::LoginException).toCredential().also {
+            logger.debug { "Logged with userId ${it.userId}" }
         }
-    }
+    }!!
 
     /**
      * Revoke credential
@@ -70,12 +66,7 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
     @Throws(RevokeException::class)
     suspend fun revoke() = credential.getAndUpdate { oldCredential ->
         if (oldCredential != null) {
-            PassportService.revoke(
-                    oldCredential.accessToken,
-                    oldCredential.cookieMap()
-            ).orThrow {
-                RevokeException(it)
-            }
+            PassportService.revoke(oldCredential.accessToken, oldCredential.cookieMap()).orThrow(::RevokeException)
             logger.debug { "Token revoked: ${oldCredential.userId}" }
         }
         null
@@ -146,10 +137,6 @@ class BilibiliClient(credential: Credential? = null) : Closeable {
     val liveService by lazy { commonClient.create<LiveService>() }
 
     override fun close() {
-        fun KProperty0<*>.isLazyInitialized(): Boolean {
-            isAccessible = true
-            return (getDelegate() as Lazy<*>).isInitialized()
-        }
         if (::commonClient.isLazyInitialized()) {
             commonClient.close()
         }

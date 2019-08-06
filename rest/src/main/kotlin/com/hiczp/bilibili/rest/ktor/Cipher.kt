@@ -20,7 +20,7 @@ internal fun String.md5() = buildString(32) {
 
 internal fun String.base64() = Base64.getDecoder().decode(this)
 
-internal fun ByteArray.base64() = String(Base64.getEncoder().encode(this))
+internal fun ByteArray.base64() = Base64.getEncoder().encodeToString(this)
 
 internal fun String.rsaEncrypt(publicKey: DER) =
         X509EncodedKeySpec(publicKey).let {
