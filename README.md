@@ -1,483 +1,490 @@
-# Bilibili API 调用库
-该项目提供 Bilibili API 的 Java 调用, 协议来自 Bilibili Android APP 的逆向工程以及截包分析.
+# Bilibili API JVM 调用库
+该项目提供 Bilibili API 的 JVM 调用, 协议来自 Bilibili Android APP 的逆向工程以及截包分析.
 
-由于B站即使更新客户端, 也会继续兼容以前的旧版本客户端, 所以短期内不用担心 API 失效的问题.
-
-对于一些 Bilibili Android APP 上没有的功能, 可以先[将 token 转换为 cookie](#sso), 然后再去调用 Bilibili Web API.
-
-# API 不完全
-由于本项目还在开发初期, 大量 API 没有完成, 所以很可能没有你想要的 API.
-
-欢迎提交 issue 或者 Merge Request.
-
-# 添加依赖
-## Gradle
-
-    compile group: 'com.hiczp', name: 'bilibili-api', version: '0.0.20'
-
-# 名词解释
-B站不少参数都是瞎取的, 并且不统一, 经常混用, 以下给出一些常见参数对应的含义
-
-| 参数 | 含义 |
-| :--- | :--- |
-| mid | 用户 ID(与 userId 含义一致, 经常被混用) |
-| userId | 用户 ID, 用户在B站的唯一标识, 数字 |
-| uid | 用户 ID, 与 userId 同义 |
-| userid | 注意这里是全小写, 它的值可能是 'bili_1178318619', 这个东西是没用的, B站并不用这个作为用户唯一标识 |
-| showRoomId | 直播间 URL (Web)上的房间号(可能是一个很小的数字, 低于 1000) |
-| roomId | 直播间的真实 ID(直播房间号在 1000 以下的房间, 真实 ID 是另外一个数字) |
-| cid | 直播间 ID(URL 上的短房间号以及真实房间号都叫 cid) |
-| ruid | 直播间房主的用户 ID |
-| rcost | 该房间内消费的瓜子数量 |
-
-(上表仅供其他开发者参照, 本调用库中已经封装为 Java 标准全写小驼峰命名法, 例如 userId, roomId, roomUserId)
+使用一台虚拟的 `Pixel 2` 设备来截取数据包, 一些固定参数可能与真实设备不一致.
 
 # 使用
-## RESTFul API
-由于B站 API 设计清奇, 一些显然不需要登录的 API 也需要登录, 所以所有 API 尽可能登陆后访问以免失败.
+```groovy
+compile group: 'com.hiczp', name: 'bilibili-api', version: '0.1.0'
+```
 
-### 登录
-使用账户名和密码作为登录参数
+# 技术说明
+`BilibiliClient` 类表示一个模拟的客户端, 实例化此类即表示打开了 Bilibili APP.
 
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    LoginResponseEntity loginResponseEntity = bilibiliAPI.login(String username, String password);
+所有调用从这个类开始, 包括登陆以及访问其他各种 API.
 
-IOException 在网络故障时抛出
+使用协程来实现异步, 由于 [kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) 为编译器实现, 因此并非所有 JVM 语言都能正确调用 `suspend` 方法.
 
-LoginException 在用户名密码不匹配时抛出
+本项目尽可能的兼容其他 JVM 语言和 Android, 不要问, 问就没测试过.
 
-CaptchaMismatchException 在验证码不正确时抛出, 见下文 [验证码问题](#验证码问题) 一节
+`BilibiliClient` 实例化时会记录一些信息, 例如初始化的事件, 用于更逼真的模拟真实客户端发送的请求. 因此请不要每次都实例化一个新的 `BilibiliClient` 实例, 而应该保存其引用.
 
-login 方法的返回值为 LoginResponseEntity 类型, 使用
+一个客户端下各种不同类型的 API (代理类)都是惰性初始化的, 并且只初始化一次, 因此不需要保存 API 的引用, 例如以下代码是被推荐的:
 
-    BilibiliAccount bilibiliAccount = loginResponseEntity.toBilibiliAccount();
-
-来获得一个 BilibiliAccount 实例, 其中包含了 OAuth2 的用户凭证, 如果有需要, 可以将其持久化保存.
-
-将一个登陆状态恢复出来(从之前保存的 BilibiliAccount 实例)使用如下代码
-
-    BilibiliAPI bilibiliAPI = new BilibiliAPI(BilibiliAccount bilibiliAccount);
-
-注意, 如果这个 BilibiliAccount 实例含有的 accessToken 是错误的或者过期的, 需要鉴权的 API 将全部 401.
-
-### 刷新 Token
-OAuth2 的重要凭证有两个, token 与 refreshToken, token 到期之后, 并不需要再次用用户名密码登录一次, 仅需要用 refreshToken 刷新一次 token 即可(会得到新的 token 和 refreshToken, refreshToken 的有效期不是无限的. B站的 refreshToken 有效期不明确).
-
-    bilibiliAPI.refreshToken();
-
-IOException 在网络故障时抛出
-
-LoginException 在 token 错误,或者 refreshToken 错误或过期时抛出.
-
-refreshToken 操作在正常情况下将在服务器返回 401(实际上 B站 不用 401 来表示未登录)时自动进行, 因此 BilibiliAPI 内部持有的 BilibiliAccount 的实例的内容可能会发生改变, 如果需要在应用关闭时持久化用户 token, 需要这样来取得最后的 BilibiliAccount 状态
-
-    BilibiliAccount bilibiliAccount = bilibiliAPI.getBilibiliAccount();
-
-### 登出
-
-    bilibiliAPI.logout();
-
-IOException 在网络故障时抛出
-
-LoginException 在 accessToken 错误或过期时抛出
-
-### 验证码问题
-当对一个账户在短时间内(时长不明确)尝试多次错误的登录(密码错误)后, 再尝试登录该账号, 会被要求验证码.
-
-此时登录操作会抛出 CaptchaMismatchException 异常, 表示必须调用另一个接口
-
-    public LoginResponseEntity login(String username,
-                                     String password,
-                                     String captcha,
-                                     String cookie) throws IOException, LoginException, CaptchaMismatchException
-
-这个接口将带 captcha 参数地去登录, 注意这里还有一个 cookie 参数.
-
-下面先给出一段正确使用该接口的代码, 随后会解释其步骤
-
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    try {
-        bilibiliAPI.login(username, password);
-    } catch (CaptchaMismatchException e) {  //如果该账号现在需要验证码来进行登录, 就会抛出异常
-        cookie = "sid=123456";    //自己造一个 cookie 或者从服务器取得
-        Response response = bilibiliAPI.getCaptchaService()
-                .getCaptcha(cookie)
-                .execute();
-        InputStream inputStream = response.body().byteStream();
-        String captcha = letUserInputCaptcha(inputStream);  //让用户根据图片输入验证码
-        bilibiliAPI.login(
-            username,
-            password,
-            captcha,
-            cookie
-        );
+```kotlin
+runBlocking {
+    val bilibiliClient = BilibiliClient().apply {
+        login(username, password)
     }
+    val myInfo = bilibiliClient.appAPI.myInfo().await()
+    val reply = bilibiliClient.mainAPI.reply(oid = 44154463).await()
+}
+```
 
-验证码是通过访问 https://passport.bilibili.com/captcha 这个地址获得的.
+如果一个请求的返回内容中的 `code`(code 是 BODY 的内容, 并非 HttpStatus) 不为 0, 将抛出异常 `BilibiliApiException`, 通过以下代码来获取服务器原始返回的 `code`:
 
-访问这个地址需要带有一个 cookie, cookie 里面要有 "sid=xxx", 然后服务端会记录下对应关系, 也就是 sid xxx 对应验证码 yyy, 然后就可以验证了.
+```kotlin
+val code = bilibiliApiException.commonResponse.code
+```
 
-我们会发现, 访问任何 passport.bilibili.com 下面的地址, 都会被分发一个 cookie, 里面带有 sid 的值. 我们访问 /captcha 也会被分发一个 cookie, 但是这个通过访问 captcha 而被分发得到的 cookie 和访问得到的验证码图片, 没有对应关系. 推测是因为 cookie 的发放在请求进入甚至模块运行完毕后才进行.
+一个错误返回的原始 `JSON` 如下所示:
 
-所以我们如果不带 cookie 去访问 /captcha, 我们这样拿到的由 /captcha 返回的 cookie 和 验证码, 是不匹配的.
+```json
+{
+    "code": -629,
+    "message": "用户名与密码不匹配",
+    "ts": 1550730464
+}
+```
 
-所以我们要先从其他地方获取一个 cookie.
+每种不同的 API 在错误时返回的 `code` 丰富多彩(确信), 可能是正数也可能是负数, 可能上万也可能是个位数, 不要问, 问就是你菜.
 
-我们可以用 /api/oauth2/getKey(获取加密密码用的 hash 和公钥) 来获取一个 cookie
+# 登录和登出
+(Bilibili oauth2 v3)
 
-    String cookie = bilibiliAPI.getPassportService()
-        .getKey()
-        .execute()
-        .headers()
-        .get("Set-cookie");
+登陆和登出均为异步方法, 需要在协程上下文中执行(接下去不会特地强调这一点).
 
-/captcha 不验证 cookie 正确性, 我们可以直接使用假的 cookie (比如 123456)对其发起验证码请求, 它会记录下这个假的 cookie 和 验证码 的对应关系, 一样能验证成功. 但是不推荐这么做.
-
-简单地说, 只要我们是带 cookie 访问 /captcha 的, 那么我们得到的验证码, 是和这个 cookie 绑定的. 我们接下去用这个 cookie 和 这个验证码的值 去进行带验证码的登录, 就可以成功登陆.
-
-至于验证码怎么处理, 可以显示给最终用户, 让用户来输入, 或者用一些预训练模型自动识别验证码.
-
-这个带验证码的登录接口也会继续抛出 CaptchaMismatchException, 如果验证码输入错误的话.
-
-### SSO
-通过 SSO API 可以将 accessToken 转为 cookie, 用 cookie 就可以访问 B站 的 Web API.
-
-B站客户端内置的 WebView 就是通过这种方式来工作的(WebView 访问页面时, 处于登录状态).
-
-首先, 我们需要登录
-
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    bilibiliAPI.login(String username, String password);
-
-通过
-
-    bilibiliAPI.toCookies();
-
-来得到对应的 cookies, 类型为 Map<String, List\<Cookie>>, key 为 domain(可能是通配类型的, 例如 ".bilibili.com"), value 为此 domain 对应的 cookies.
-
-如果只想得到用于进行 SSO 操作的那条 URL, 可以这么做
-
-    String goUrl = "https://account.bilibili.com/account/home";
-    bilibiliAPI.getSsoUrl(goUrl);
-
-返回值是一个 HttpUrl, 里面 url 的值差不多是这样的
-
-    https://passport.bilibili.com/api/login/sso?access_key=c3bf6002bd2e539f5bfce56308f14789&appkey=1d8b6e7d45233436&build=515000&gourl=https%3A%2F%2Faccount.bilibili.com%2Faccount%2Fhome&mobi_app=android&platform=android&ts=1520079995&sign=654e2d00aa827aa1d7acef6fbeb9ee70
-
-如果 access_key 是正确的话, 这个 url 访问一下就登录 B站 了.
-
-如果想跟 B站 客户端一样弄一个什么内嵌 WebView 的话, 这个 API 就可以派上用场(只需要在 WebView 初始化完毕后让 WebView 去访问这个 url, 就登陆了)(goUrl 可以是任意值, 全部的 302 重定向完成后将进入这个地址, 如果 goUrl 不存在或为空则将跳转到B站首页).
-
-### Web API
-上文讲到, 通过 SSO API, 可以将 token 转为 cookie, 在本项目中, Web API 封装在 BilibiliWebAPI 中, 可以通过如下方式得到一个已经登录了的 BilibiliWebAPI 实例
-
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    bilibiliAPI.login(String username, String password);
-    BilibiliWebAPI bilibiliWebAPI = bilibiliAPI.getBilibiliWebAPI();
-
-IOException 在网络错误时抛出(获取 cookie 时需要进行网络请求)
-
-如果将之前的 bilibiliAPI.toCookies() 的返回值(cookiesMap)持久化了下来的话, 下次可以通过以下方式直接获得一个已经登录了的 BilibiliWebAPI 实例(注意, cookie 没有 refreshToken 机制, 过期不会自动刷新, 因此不推荐持久化 cookie)
-
-    Map<String, List<Cookie>> cookiesMap = bilibiliAPI.toCookies();
-    //序列化后存储
-    //...
-    //反序列化后得到上次存储的 cookiesMap
-    BilibiliWebAPI bilibiliWebAPI = new BilibiliWebAPI(cookiesMap);
-
-有了 BilibiliWebAPI 实例之后, 通过类似以下代码的形式来获取对应的 Service, API 调用方法和基于 Token 方式的 API 一致
-
-    LiveService liveService = bilibiliWebAPI.getLiveService();
-
-(这个 LiveService 是 Web API 里的 LiveService)
-
-由于 Web API 是有状态的, 每个 BilibiliWebAPI 内部维护的 CookieJar 是同一个, 一些验证有关的 API 可能会改变 cookie.
-
-通过以下代码来获得一个 BilibiliWebAPI 中目前持有的 CookieJar 的引用
-
-    bilibiliWebAPI.getCookieJar();
-
-### API 调用示例
-打印一个直播间的历史弹幕
-
-    long roomId = 3;
-    new BilibiliAPI()
-        .getLiveService()
-        .getHistoryBulletScreens(roomId)
-        .execute()
-        .body()
-        .getData()
-        .getRoom()
-        .forEach(liveHistoryBulletScreenEntity ->
-            System.out.printf("[%s]%s: %s\n",
-                liveHistoryBulletScreenEntity.getTimeline(),
-                liveHistoryBulletScreenEntity.getNickname(),
-                liveHistoryBulletScreenEntity.getText())
-        );
-
-签到
-
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    bilibiliAPI.login(username, password);
-    bilibiliAPI.getLiveService()
-        .getSignInfo()
-        .execute();
-
-发送一条弹幕到指定直播间
-
-    long roomId = 3;
-    String username = "yourUsername";
-    String password = "yourPassword";
-    BilibiliAPI bilibiliAPI = new BilibiliAPI();
-    bilibiliAPI.login(username, password);
-    
-    bilibiliAPI.getLiveService()
-        .sendBulletScreen(
-            new BulletScreenEntity(
-                    roomId,
-                    bilibiliAPI.getBilibiliAccount().getUserId(),   //实际上并不需要包含 mid 就可以正常发送弹幕, 但是真实的 Android 客户端确实发送了 mid
-                    "这是自动发送的弹幕"
-            )
-        )
-        .execute();
-
-(如果要调用需要鉴权的 API, 需要先登录)
-
-API 文档
-
-//TODO 文档编写中
-
-## Socket
-### 获取直播间实时弹幕
-
-    long roomId = 3;
-    EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-    LiveClient liveClient = new BilibiliAPI()
-        .getLiveClient(eventLoopGroup, roomId)
-        .registerListener(new MyListener())
-        .connect();
-
-.connect() 会抛出 IOException 当网络故障时.
-
-(connect 是阻塞的)
-
-使用 .getLiveClient() 前可以先登录也可以不登陆直接用, 如果 API 已经登录, 那么进房数据包中会带有用户ID, 尚不明确有什么作用, 可能与一些统计有关.
-
-多个 LiveClient 可以复用同一个 EventLoopGroup.
-
-(connect 方法运行结束只代表 socket 确实是连上了, 但是服务器还没有响应进房请求数据包)
-
-(当服务器响应进房请求数据包时才代表真的连上了, 此时会有一个连接成功的事件, 见下文)
-
-事件机制使用 Google Guava EventBus 实现, 监听器不需要继承任何类或者接口.
-
-    public class MyListener {
-        @Subscribe
-        public void onConnectSucceed(ConnectSucceedEvent connectSucceedEvent) {
-            //do something
-        }
-        
-        @Subscribe
-        public void onConnectionClose(ConnectionCloseEvent connectionCloseEvent) {
-            //do something
-        }
-        
-        @Subscribe
-        public void onDanMuMsg(DanMuMsgPackageEvent danMuMsgPackageEvent) {
-            DanMuMsgEntity danMuMsgEntity = danMuMsgPackageEvent.getEntity();
-            System.out.pintf("%s: %s\n", danMuMsgEntity.getUsername(), danMuMsgEntity.getMessage());
-        }
+```kotlin
+runBlocking {
+    BilibiliClient().run {
+        login(username, password)
+        logout()
     }
+}
+```
 
-如果持续 40 秒(心跳包为 30 秒)没有收到任何消息, 将视为掉线, 会跟服务器主动断开连接一样(这通常是发送了服务器无法读取的数据包)触发一次 ConnectionCloseEvent.
+`login` 方法返回一个 `LoginResponse` 实例, 下次可以直接赋值到没有登陆的 `BilibiliClient` 实例中来恢复登陆状态.
 
-    liveClient.closeChannel();
+```kotlin
+BilibiliClient().apply {
+    this.loginResponse = loginResponse
+}
+```
 
-即可阻塞关闭连接.
+`LoginResponse` 继承 `Serializable`, 可被序列化(JVM 序列化).
 
-    liveClient.closeChannelAsync();
+可能的错误返回有两种:
 
-即可异步关闭连接.
+    -629 用户名与密码不匹配
+    -105 验证码错误
 
-    eventLoopGroup.shutdownGracefully();
+如果仅使用用户名与密码进行登陆并且得到了 `-105` 的结果, 那么说明需要验证码(通常是由于多次错误的登陆尝试导致的).
 
-即可关闭事件循环, 结束 Nio 工作线程(所有使用这个 EventLoopGroup 的 LiveClient 也将在此时被关闭).
+原始返回如下所示
 
-如果需要在直播间发送弹幕可以直接使用如下代码(需要先登录)
+    {"ts":1550569982,"code":-105,"data":{"url":"https://passport.bilibili.com/register/verification.html?success=1&gt=b6e5b7fad7ecd37f465838689732e788&challenge=9a67afa4d42ede71a93aeaaa54a4b6fe&ct=1&hash=105af2e7cc6ea829c4a95205f2371dc5"},"message":"验证码错误!"}
 
-    String message = "这是一条弹幕";
-    liveClient.sendBulletScreen(message);
+自行访问 `commonResponse.data.obj.url.string` 打开一个极验弹窗, 完成滑动验证码后再次调用登陆接口:
 
-所有的事件(有些数据包我也不知道它里面的一些值是什么含义, /record 目录下面有抓取到的 Json, 可以用来查看):
+```kotlin
+login(username, password, challenge, secCode, validate)
+```
 
-| 事件 | 抛出条件 | 含义 |
-| :--- | :--- | :--- |
-| ActivityEventPackageEvent | 收到 ACTIVITY_EVENT 数据包 | 活动事件 |
-| ChangeRoomInfoPackageEvent | 收到 CHANGE_ROOM_INFO 数据包 | 更换房间背景图片 |
-| ComboEndPackageEvent | 收到 COMBO_END 数据包 | 礼物连发结束 |
-| ComboSendPackageEvent | 收到 COMBO_SEND 数据包 | 礼物连发开始 |
-| ConnectionCloseEvent | 连接断开(主动或被动) | |
-| ConnectSucceedEvent | 进房成功 | |
-| CutOffPackageEvent | 收到 CUT_OFF 数据包 | 被 B站 管理员强制中断 |
-| DanMuMsgPackageEvent | 收到 DANMU_MSG 数据包 | 弹幕消息 |
-| EntryEffectPackageEvent | 收到 ENTRY_EFFECT 数据包 | 尚不明确 |
-| EventCmdPackageEvent | 收到 EVENT_CMD 数据包 | 尚不明确 |
-| GuardBuyPackageEvent | 收到 GUARD_BUY 数据包 | 船票购买 |
-| GuardLotteryStartPackageEvent | 收到 GUARD_LOTTERY_START 数据包 | 船票购买后的抽奖活动 |
-| GuardMsgPackageEvent | 收到 GUARD_MSG 数据包 | 舰队消息(登船) |
-| LivePackageEvent | 收到 LIVE 数据包 | 开始直播 |
-| NoticeMsgPackageEvent | 收到 NOTICE_MSG 数据包 | 获得大奖的通知消息 |
-| PkAgainPackageEvent | 收到 PK_AGAIN 数据包 | 下面几个都是 PK 有关的事件 |
-| PkClickAgainPackageEvent | 收到 PK_CLICK_AGAIN 数据包 |
-| PkEndPackageEvent | 收到 PK_END 数据包 |
-| PkInviteFailPackageEvent | 收到 PK_INVITE_FAIL 数据包 |
-| PkInviteInitPackageEvent | 收到 PK_INVITE_INIT 数据包 |
-| PkInviteSwitchClosePackageEvent | 收到 PK_INVITE_SWITCH_CLOSE 数据包 |
-| PkInviteSwitchOpenPackageEvent | 收到 PK_INVITE_SWITCH_OPEN 数据包 |
-| PkMatchPackageEvent | 收到 PK_MATCH 数据包 |
-| PkMicEndPackageEvent | 收到 PK_MIC_END 数据包 |
-| PkPrePackageEvent | 收到 PK_PRE 数据包 |
-| PkProcessPackageEvent | 收到 PK_PROCESS 数据包 |
-| PkSettlePackageEvent | 收到 PK_SETTLE 数据包 |
-| PkStartPackageEvent | 收到 PK_START 数据包 |
-| PreparingPackageEvent | 收到 PREPARING 数据包 | 停止直播 |
-| RaffleEndPackageEvent | 收到 RAFFLE_END 数据包 | 抽奖结束(小奖, 通常是不定期活动) |
-| RaffleStartPackageEvent | 收到 RAFFLE_START 数据包 | 抽奖开始(小奖) |
-| ReceiveDataPackageDebugEvent | 该事件用于调试, 收到任何 Data 数据包时都会触发 | |
-| RoomAdminsPackageEvent | 收到 ROOM_ADMINS 数据包 | 房管变更 |
-| RoomBlockMsgPackageEvent | 收到 ROOM_BLOCK_MSG 数据包 | 房间黑名单(房间管理员添加了一个用户到黑名单) |
-| RoomLockPackageEvent | 收到 ROOM_LOCK 数据包 | 房间被封 |
-| RoomRankPackageEvent | 收到 ROOM_RANK 数据包 | 小时榜 |
-| RoomShieldPackageEvent | 收到 ROOM_SHIELD 数据包 | 房间屏蔽 |
-| RoomSilentOffPackageEvent | 收到 ROOM_SILENT_OFF 数据包 | 房间结束禁言 |
-| RoomSilentOnPackageEvent | 收到 ROOM_SILENT_ON 数据包 | 房间开启了禁言(禁止某一等级以下的用户发言) |
-| SendGiftPackageEvent | 收到 SEND_GIFT 数据包 | 送礼 |
-| SendHeartBeatPackageEvent | 每次发送心跳包后触发一次 | |
-| SpecialGiftPackageEvent | 收到 SPECIAL_GIFT 数据包 | 节奏风暴(20 倍以下的)(只在对应房间内有, 不会全站广播) |
-| SysGiftPackageEvent | 收到 SYS_GIFT 数据包 | 系统礼物(20 倍以上节奏风暴, 活动抽奖等) |
-| SysMsgPackageEvent | 收到 SYS_MSG 数据包 | 系统消息(小电视等) |
-| TVEndPackageEvent | 收到 TV_END 数据包 | 小电视抽奖结束(大奖的获得者信息) |
-| TVStartPackageEvent | 收到 TV_START 数据包 | 小电视抽奖开始 |
-| UnknownPackageEvent | B站新增了新种类的数据包, 出现此情况请提交 issue | |
-| ViewerCountPackageEvent | 收到 房间人数 数据包(不是 Json) | |
-| WarningPackageEvent | 收到 WARNING 数据包 | 警告信息 |
-| WelcomeActivityPackageEvent | 收到 WELCOME_ACTIVITY 数据包 | 欢迎(活动) |
-| WelcomePackageEvent | 收到 WELCOME 数据包 | 欢迎(通常是 VIP) |
-| WelcomeGuardPackageEvent | 收到 WELCOME_GUARD 数据包 | 欢迎(舰队) |
-| WishBottlePackageEvent | 收到 WISH_BOTTLE 数据包 | 许愿瓶 |
+`challenge` 为本次极验的唯一标识(在一开始给出的 url 中)
 
-事件里面可以取到解析好的 POJO, 然后可以从里面取数据, 见上面的监听器示例.
+`validate` 为极验返回值
 
-# 特别说明
-## DANMU_MSG 中的各个字段含义
-在直播间实时弹幕推送流中, 存在一种类型为 DANMU_MSG 的数据包, 它里面存储的 JSON, 全部都是 JsonArray, 并且每个元素类型不一样, 含义不一样.
+`secCode` 为 `"$validate|jordan"`
 
-简单地说, 这个 JSON 完全无法自描述而且很多字段猜不到是什么含义, 它的示例见 /record 文件夹(还有一份带备注的版本, 里面记录了已经猜出的字段含义).
+(注意, 极验会根据滑动的轨迹来识别人机, 所以要为最终用户打开一个 WebView 来进行真人操作而不能自动完成. 极验最终返回的是一个 jsonp, 里面包含以上三个参数, 详见极验接入文档).
 
-已经猜出的字段, 可以直接从 DanMuMsgEntity 里面用对应的方法取得, 对于没有猜出的字段, 需要类似这样来获取:
+注意, `BilibiliClient` 不能严格保证线程安全, 如果在登出的同时进行登录操作可能引发错误(想要这么做的人一定脑子瓦特了).
 
-    int something = danMuMsgEntity.getInfo().get(0).getAsJsonArray().get(2).getAsInt();
+登陆后, 可以访问全部 API(注意, 有一些明显不需要登录的 API 也有可能需要登录).
 
-如果你可以明确其中的字段含义, 欢迎提交 issue.
+由于各种需要登陆的 API 在未登录时返回的 `code` 并不统一, 因此没有办法做自动 `token` 刷新, 自己看着办.
 
-## 直播间 ID 问题
-一个直播间, 我们用浏览器去访问它, 他可能是这样的
+在真实的客户端上, 每次一打开 APP 就会访问[个人信息 API](#获取个人信息)来确定 `token` 是否仍然可用, 这就是 B站 自己的解决方案.
 
-    http://live.bilibili.com/3
-    
-我们可能会以为后面的 3 就是这个直播间的 room_id, 其实并不是.
+# 访问 API
+不要问文档, 用自动补全(心)来感受. 以下给出几个示例
 
-我们能直接看到的这个号码, 其实是 show_room_id.
+## 获取个人信息
+(首先要登陆)
 
-所有直播间号码小于 1000 的直播间, show_room_id 和 room_id 是不相等的(room_id 在不少 API 里又叫 cid).
+```kotlin
+val myInfo = bilibiliClient.appAPI.myInfo().await()
+```
 
-一些 API 能提供自动跳转功能, 也就是用这个 show_room_id 作为参数, 返回的信息是跳转到对应的 room_id 之后的返回信息.
+返回用户 ID, vip 信息等.
 
-简单地说, 一些 API 用 show_room_id 作为参数可以正常工作, 而另一些不能. 所以尽可能使用 room_id 作为参数来调用 API.
+## 搜索
+当我们想看某些内容时, 我们会首先使用搜索功能, 例如
 
-room_id 的获取要通过
+```kotlin
+val searchResult = bilibiliClient.appAPI.search(keyword = "刀剑神域").await()
+```
 
-    http://api.live.bilibili.com/AppRoom/index?room_id=3&platform=android
+实际上这对应客户端上的 搜索 -> 综合.
 
-其中, response.data.room_id 就是其真实的 room_id, 例子中的这个直播间的真实 room_id 为 23058
+如果要搜索番剧则使用 `bilibiliClient.appAPI.searchBangumi`.
 
-在代码中我们这样做
+同理, 搜索直播, 用户, 影视, 专栏分别使用 `searchLive`, `searchUser`, `searchMovie`, `searchArticle`.
 
-    long showRoomId = 3;
-    long roomId = bilibiliAPI.getLiveService()
-                    .getRoomInfo(showRoomId)
-                    .execute()
-                    .body()
-                    .getData()
-                    .getRoomId();
+所有的搜索都使用 `pageNumber` 参数来控制翻页(从 1 开始).
 
-由此, 我们获得了直播间的真实 room_id, 用它访问其他 API 就不会出错了.
+## 获取视频播放地址
+获取视频实际播放地址的 API 比较特殊, 被单独分了出来, 示例如下
 
-## 服务器返回非 0 返回值时
-当服务器返回的 JSON 中的 code 字段非 0 时(有错误发生), 该 JSON 可能是由服务端过滤器统一返回的, 因此其 JSON 格式(字段类型)将和实体类不一样, 此时会导致 JsonParseErrorException.
+```kotlin
+val videoPlayUrl = bilibiliClient.playerAPI.videoPlayUrl(aid = 41517911, cid = 72913641).await()
+```
 
-为了让调用代码不需要写很多 try catch, 因此当服务器返回的 code 非 0 时, 封装好的 OkHttpClientInterceptor 将把 data 字段变为 null(发生错误时, data 字段没有实际有效的数据).
+`aid` 即 av 号, 只能表示视频播放的那个页面, 如果一个视频有多个 `p`, 那么每个 `p` 都有单独的 `cid`.
 
-因此只需要判断 code 是否是 0 即可知道 API 是否成功执行, 不需要异常捕获.
+在 Web 端, URL 通常是这样的
 
-(B站所有 API 无论是否执行成功, HttpStatus 都是 200, 判断 HTTP 状态码是无用的, 必须通过 JSON 中的 code 字段来知道 API 是否执行成功).
+    https://www.bilibili.com/video/av44541340/?p=2
 
-# 测试
-测试前需要先设置用户名和密码, 在 src/test/resources 目录下, 找到 config-template.json, 将其复制一份到同目录下并命名为 config.json 然后填写其中的字段即可.
+实际上就是选择了该 `aid` 下的第二个 `cid`(注意, 参数里使用的 `cid` 不是这个 p 的序号, 它也是一个很长的数字).
 
-本项目使用 JUnit 作为单元测试框架. 命令行只需要执行
+简单的来说, `aid` 和 `cid` 加在一起才能表示一个视频流(为什么 `cid` 不能直接表示一个视频我也不知道).
 
-    gradle test
+因此无论是获取视频播放地址, 还是获取弹幕列表, 都要同时传入 `aid` 与 `cid`.
 
-如果要在 IDEA 上进行测试, 需要运行 test 目录中的 RuleSuite 类(在 IDEA 中打开这个类, 点击行号上的重叠的两个向右箭头图标).
+而 `cid` 在哪里获得呢, 如下所示
 
-# 继续开发
-如果您想加入到开发中, 欢迎提交 Merge Request.
+```kotlin
+val view = bilibiliClient.appAPI.view(aid = 41517911).await()
+```
 
-本项目的 Http 请求全部使用 Retrofit 完成, 因此请求的地址和参数需要放在接口中统一管理, 如果您对 Retrofit 不是很熟悉, 可以看[这篇文章](http://square.github.io/retrofit/).
+该接口返回对一个视频页面的描述信息(甚至包含广告和推荐), 客户端根据这些信息生成视频页面.
 
-服务器返回值将被 Gson 转换为 Java POJO(Entity), 通过[这篇文章](https://github.com/google/gson/blob/master/UserGuide.md)来了解 Gson.
+其中 `data.cid` 为默认 `p` 的 `cid`. `data.pages[n].cid` 为每个 `p` 的 `cid`. 如果只有一个 `p` 那么说明视频没有分 `p`.
 
-POJO 使用 IDEA 插件 [GsonFormat](https://plugins.jetbrains.com/plugin/7654-gsonformat) 自动化生成, 而非手动编写, 并且尽可能避免对自动生成的结果进行修改以免导致可能出现混淆或含义不明确的情况.
+请求视频地址将访问如下结构的内容
 
-(插件必须开启 "use SerializedName" 选项从而保证字段名符合小驼峰命名法)
-
-由于 B站 一些 JSON 是瞎鸡巴来的, 比如可能出现以下这种情况
-
-    "list": [
-        {
-            "name": "value",
+```json
+{
+    "code": 0,
+    "data": {
+        "accept_description": [
+            "高清 1080P+",
+            "高清 1080P",
+            "高清 720P",
+            "清晰 480P",
+            "流畅 360P"
+        ],
+        "accept_format": "hdflv2,flv,flv720,flv480,flv360",
+        "accept_quality": [
+            112,
+            80,
+            64,
+            32,
+            16
+        ],
+        "dash": {
+            "audio": [
+                {
+                    "bandwidth": 319173,
+                    "base_url": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30280.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=ks3u&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=33273eaf403739d9f51304509f55589e",
+                    "codecid": 0,
+                    "id": 30280
+                },
+                {
+                    "bandwidth": 67326,
+                    "base_url": "http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30216.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=kodou&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=3d1f9b836430bb8033b2f318faf42f9b",
+                    "codecid": 0,
+                    "id": 30216
+                }
+            ],
+            "video": [
+                {
+                    "bandwidth": 376693,
+                    "base_url": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30015.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&gen=playurl&nbs=1&oi=3670888782&os=ks3u&platform=android&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&upsig=82bc845bce9f22b731b062bf83fa000f",
+                    "codecid": 7,
+                    "id": 16
+                },
+                ...
+                {
+                    "bandwidth": 2615324,
+                    "base_url": "http://upos-hz-mirrorcosu.acgvideo.com/upgcxcode/18/58/77995818/77995818-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEuENvNC8aNEVEtEvE9IMvXBvE2ENvNCImNEVEIj0Y2J_aug859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859IB_&deadline=1551113319&dynamic=1&gen=playurl&oi=3670888782&os=cosu&platform=android&rate=0&trid=925269b941bf4883ac9ec92c6ab5af4e&uipk=5&uipv=5&um_deadline=1551113319&um_sign=22fef3c0efa0d23388429f6926fad298&upsig=c4768c036beb667ba4648369770f8de8",
+                    "codecid": 7,
+                    "id": 80
+                }
+            ]
         },
-        ...
-    ] 
+        "fnval": 16,
+        "fnver": 0,
+        "format": "flv480",
+        "from": "local",
+        "quality": 32,
+        "result": "suee",
+        "seek_param": "start",
+        "seek_type": "offset",
+        "timelength": 175332,
+        "video_codecid": 7,
+        "video_project": true
+    },
+    "message": "0",
+    "ttl": 1
+}
+```
 
-此时自动生成的类型将是
+(由于内容太长, 去除了一部分内容)
 
-    List<List> lists
+注意, 视频下载地址有好几个(以上返回内容中被折叠成了两个), 但是实际上他们都是一样的内容, 只是清晰度不同. `data.dash.video.id` 实际上代表 `data.accept_quality`.
 
-因此必须要为内层元素指定一个具有语义的名称, 例如 Name, 此时类型变为
+视频和音频是分开的, 视频和音频都返回 `m4s` 文件, 将其合并即可得到完整的 `mp4` 文件.
 
-    List<Name> names
+`data.quality` 指默认选择的清晰度, 通常情况下移动网络会自动选择 `32`, 即 "清晰 480P"(在 `data.accept_description` 中对应).
 
-API 尽可能按照 UI 位置来排序, 例如
+对于番剧来说, 也使用 `aid` 与 `cid` 来获得播放地址
 
-    侧拉抽屉 -> 直播中心 -> 我的关注
+```kotlin
+val bangumiPlayUrl = bilibiliClient.playerAPI.bangumiPlayUrl(aid = 42714241, cid = 74921228).await()
+```
 
-这是 "直播中心" 页面的第一个可点击控件, 那么下一个 API 或 API 组就应该是第二个可点击组件 "观看历史".
+返回内容差不多是一个原理, 这里就不赘述了.
 
-和 UI 不对应的 API, 按照执行顺序排序, 例如进入直播间会按顺序访问一系列 API, 这些 API 就按照时间顺序排序.
+如何获得番剧的 `aid` 与 `cid` 呢. 我们都知道, 实际上番剧那个页面的唯一标识是 "季", 同一个番的不同 "季" 其实是不同的东西.
 
-对于不知道怎么排的 API, 瞎鸡巴排就好了.
+我们在番剧搜索页面可以得到番剧的 `season`, 这代表了一个番剧的某一季的页面.
+
+然后我们用 `season` 来打开番剧页面.
+
+```kotlin
+val season = bilibiliClient.mainAPI.season(seasonId = 25617).await()
+```
+
+返回值中的 `result.seasons[n].season_id` 为该番所有季的 id(包含用来作为查询条件的 `seasonId`).
+
+该 API 还可以用 `episodeId` 作为查询条件, 即以集为条件打开一个番剧页面(会跳转到对应的季).
+
+返回值中的 `result.episodes` 包含了当前所选择的季的全部集的 `aid` 与 `cid`.
+
+## 查看视频下面的评论
+看完了视频当然要看一下傻吊网友都在说些什么. 使用以下 API 获取一个视频的评论.
+
+```kotlin
+val reply = bilibiliClient.mainAPI.reply(oid = 44154463).await()
+```
+
+这里的 `oid` 指 `aid`(其他一些 API 中 `oid` 也可能指 `cid` 详见方法上面的注释).
+
+评论是不分 `p` 的, 所有评论都是在一起的.
+
+可以额外使用一个 `next` 参数来指定返回的起始楼层(即翻页).
+
+楼层是越翻越小的, 所以 `next` 也要越来越小.
+
+看到了傻吊网友们的评论是不够的, 我们还想看到杠精与其隔着屏幕对喷的场景, 因此我们要获取评论的子评论, 即评论的评论
+
+```kotlin
+val childReply = bilibiliClient.mainAPI.childReply(oid = 16622855, root = 1405602348).await()
+```
+
+其中的 `root` 表示根评论的 id.
+
+每个评论都有自己的 `replyId`, `parentId` 以及 `rootId`.
+
+假如一个人在一个评论的子评论里发布了一个评论并且 at 了其他人发的评论, 那么其 `parentId` 是他所 at 的评论, 其 `rootId` 为所在的根评论.
+
+如果不满足对应的层级逻辑关系(例如本身为根评论), `parentId` 或 `rootId` 可能为 0.
+
+用额外的 `minId` 参数来指定返回的起始子楼层.
+
+注意, 子楼层是越翻越大的.
+
+如果一个根评论下面有很多个喷子在互喷, 会导致看不清, 客户端上有一个按钮 "查看对话" 就是解决这个问题的.
+
+```kotlin
+val chatList = bilibiliClient.mainAPI.chatList(oid = 34175504, root = 1136310360, dialog = 1136351035).await()
+```
+
+`root` 为根评论 ID, `dialog` 为父评论 ID.
+
+用 `minFloor` 控制分页, 原理同上.
+
+番剧下面的评论用一样的方式获取.
+
+## 获得一个视频的弹幕
+看评论自然不够刺激, 我们想看到弹幕!
+
+获取弹幕非常简单
+
+```kotlin
+val danmakuFile = bilibiliClient.danmakuAPI.list(aid = 810872, oid = 1176840).await()
+```
+
+弹幕是一个文件, 可能非常大, 里面是二进制内容.
+
+为了解析弹幕, 我们要用到另一个类
+
+```kotlin
+val (flagMap, danmakuList) = DanmakuParser.parser(danmakuFile.byteStream())
+```
+
+`flagMap` 类型为 `Map<Long, Int>` 键和值分别表示 弹幕ID 与 弹幕等级.
+
+弹幕等级在区间 \[1, 10\] 内, 低于客户端设置的 "弹幕云屏蔽等级" 的弹幕将不会显示出来.
+
+`danmakuList` 类型为 `List<Danmaku>`, 内含所有解析得到的弹幕.
+
+使用以下代码来输出全部弹幕的内容
+
+```kotlin
+danmakuList.forEach {
+    println(it.content)
+}
+```
+
+注意, 弹幕的解析是惰性的, `danmakuList` 是一个 `Sequence`. 如果同时持有很多未用完的 `danmakuList` 的引用可能会造成大量内存浪费.
+
+客户端的弹幕屏蔽设置是对弹幕中的 `user` 属性做的. 而实际上 `danmaku.user` 是一个字符串.
+
+这个字符串是 用户ID 的 `CRC32` 的校验和.
+
+众所周知, 一切 hash 算法都有冲突的问题. 这也就意味着, 屏蔽一个用户的同时可能屏蔽掉了多个与该用户 hash 值相同的用户.
+
+在另一方面, 通过这个 `CRC32` 校验和进行用户 ID 反查, 将查询到多个可能的用户, 因此无法完全确定一条弹幕到底是哪个用户发送的.
+
+如果想获得发送这条弹幕的所有可能的用户的 ID, 可以通过以下方法:
+
+```kotlin
+val possibleUserIds = danmaku.calculatePossibleUserIds()
+```
+
+返回一个 `List<Int>`, 内容为所有可能的用户 ID(至少有一个).
+
+注意, 第一次使用 `CRC反查` 功能将花费大约 `300ms` 来生成彩虹表, 如果想手动初始化请使用以下代码
+
+```kotlin
+Crc32Cracker
+```
+
+(`Crc32Cracker` 是一个惰性初始化的单例)
+
+通常情况下, 一次 `CRC反查` 耗时大约 `1ms`.
+
+由于这是一个比较耗时的操作, 请不要每条弹幕都如此操作(相比较 6000 条弹幕的解析只需要 `150ms`).
+
+番剧的弹幕同理.
+
+## 发送视频弹幕
+光看不发憋着慌, 我们来发送一条视频弹幕:
+
+```kotlin
+bilibiliClient.mainAPI.sendDanmaku(aid = 40675923, cid = 71438168, progress = 2297, message = "2333").await()
+```
+
+其中 `progress` 是播放器时间, 其他观众将看到你的弹幕在视频的此处出现, 单位为毫秒.
+
+`message` 应该是有长度限制的, 但是没有测过.
+
+如果不确定视频的长度, 需要从[视频播放地址的 API](#获取视频播放地址) 中的 `data.timelength` 来获得, 单位也是毫秒.
+
+## 获取直播弹幕
+刚进入直播间时, 立即看到的十条弹幕实际上是最近的历史弹幕, 通过以下方式来获取
+
+```kotlin
+bilibiliClient.liveAPI.roomMessage(roomId).await()
+```
+
+接下来的弹幕都是实时弹幕, 直播间实时弹幕通过 `Websocket` 来推送.
+
+```kotlin
+val job = bilibiliClient.liveClient(roomId = 3) {
+    onConnect = {
+        println("Connected")
+    }
+
+    onPopularityPacket = { _, popularity ->
+        println("Current popularity: $popularity")
+    }
+
+    onCommandPacket = { _, jsonObject ->
+        println(jsonObject)
+    }
+
+    onClose = { _, closeReason ->
+        println(closeReason)
+    }
+}.launch()
+```
+
+服务器推送的 `Message` 有两种, 一种是 `人气值` 数据, 另一种是 `Command` 数据.
+
+`Command` 数据包用于控制客户端渲染何种内容. 弹幕, 送礼, 系统公告等全部都是由 `Command` 数据包控制的, 其本体为一个 `JsonObject`.
+
+例如一个弹幕数据是这样的(`cmd` 字段的值为 `DANMU_MSG`):
+
+```json
+{"cmd":"DANMU_MSG","info":[[0,1,25,16777215,1553417856,1553414245,0,"9e539d78",0,0,0],"记得存档！",[3432444,"喵的叫一声",0,0,0,10000,1,""],[6,"日常","奶粉の日常",35399,5805790,""],[22,0,5805790,">50000"],["",""],0,0,null,{"ts":1553417856,"ct":"87255D9C"}]}
+```
+
+`Welcome` 的数据是这样的
+```json
+{"cmd":"WELCOME","data":{"uid":110208099,"uname":"霸刀宋壹i","is_admin":false,"svip":1}}
+```
+
+各种 `Command` 数据包的结构经常改变, 因此不提供实体类.
+
+由于 `DANMU_MSG` 的数据结构太过意识流, 因此提供了额外的辅助工具来方便地解析它.
+
+`DanmakuMessage` 是一个 `inline class` 请不要对其进行太过复杂的操作.
+
+```kotlin
+onCommandPacket = { _, jsonObject ->
+    val cmd by jsonObject.byString
+    println(
+        if (cmd == "DANMU_MSG") {
+            with(DanmakuMessage(jsonObject)) {
+                "${if (fansMedalInfo.isNotEmpty()) "[$fansMedalName $fansMedalLevel] " else ""}[UL$userLevel] $nickname: $message"
+            }
+        } else {
+            jsonObject.toString()
+        }
+    )
+}
+```
+
+输出:
+
+```
+[甜甜天 7] [UL25] czp3009: 233
+```
+
+更多 `Command` 数据包的数据结构详见本项目的 [/record/直播弹幕](record/直播弹幕) 文件夹.
+
+注意, `onPopularityPacket`, `onCommandPacket` 这些回调不能进行耗时操作.
+
+关闭连接
+
+```kotlin
+job.cancel()
+```
+
+## 发送直播弹幕
+在直播间里发送弹幕也非常简单(必须先登陆)
+
+```kotlin
+liveClient.sendMessage("我上我也行").await()
+```
+
+注意, 除了弹幕超长(普通用户为 20 个 Unicode 字符, 老爷, 会员可以额外加长)会导致抛出异常, 其他情况都会正常返回(`code` 为 0).
+
+完全正常返回时(弹幕正确的被发送了), 返回内容中的 `message` 为一个空字符串.
+
+如果不为空字符串, 则表示不完全正常
+
+例如返回内容的 `message` 为 "msg repeat" 则表示短时间重复发送相同的弹幕而被服务器拒绝, 但是返回的 `code` 确实是 0.
+
+其他情况诸如包含特殊字符, 包含不文明词语等均会导致不完全正常的返回.
+
+正常返回时, 就算不完全正常, 客户端也会将这条弹幕显示到屏幕上, 如果不是完全正常的, 那么这条弹幕就只有自己能看见(刷新后也会消失).
+
+需要额外判断返回的 `message` 是否为空字符串来确认这条弹幕有没有被正确发送.
 
 # License
 GPL V3
