@@ -287,8 +287,9 @@ data class Reply(
                             var currentLevel: Int, // 5
                             @SerializedName("current_min")
                             var currentMin: Int, // 0
+                            //https://github.com/czp3009/bilibili-api/issues/28
                             @SerializedName("next_exp")
-                            var nextExp: Int // 0
+                            var nextExp: String // 0
                     )
 
                     data class Vip(
@@ -356,8 +357,9 @@ data class Reply(
                         var currentLevel: Int, // 4
                         @SerializedName("current_min")
                         var currentMin: Int, // 0
+                        //https://github.com/czp3009/bilibili-api/issues/28
                         @SerializedName("next_exp")
-                        var nextExp: Int // 0
+                        var nextExp: String // 0
                 )
 
                 data class Nameplate(
@@ -601,8 +603,9 @@ data class Reply(
                         var currentLevel: Int, // 5
                         @SerializedName("current_min")
                         var currentMin: Int, // 0
+                        //https://github.com/czp3009/bilibili-api/issues/28
                         @SerializedName("next_exp")
-                        var nextExp: Int // 0
+                        var nextExp: String // 0
                 )
 
                 data class FansDetail(
@@ -771,8 +774,9 @@ data class Reply(
                             var currentLevel: Int, // 5
                             @SerializedName("current_min")
                             var currentMin: Int, // 0
+                            //https://github.com/czp3009/bilibili-api/issues/28
                             @SerializedName("next_exp")
-                            var nextExp: Int // 0
+                            var nextExp: String // 0
                     )
                 }
 
@@ -978,8 +982,9 @@ data class Reply(
                                 var currentLevel: Int, // 3
                                 @SerializedName("current_min")
                                 var currentMin: Int, // 0
+                                //https://github.com/czp3009/bilibili-api/issues/28
                                 @SerializedName("next_exp")
-                                var nextExp: Int // 0
+                                var nextExp: String // 0
                         )
 
                         data class Nameplate(
@@ -1081,8 +1086,9 @@ data class Reply(
                                     var currentLevel: Int, // 4
                                     @SerializedName("current_min")
                                     var currentMin: Int, // 0
+                                    //https://github.com/czp3009/bilibili-api/issues/28
                                     @SerializedName("next_exp")
-                                    var nextExp: Int // 0
+                                    var nextExp: String // 0
                             )
 
                             data class Nameplate(
@@ -1211,8 +1217,9 @@ data class Reply(
                             var currentLevel: Int, // 5
                             @SerializedName("current_min")
                             var currentMin: Int, // 0
+                            //https://github.com/czp3009/bilibili-api/issues/28
                             @SerializedName("next_exp")
-                            var nextExp: Int // 0
+                            var nextExp: String // 0
                     )
 
                     data class Pendant(

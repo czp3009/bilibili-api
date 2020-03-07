@@ -276,8 +276,9 @@ data class ChildReply(
                             var currentLevel: Int, // 5
                             @SerializedName("current_min")
                             var currentMin: Int, // 0
+                            //https://github.com/czp3009/bilibili-api/issues/28
                             @SerializedName("next_exp")
-                            var nextExp: Int // 0
+                            var nextExp: String // 0
                     )
                 }
 
@@ -394,8 +395,9 @@ data class ChildReply(
                         var currentLevel: Int, // 5
                         @SerializedName("current_min")
                         var currentMin: Int, // 0
+                        //https://github.com/czp3009/bilibili-api/issues/28
                         @SerializedName("next_exp")
-                        var nextExp: Int // 0
+                        var nextExp: String // 0
                 )
             }
         }

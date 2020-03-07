@@ -390,8 +390,9 @@ data class Space(
                     var currentLevel: Int, // 5
                     @SerializedName("current_min")
                     var currentMin: Int, // 10800
+                    //https://github.com/czp3009/bilibili-api/issues/28
                     @SerializedName("next_exp")
-                    var nextExp: Int // 28800
+                    var nextExp: String // 28800
             )
         }
 

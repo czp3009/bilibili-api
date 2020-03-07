@@ -5,7 +5,7 @@
 
 # 使用
 ```groovy
-compile group: 'com.hiczp', name: 'bilibili-api', version: '0.1.1'
+compile group: 'com.hiczp', name: 'bilibili-api', version: '0.1.2'
 ```
 
 # 技术说明

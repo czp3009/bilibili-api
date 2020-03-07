@@ -15,8 +15,9 @@ data class MyInfo(
     data class Data(
             @SerializedName("birthday")
             var birthday: String, // 1995-11-18
+            //https://github.com/czp3009/bilibili-api/issues/27
             @SerializedName("coins")
-            var coins: Int, // 1025
+            var coins: Float, // 1025
             @SerializedName("email_status")
             var emailStatus: Int, // 0
             @SerializedName("face")
