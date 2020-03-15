@@ -115,7 +115,7 @@ login(username, password, challenge, secCode, validate)
 }
 ```
 
-需要手动判断`data.url`是否为`null`, 尽管这种情况不多见g
+需要手动判断`data.url`是否为`null`, 尽管这种情况不多见
 
 由于各种需要登陆的 API 在未登录时返回的 `code` 并不统一, 因此没有办法做自动 `token` 刷新, 自己看着办.
 
