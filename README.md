@@ -5,7 +5,7 @@
 
 # 使用
 ```groovy
-compile group: 'com.hiczp', name: 'bilibili-api', version: '0.1.2'
+compile group: 'com.hiczp', name: 'bilibili-api', version: '0.1.3'
 ```
 
 # 技术说明
@@ -101,6 +101,21 @@ login(username, password, challenge, secCode, validate)
 注意, `BilibiliClient` 不能严格保证线程安全, 如果在登出的同时进行登录操作可能引发错误(想要这么做的人一定脑子瓦特了).
 
 登陆后, 可以访问全部 API(注意, 有一些明显不需要登录的 API 也有可能需要登录).
+
+注意, 即使返回`code`为0也不一定登录成功, 例如
+
+```json
+{
+  "ts": 1584206212,
+  "code": 0,
+  "data": {
+    "status": 1,
+    "url": "https://passport.bilibili.com/mobile/verifytel_h5.html?mid\u003d517548681\u0026tel\u003d156****0364\u0026source\u003d2\u0026keepTime\u003d0\u0026appId\u003d878\u0026subId\u003d0\u0026ticket\u003d1"
+  }
+}
+```
+
+需要手动判断`data.url`是否为`null`, 尽管这种情况不多见g
 
 由于各种需要登陆的 API 在未登录时返回的 `code` 并不统一, 因此没有办法做自动 `token` 刷新, 自己看着办.
 
