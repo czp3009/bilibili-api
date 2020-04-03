@@ -1,6 +1,7 @@
 package com.hiczp.bilibili.api.player.model
 
 import com.google.gson.annotations.SerializedName
+import org.jetbrains.annotations.Nullable
 
 data class VideoPlayUrl(
         @SerializedName("code")
@@ -42,7 +43,9 @@ data class VideoPlayUrl(
             @SerializedName("video_codecid")
             var videoCodecid: Int, // 7
             @SerializedName("video_project")
-            var videoProject: Boolean // true
+            var videoProject: Boolean, // true
+            @SerializedName("durl")
+            var durl: List<Durl>
     ) {
         data class Dash(
                 @SerializedName("audio")
@@ -76,5 +79,18 @@ data class VideoPlayUrl(
                     var id: Int // 16
             )
         }
+
+        data class Durl(
+                @SerializedName("order")
+                var order: Int,
+                @SerializedName("length")
+                var length: Long,
+                @SerializedName("size")
+                var size: Long,
+                @SerializedName("url")
+                var url: String,
+                @SerializedName("backup_url")
+                var backupUrl: List<String>
+        )
     }
 }

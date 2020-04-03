@@ -21,11 +21,9 @@ data class LoginResponse(
             @SerializedName("status")
             var status: Int, // 0
             @SerializedName("token_info")
-            var tokenInfo: TokenInfo
+            var tokenInfo: TokenInfo,
             @SerializedName("url")
             var url: String
-            @SerializedName("status")
-            var status: int
     ) : Serializable {
         data class CookieInfo(
                 @SerializedName("cookies")
