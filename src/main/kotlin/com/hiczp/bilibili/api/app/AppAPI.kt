@@ -53,7 +53,7 @@ interface AppAPI {
             @Query("ad_extra") adExtra: String? = null,
             @Query("autoplay_card") autoplayCard: Int = 0,
             @Query("banner_hash") bannerHash: String? = null,
-            @Query("column") column: Int = 2,
+            @Query("column") column: Int = 3,
             @Query("device_type") deviceType: Int = 0,
             @Query("flush") flush: Int = 0,
             @Query("fnval") fnVal: Int = 16,

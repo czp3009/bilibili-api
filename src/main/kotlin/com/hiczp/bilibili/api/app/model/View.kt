@@ -76,7 +76,11 @@ data class View(
             @SerializedName("tname")
             var tname: String, // 星海
             @SerializedName("videos")
-            var videos: Int // 1
+            var videos: Int, // 1
+            @SerializedName("honor")
+            var honor: Honor,
+            @SerializedName("bvid")
+            var bvid: String //BV1xx411c79H
     ) {
         data class Cm(
                 @SerializedName("ad_info")
@@ -445,5 +449,28 @@ data class View(
                     var hasDanmu: Int // 0
             )
         }
+
+        data class Honor(
+                @SerializedName("icon")
+                var icon: String,
+                @SerializedName("icon_night")
+                var iconNight: String,
+                @SerializedName("text")
+                var text: String,
+                @SerializedName("text_extra")
+                var textExtra: String,
+                @SerializedName("text_color")
+                var textColor: String, //#F3921F
+                @SerializedName("text_color_night")
+                var textColorNight: String,
+                @SerializedName("bg_color")
+                var bgColor: String,
+                @SerializedName("bg_color_night")
+                var bgColorNight: String,
+                @SerializedName("url")
+                var url: String,
+                @SerializedName("url_text")
+                var urlText: String
+        )
     }
 }
