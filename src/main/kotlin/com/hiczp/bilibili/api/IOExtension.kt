@@ -2,7 +2,7 @@ package com.hiczp.bilibili.api
 
 import com.hiczp.bilibili.api.thirdpart.commons.BoundedInputStream
 import io.ktor.util.InternalAPI
-import kotlinx.io.errors.EOFException
+import io.ktor.utils.io.errors.EOFException
 import java.io.InputStream
 
 //减少包引入

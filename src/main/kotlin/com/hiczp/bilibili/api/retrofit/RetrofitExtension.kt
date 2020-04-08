@@ -3,14 +3,14 @@ package com.hiczp.bilibili.api.retrofit
 import okhttp3.FormBody
 
 inline fun FormBody.forEach(block: (String, String) -> Unit) {
-    repeat(size()) {
+    repeat(size) {
         block(encodedName(it), encodedValue(it))
     }
 }
 
 fun FormBody.raw() =
         StringBuilder().apply {
-            repeat(size()) {
+            repeat(size) {
                 if (it != 0) append('&')
                 append(encodedName(it))
                 append('=')
@@ -20,14 +20,14 @@ fun FormBody.raw() =
 
 fun FormBody.sortedRaw(): String {
     val nameAndValue = ArrayList<String>()
-    repeat(size()) {
+    repeat(size) {
         nameAndValue.add("${encodedName(it)}=${encodedValue(it)}")
     }
     return nameAndValue.sorted().joinToString(separator = "&")
 }
 
 fun FormBody.containsEncodedName(name: String): Boolean {
-    repeat(size()) {
+    repeat(size) {
         if (encodedName(it) == name) return true
     }
     return false
@@ -35,7 +35,7 @@ fun FormBody.containsEncodedName(name: String): Boolean {
 
 fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {
     with(formBody) {
-        repeat(size()) {
+        repeat(size) {
             addEncoded(encodedName(it), encodedValue(it))
         }
     }

@@ -25,17 +25,17 @@ class PlayerInterceptor(
         val request = chain.request()
 
         //添加 header
-        val header = request.headers().newBuilder().apply {
+        val header = request.headers.newBuilder().apply {
             add(Header.ACCEPT, "*/*")
             add(Header.USER_AGENT, "Bilibili Freedoooooom/MarkII")
             add(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8")
         }.build()
 
         //添加 Query Params
-        val oldUrl = request.url()
+        val oldUrl = request.url
         //如果是视频播放地址这个 API, 要用特殊的 appKey
         val isVideo = oldUrl.toString().startsWith(PlayerAPI.videoPlayUrl)
-        val url = StringBuilder(oldUrl.encodedQuery() ?: "").apply {
+        val url = StringBuilder(oldUrl.encodedQuery ?: "").apply {
             //appKey
             addParamEncode(Param.APP_KEY, if (isVideo) bilibiliClientProperties.videoAppKey else bilibiliClientProperties.appKey)
             //凭证有关
