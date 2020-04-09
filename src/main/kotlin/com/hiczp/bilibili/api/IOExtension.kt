@@ -32,7 +32,7 @@ fun InputStream.readFully(length: Int): ByteArray {
 /**
  * 以大端模式从流中读取一个 int
  */
-@UseExperimental(ExperimentalUnsignedTypes::class)
+@OptIn(ExperimentalUnsignedTypes::class)
 fun InputStream.readInt(): Int {
     val byteArray = readFully(4)
     return (byteArray[0].toUByte().toInt() shl 24) or
@@ -44,13 +44,13 @@ fun InputStream.readInt(): Int {
 /**
  * 以大端模式从流中读取一个 unsigned int
  */
-@UseExperimental(ExperimentalUnsignedTypes::class)
+@OptIn(ExperimentalUnsignedTypes::class)
 fun InputStream.readUInt() = readInt().toUInt()
 
 fun InputStream.bounded(size: Long) = BoundedInputStream(this, size)
 
-@UseExperimental(ExperimentalUnsignedTypes::class)
+@OptIn(ExperimentalUnsignedTypes::class)
 fun InputStream.bounded(size: UInt) = bounded(size.toLong())
 
-@UseExperimental(InternalAPI::class)
+@OptIn(InternalAPI::class)
 internal fun ByteArray.toPrettyPrintString() = joinToString(prefix = "[", postfix = "]") { "0x%02x".format(it) }

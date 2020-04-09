@@ -39,7 +39,7 @@ dependencies {
 compileKotlin {
     kotlinOptions {
         jvmTarget = jvm_target
-        freeCompilerArgs = ["-Xjvm-default=enable", "-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
+        freeCompilerArgs = ["-Xjvm-default=enable", "-Xopt-in=kotlin.RequiresOptIn", "-XXLanguage:+InlineClasses"]
     }
 }
 compileTestKotlin {
@@ -148,4 +148,8 @@ publishing {
 
 signing {
     sign publishing.publications.mavenJava
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    tasks.signMavenJavaPublication.onlyIf { taskGraph.hasTask tasks.publish }
 }

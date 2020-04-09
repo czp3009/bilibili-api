@@ -49,7 +49,7 @@ class LiveClient(
     /**
      * 开启连接
      */
-    @UseExperimental(KtorExperimentalAPI::class, ObsoleteCoroutinesApi::class, InternalAPI::class)
+    @OptIn(KtorExperimentalAPI::class, ObsoleteCoroutinesApi::class, InternalAPI::class)
     fun launch() = GlobalScope.launch(CoroutineExceptionHandler { _, throwable ->
         callback.onError?.invoke(this, throwable) ?: logger.error(throwable)
     }) {
