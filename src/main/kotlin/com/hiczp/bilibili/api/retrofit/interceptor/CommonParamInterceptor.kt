@@ -17,9 +17,9 @@ private val logger = KotlinLogging.logger {}
 class CommonParamInterceptor(private vararg val additionParams: ParamExpression) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var headers = request.headers()
-        var httpUrl = request.url()
-        var body = request.body()
+        var headers = request.headers
+        var httpUrl = request.url
+        var body = request.body
 
         //是否强制加到 Query(暂不存在强制加到 FormBody 的情况)
         var forceQuery = false
@@ -31,8 +31,8 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
 
         when {
             //如果是 GET 则添加到 Query
-            request.method() == Method.GET || forceQuery -> {
-                httpUrl = request.url().newBuilder().apply {
+            request.method == Method.GET || forceQuery -> {
+                httpUrl = request.url.newBuilder().apply {
                     additionParams.forEachNonNull { name, value ->
                         addQueryParameter(name, value)
                     }
@@ -60,7 +60,7 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
             //如果方式不为 GET 且 Body 不为空或者为 FormBody 则无法添加公共参数
             else -> {
                 logger.error {
-                    "Cannot add params to request: ${request.method()} ${request.url()} ${body.javaClass.simpleName}"
+                    "Cannot add params to request: ${request.method} ${request.url} ${body.javaClass.simpleName}"
                 }
             }
         }
@@ -69,7 +69,7 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
                 request.newBuilder()
                         .headers(headers)
                         .url(httpUrl)
-                        .method(request.method(), body)
+                        .method(request.method, body)
                         .build()
         )
     }

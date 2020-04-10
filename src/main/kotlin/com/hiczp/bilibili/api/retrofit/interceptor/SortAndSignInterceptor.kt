@@ -21,13 +21,13 @@ private val logger = KotlinLogging.logger {}
 class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val url = request.url()
-        val body = request.body()
+        val url = request.url
+        val body = request.body
 
         request = when {
             //判断 appKey 是否在 Query 里
             url.queryParameter(Param.APP_KEY) != null -> {
-                val sortedEncodedQuery = url.encodedQuery()!!.split('&').sorted().joinToString(separator = "&")
+                val sortedEncodedQuery = url.encodedQuery!!.split('&').sorted().joinToString(separator = "&")
                 request.newBuilder()
                         .url(url.newBuilder()
                                 .encodedQuery("$sortedEncodedQuery&${Param.SIGN}=${calculateSign(sortedEncodedQuery, appSecret)}")
@@ -46,7 +46,7 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
                     addEncoded(Param.SIGN, calculateSign(sortedRaw, appSecret))
                 }.build()
                 request.newBuilder()
-                        .method(request.method(), formBody)
+                        .method(request.method, formBody)
                         .build()
             }
 

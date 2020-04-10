@@ -15,7 +15,7 @@ import okhttp3.Response
 object FailureResponseInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-        val body = response.body()
+        val body = response.body
         if (!response.isSuccessful || body == null || body.contentLength() == 0L) return response
 
         //获取字符集
