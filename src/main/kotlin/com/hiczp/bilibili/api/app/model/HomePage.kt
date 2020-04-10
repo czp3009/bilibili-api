@@ -134,7 +134,7 @@ data class HomePage(
                     @SerializedName("creative_content")
                     var creativeContent: CreativeContent,
                     @SerializedName("creative_id")
-                    var creativeId: Int, // 6578071
+                    var creativeId: Long, // 6578071
                     @SerializedName("creative_type")
                     var creativeType: Int, // 2
                     @SerializedName("extra")

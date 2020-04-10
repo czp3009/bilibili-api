@@ -1,4 +1,4 @@
-package com.hiczp.bilibili.api.thirdpart.commons;
+package com.hiczp.bilibili.api.commons;
 
 //用于减少包引入
 

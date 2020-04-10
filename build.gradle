@@ -16,7 +16,7 @@ buildscript {
 }
 
 group = 'com.hiczp'
-version = '0.2.0'
+version = '0.2.1'
 description = 'Bilibili Android client API library for Kotlin'
 
 apply plugin: 'kotlin'

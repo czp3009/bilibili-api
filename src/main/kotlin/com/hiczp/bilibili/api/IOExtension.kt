@@ -1,6 +1,6 @@
 package com.hiczp.bilibili.api
 
-import com.hiczp.bilibili.api.thirdpart.commons.BoundedInputStream
+import com.hiczp.bilibili.api.commons.BoundedInputStream
 import io.ktor.util.InternalAPI
 import io.ktor.utils.io.errors.EOFException
 import java.io.InputStream
