@@ -5,7 +5,13 @@
 
 # 使用
 ```groovy
-compile group: 'com.hiczp', name: 'bilibili-api', version: '0.2.0'
+compile group: 'com.hiczp', name: 'bilibili-api', version: '0.2.1'
+```
+
+对于 Android 项目, 如需要解析弹幕, 添加
+```groovy
+compile group: 'javax.xml.stream', name: 'stax-api' version: last_version
+compile group: 'org.codehaus.woodstox', name: 'woodstox-core-asl' version: last_version
 ```
 
 # 技术说明
