@@ -1,10 +1,16 @@
 buildscript {
     ext {
-        project_version = '0.2.0'
-        kotlin_version = '1.3.41'
-        kotlin_coroutines_version = '1.2.2'
+        project_version = '0.3.0'
+        kotlin_version = '1.3.71'
+        kotlin_coroutines_version = '1.3.5'
+        ktor_version = '1.3.1'
+        caeruleum_version = '1.2.9'
+        gson_version = '2.8.6'
+        kotson_version = '2.5.0'
+        kotlin_logging_version = '1.7.8'
+        slf4j_version = '1.7.30'
+        junit_version = '5.6.1'
         jvm_target = JavaVersion.VERSION_1_8
-        ktor_version = '1.2.2'
     }
 
     repositories {
@@ -16,131 +22,142 @@ buildscript {
     }
 }
 
-allprojects {
-    group = 'com.hiczp'
-    version = project_version
-    description = 'Bilibili API library for Kotlin'
+group = 'com.hiczp'
+version = project_version
+description = 'Bilibili API library for Kotlin'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'kotlin'
 
-    apply plugin: 'kotlin'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
-
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { url = 'https://dl.bintray.com/kotlin/ktor/' }
-        mavenLocal()
-    }
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
 }
 
-subprojects {
-    //kotlin
-    dependencies {
-        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
-        api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8'
-        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
-        api group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
-        // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-        api group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: kotlin_coroutines_version
-    }
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = jvm_target
-            freeCompilerArgs = ["-Xjvm-default=enable", "-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
-        }
-    }
-    compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = jvm_target
-            freeCompilerArgs = ["-Xjvm-default=enable", "-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
-        }
-    }
-
-    //logging
-    dependencies {
-        // https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging
-        api group: 'io.github.microutils', name: 'kotlin-logging', version: '1.6.26'
-        // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-        testApi group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
-    }
-
-    //unit test
-    dependencies {
-        // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
-        testApi group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.4.2'
-    }
-
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allSource
-        archiveClassifier = 'sources'
-    }
-
-    task javadocJar(type: Jar) {
-        from javadoc
-        archiveClassifier = 'javadoc'
-    }
-
-    publishing {
-        def moduleName = "${rootProject.name}-${project.name}"
-
-        repositories {
-            maven {
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username = project.properties.ossUsername
-                    password = project.properties.ossPassword
-                }
-            }
-        }
-
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
-                artifactId moduleName
-
-                pom {
-                    name = moduleName
-                    description = project.description
-                    url = 'https://github.com/czp3009/bilibili-api'
-
-                    licenses {
-                        license {
-                            name = 'GNU GENERAL PUBLIC LICENSE Version 3'
-                            url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'czp3009'
-                            name = 'czp3009'
-                            email = 'czp3009@gmail.com'
-                            url = 'https://www.hiczp.com'
-                        }
-                    }
-
-                    scm {
-                        connection = 'scm:git:git://github.com/czp3009/bilibili-api.git'
-                        developerConnection = 'scm:git:ssh://github.com/czp3009/bilibili-api.git'
-                        url = 'https://github.com/czp3009/bilibili-api'
-                    }
-                }
-            }
-        }
-    }
-
-    signing {
-        sign publishing.publications.mavenJava
-    }
-}
-
+//kotlin
 dependencies {
-    api project(':rest')
-    api project(':websocket')
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
+    api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8'
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+    api group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+    api group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: kotlin_coroutines_version
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = jvm_target
+        freeCompilerArgs = ['-Xopt-in=kotlin.RequiresOptIn']
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = jvm_target
+    }
 }
 
-jar {
-    enabled = false
+//logging
+dependencies {
+    // https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging
+    api group: 'io.github.microutils', name: 'kotlin-logging', version: kotlin_logging_version
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    testApi group: 'org.slf4j', name: 'slf4j-simple', version: slf4j_version
+}
+
+//unit test
+dependencies {
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testApi group: 'org.junit.jupiter', name: 'junit-jupiter', version: junit_version
+}
+
+//http
+dependencies {
+    // https://mvnrepository.com/artifact/com.hiczp/caeruleum
+    api group: 'com.hiczp', name: 'caeruleum', version: caeruleum_version
+}
+
+//ktor
+dependencies {
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-core
+    api group: 'io.ktor', name: 'ktor-client-core', version: ktor_version
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-websockets
+    api group: 'io.ktor', name: 'ktor-client-websockets', version: ktor_version
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-logging-jvm
+    api group: 'io.ktor', name: 'ktor-client-logging-jvm', version: ktor_version
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-gson
+    api group: 'io.ktor', name: 'ktor-client-gson', version: ktor_version
+}
+
+//json
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    api group: 'com.google.code.gson', name: 'gson', version: gson_version
+    // https://mvnrepository.com/artifact/com.github.salomonbrys.kotson/kotson
+    api group: 'com.github.salomonbrys.kotson', name: 'kotson', version: kotson_version
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    repositories {
+        maven {
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = project.properties.ossUsername
+                password = project.properties.ossPassword
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = project.name
+                description = project.description
+                url = 'https://github.com/czp3009/bilibili-api'
+
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE Version 3'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'czp3009'
+                        name = 'czp3009'
+                        email = 'czp3009@gmail.com'
+                        url = 'https://www.hiczp.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/czp3009/bilibili-api.git'
+                    developerConnection = 'scm:git:ssh://github.com/czp3009/bilibili-api.git'
+                    url = 'https://github.com/czp3009/bilibili-api'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    tasks.signMavenJavaPublication.onlyIf { taskGraph.hasTask tasks.publish }
 }
