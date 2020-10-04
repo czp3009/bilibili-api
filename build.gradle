@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        kotlin_version = '1.3.71'
-        kotlin_coroutines_version = '1.3.5'
+        kotlin_version = '1.4.10'
+        kotlin_coroutines_version = '1.3.9'
         ktor_version = '1.3.1'
         jvm_target = JavaVersion.VERSION_1_8
     }
